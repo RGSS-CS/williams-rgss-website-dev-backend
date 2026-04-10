@@ -1,2 +1,2 @@
 # williams-rgss-website-dev
-The baseline for both websites provided to RGSS and Dr. GW Williams
+The baseline for both websites provided to RGSS and Dr. GW Williams for the backend
