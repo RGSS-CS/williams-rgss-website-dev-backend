@@ -1,0 +1,22 @@
+from calendars.models import Club, School_event
+from django.utils import timezone
+from datetime import timedelta
+
+# Create a demo club
+club = Club.objects.create(
+    name="Robotics Club",
+    description="Students build and program robots.",
+    day="wednesday",
+    classroom_code="B204"
+)
+
+# Create a demo event linked to the club
+event = School_event.objects.create(
+    title="Robotics Workshop",
+    description="Intro to robotics and safety training.",
+    start_time=timezone.now() + timedelta(days=1),
+    end_time=timezone.now() + timedelta(days=1, hours=2),
+    club=club
+)
+
+event
