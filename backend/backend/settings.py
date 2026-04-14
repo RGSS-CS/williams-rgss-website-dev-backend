@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "corsheaders",
+    "rest_framework",
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
     'django.contrib.admin',
