@@ -2,3 +2,4 @@ django
 gcsa
 icalendar
 django-cors-headers
+djangorestframework
