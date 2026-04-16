@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime
-from gcsa.google_calendar import GoogleCalendar
-import json
 
-calendar = GoogleCalendar()
 
 # Create your views here.
+#REQRUIRE NEW METHOD, django-ical
+'''
 def get_events(request):
     time_min = datetime.fromtimestamp(request.POST.get("timestamp_start"))
     time_max = datetime.fromtimestamp(request.POST.get("timestamp_end"))
@@ -24,3 +23,4 @@ def get_events(request):
         })
     
     return HttpResponse(json.dumps(events))
+'''
