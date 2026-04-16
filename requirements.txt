@@ -1,5 +1,4 @@
 django
-gcsa
-icalendar
 django-cors-headers
 djangorestframework
+django-ical==1.3
