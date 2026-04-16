@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_ical",
     "corsheaders",
     "rest_framework",
     "calendars.apps.CalendarsConfig",
