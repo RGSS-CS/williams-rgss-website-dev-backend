@@ -124,3 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Calendar stuff
+CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
+# CALENDAR_NAME_VALIDATORS = []
