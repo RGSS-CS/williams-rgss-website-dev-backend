@@ -1,21 +1,22 @@
 from django.db import models
-from django.contrib.syndication.views import Feed
-from django_ical.utils import build_rrule_from_recurrences_rrule
-from django_ical.views import ICalFeed
+#from django_ical.utils import build_rrule_from_recurrences_rrule
 from django.conf import settings
 from django.utils import timezone
 #from clubs.models import Club
+from django.urls import reverse
 
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     product_id = settings.CALENDAR_PRODUCT_ID
     timezone = models.TextField(default="UTC") # TODO: deal w/ this later, possibly choices?
+    filename = models.TextField(default="invalid")
 
-    # def save(self, *args, **kwargs):
-    #     if self.description and not self.description.startswith(settings.CALENDAR_PRODUCT_ID):
-    #         self.description = settings.CALENDAR_PATH + self.description
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.filename and not self.filename.endswith(".ics"):
+            self.filename += ".ics"
+
+        super().save(*args, **kwargs)
 
 class CalendarEvent(models.Model):
     title = models.CharField(max_length=100)
@@ -29,3 +30,7 @@ class CalendarEvent(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse("calendars_get_calendar_event", kwargs={"event": self.title})
+    
