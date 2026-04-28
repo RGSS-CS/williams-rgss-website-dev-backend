@@ -2,12 +2,15 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.contrib import messages
 
 # Create your views here.
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account was created for {username}')
             login(request, form.save())
             return redirect('posts:list')
     else:
