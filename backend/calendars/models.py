@@ -10,8 +10,8 @@ class Calendar(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     product_id = settings.CALENDAR_PRODUCT_ID
-    timezone = models.TextField(default="UTC") # TODO: deal w/ this later, possibly choices?
-    filename = models.TextField(default="invalid")
+    timezone = models.TextField(default="UTC") # TODO: deal w/ this later, possibly choices? maybe?
+    filename = models.TextField(default="none")
     club = models.OneToOneField(Club, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):

@@ -10,14 +10,11 @@ class CalendarFeed(ICalFeed):
     timezone = 'UTC'
     file_name = "event.ics"
 
-    def __init__(self, *args, **kwargs):
-        self.args = args
-        self.kwargs = kwargs
-        super().__init__()
+    def get_object(self, request, *args, **kwargs):
+        return get_object_or_404(Calendar, pk=kwargs.get("pk"))
 
-    def items(self):
+    def items(self, calendar):
         # calendar = get_object_or_404(Calendar, filename=self.kwargs.get("calendar"))
-        calendar = get_object_or_404(Calendar, pk=self.kwargs["pk"])
         return CalendarEvent.objects.filter(calendar=calendar).order_by('-start')
 
     def item_title(self, item):
