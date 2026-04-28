@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 #from clubs.models import Club
 from django.urls import reverse
+from clubs.models import Club
 
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
@@ -11,6 +12,7 @@ class Calendar(models.Model):
     product_id = settings.CALENDAR_PRODUCT_ID
     timezone = models.TextField(default="UTC") # TODO: deal w/ this later, possibly choices?
     filename = models.TextField(default="invalid")
+    club = models.OneToOneField(Club, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         if self.filename and not self.filename.endswith(".ics"):
