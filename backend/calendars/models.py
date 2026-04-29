@@ -11,7 +11,7 @@ class Calendar(models.Model):
     description = models.TextField(blank=True)
     product_id = settings.CALENDAR_PRODUCT_ID
     timezone = models.TextField(default="UTC") # TODO: deal w/ this later, possibly choices? maybe?
-    filename = models.TextField(default="none")
+    filename = models.TextField(default=f"{name}.ics")
     club = models.OneToOneField(Club, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
@@ -22,7 +22,7 @@ class Calendar(models.Model):
 
 class CalendarEvent(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, max_length=500)
     start = models.DateTimeField()
     end = models.DateTimeField()
     location = models.CharField(max_length=255, blank=True)
