@@ -3,3 +3,4 @@ django-cors-headers
 djangorestframework
 django-ical
 django-taggit
+PIL
