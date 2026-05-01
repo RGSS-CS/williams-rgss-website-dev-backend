@@ -16,22 +16,24 @@ class Command(BaseCommand):
     usage: python3 manage.py generate_testdata [options]
 
     options:
-        --seed          specify a seed (default randomly generated 16-digit int)
-        --club-amount   specify how many instances to generate of the Club model (default 64)
-        --event-amount  specify how many instances to generate of the CalendarEvent model per calendar (default 64)
+        -s --seed          specify a seed (default randomly generated 16-digit int)
+        -c --club-amount   specify how many instances to generate of the Club model (default 64)
+        -e --event-amount  specify how many instances to generate of the CalendarEvent model per calendar (default 64)
     """
 
     def add_arguments(self, parser):
-        pass # TODO: make arguments work
+        parser.add_argument("-s", "--seed")
+        parser.add_argument("-c", "--club-amount", type=int)
+        parser.add_argument("-e", "--event-amount", type=int)
     
     def handle(self, *args, **options):
-        if "seed" in options:
-            seed = options["seed"]
-        else:
+        if options["seed"] is None:
             seed = random.randint(10**16, 10**17-1)
+        else:
+            seed = options["seed"]
         random.seed(seed)
         
-        for i in range(options["club-amount"]):
+        for i in range(options["club_amount"]):
             name = random_string(50)
             description = random_string(100)
             club = Club.objects.create(
@@ -39,11 +41,11 @@ class Command(BaseCommand):
                 description=description
             )
 
-            for i in range(options["event-amount"]):
+            for i in range(options["event_amount"]):
                 title = random_string(50)
                 description = random_string(100)
-                start = datetime.fromtimestamp(random.randint(datetime.now().timestamp(), datetime.now().timestamp()+31556926))
-                end = datetime.fromtimestamp(random.randint(start.timestamp(), start.timestamp()+31556926))
+                start = datetime.fromtimestamp(random.randint(int(datetime.now().timestamp()), int(datetime.now().timestamp()+31556926)))
+                end = datetime.fromtimestamp(random.randint(int(start.timestamp()), int(start.timestamp()+31556926)))
                 location = random_string(100)
                 calendar = club.calendar
                 CalendarEvent.objects.create(

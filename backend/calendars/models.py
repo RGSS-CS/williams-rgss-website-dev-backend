@@ -34,5 +34,5 @@ class CalendarEvent(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse("calendars_get_calendar_event", kwargs={"event": self.title})
+        return reverse("calendars_get_calendar_event", kwargs={"pk": self.pk})
     
