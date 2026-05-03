@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "django-taggit",
+    "taggit",
     "commands.apps.CommandsConfig",
     "django_ical",
     "corsheaders",
