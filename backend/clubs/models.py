@@ -25,9 +25,12 @@ class Club(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+def get_upload_path(instance, filename):
+    return f"clubs/gallery/{instance.club.pk}/{filename}"
+
 class ClubGalleryImage(models.Model):
     club = models.ForeignKey(Club, related_name='galleryImage', on_delete=models.CASCADE)
-    image = models.ImageField(default="default.jpg", upload_to=f"clubs/gallery/{club.pk}/")
+    image = models.ImageField(default="default.jpg", upload_to=get_upload_path)
     name = models.CharField(max_length=100)
     description = models.TextField(default="", max_length=500)
 
