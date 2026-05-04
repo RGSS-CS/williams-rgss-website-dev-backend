@@ -1,6 +1,10 @@
 from django.urls import path, include, re_path
 from . import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register("books", views.ClubViewSet)
 
 urlpatterns = [
-    path("get/<int:pk>/info/", views.club_info, name="clubs_club_info"),
+    path("", include(router.urls)),
 ]
