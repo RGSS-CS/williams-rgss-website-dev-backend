@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import Group
 from taggit.managers import TaggableManager
 from PIL import Image
 

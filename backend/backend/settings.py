@@ -12,6 +12,17 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import json
+import dotenv
+import sys
+
+RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == "runserver")
+
+if RUNNING_DEVELOPMENT_SERVER:
+    dotenv.load_dotenv()
+else:
+    with open("/etc/config.json") as config_file:
+        config = json.load(config_file)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +32,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s7!$t5-_^uy$6%8v^-rw!ndwr19-@pht1f1yw#2n&k*a62@+=n'
+if RUNNING_DEVELOPMENT_SERVER:
+    SECRET_KEY = 'django-insecure-s7!$t5-_^uy$6%8v^-rw!ndwr19-@pht1f1yw#2n&k*a62@+=n'
+else:
+    SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = RUNNING_DEVELOPMENT_SERVER
 
 ALLOWED_HOSTS = [
     'http://localhost:3000',
@@ -127,6 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

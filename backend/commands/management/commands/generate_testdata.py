@@ -1,9 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
-from calendars.models import Calendar, CalendarEvent
+from calendars.models import CalendarEvent
 from clubs.models import Club
 import random
 import string
-from django.utils import timezone
 from datetime import datetime
 
 def random_string(length: int):

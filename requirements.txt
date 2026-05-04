@@ -4,3 +4,4 @@ djangorestframework
 django-ical
 django-taggit
 pillow
+dotenv
