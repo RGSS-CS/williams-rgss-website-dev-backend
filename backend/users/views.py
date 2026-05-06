@@ -28,10 +28,6 @@ def login_view(request):
 
     return render(request, "users/login.html", {"form":form})
 
-@login_required(login_url='/users/login/')
-def profile(request):
-    return render(request, "users/profile.html")
-
 def logout_view(request):
     if request.method == 'POST':
         logout_view(request)
