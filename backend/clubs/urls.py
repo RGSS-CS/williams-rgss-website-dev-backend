@@ -3,7 +3,7 @@ from . import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register("books", views.ClubViewSet)
+router.register("clubs", views.ClubViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
