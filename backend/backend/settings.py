@@ -16,13 +16,7 @@ import json
 import dotenv
 import sys
 
-RUNNING_DEVELOPMENT_SERVER = (len(sys.argv) > 1 and sys.argv[1] == "runserver")
-
-if RUNNING_DEVELOPMENT_SERVER:
-    dotenv.load_dotenv()
-else:
-    with open("/etc/config.json") as config_file:
-        config = json.load(config_file)
+RUNNING_DEVELOPMENT_SERVER = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
