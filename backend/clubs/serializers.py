@@ -4,5 +4,5 @@ from .models import Club, ClubGalleryImage
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
-        fields = ["pk", "name", "description", "calendar"]
+        fields = ["id", "name", "description", "calendar"]
         
