@@ -11,6 +11,20 @@ class Club(models.Model):
     image = models.ImageField(default="default.jpg", upload_to="clubs/images")
     # TODO: add other neeeded fields
 
+    # club name
+    # club motto
+    # club location
+    # club schedule
+    # club profile picture
+    # club main category
+    # club tags
+    # club social media URLs
+    # club description
+    # club gallery/images bank
+    # club execs list
+    # a. club exec profile picture
+    # b. club exec position
+
     def __str__(self):
         return self.name
     
