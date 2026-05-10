@@ -1,24 +1,17 @@
 services:
   backend:
     image: ghcr.io/rgss-cs/backend:latest
-    container_name: williams-rgss-backend
-    ports:
-      - "8000:8000"
+    container_name: backend
     env_file:
       - .env
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
     networks:
       - internetwork
       - backend-net
+    pull_policy: always
 
   db:
     image: postgres:17-alpine
