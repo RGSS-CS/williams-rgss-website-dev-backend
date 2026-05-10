@@ -35,8 +35,11 @@ else:
 DEBUG = RUNNING_DEVELOPMENT_SERVER
 
 ALLOWED_HOSTS = [
-    'http://localhost:3000',
-    'localhost',
+    'http://frontend:3000',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://frontend:3000",
 ]
 
 
