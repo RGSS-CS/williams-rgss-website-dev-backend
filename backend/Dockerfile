@@ -11,7 +11,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 RUN addgroup --system app && \
-    adduser --system --ingroup app --home /app app
+    adduser --system --ingroup app --home /app app && \
+    chown -R app:app /app
 
 COPY --chown=app:app backend/ .
 
