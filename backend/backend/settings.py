@@ -16,7 +16,7 @@ import json
 import dotenv
 import sys
 
-RUNNING_DEVELOPMENT_SERVER = True
+RUNNING_DEVELOPMENT_SERVER = os.environ.get("RUNNING_DEVELOPMENT_SERVER", "False") == "True"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,14 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if RUNNING_DEVELOPMENT_SERVER:
     SECRET_KEY = 'django-insecure-s7!$t5-_^uy$6%8v^-rw!ndwr19-@pht1f1yw#2n&k*a62@+=n'
 else:
-    SECRET_KEY = config["SECRET_KEY"]
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = RUNNING_DEVELOPMENT_SERVER
+DEBUG = os.environ.get("RUNNING_DEVELOPMENT_SERVER", "False") == "True"
 
 ALLOWED_HOSTS = [
-    'http://localhost:3000',
-    'localhost',
+    os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 ]
 
 

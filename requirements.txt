@@ -5,3 +5,4 @@ django-ical
 django-taggit
 pillow
 dotenv
+psycopg2-binary
