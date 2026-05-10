@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
-import json
-import dotenv
-import sys
+# import json
+# import dotenv
+# import sys
 
 RUNNING_DEVELOPMENT_SERVER = os.environ.get("RUNNING_DEVELOPMENT_SERVER", "False") == "True"
 
