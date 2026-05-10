@@ -11,6 +11,7 @@ services:
     networks:
       - internetwork
       - backend-net
+    pull_policy: always
 
   db:
     image: postgres:17-alpine
