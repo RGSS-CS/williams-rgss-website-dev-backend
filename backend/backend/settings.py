@@ -16,7 +16,7 @@ import os
 # import dotenv
 # import sys
 
-RUNNING_DEVELOPMENT_SERVER = os.environ.get("RUNNING_DEVELOPMENT_SERVER", "False") == "True"
+RUNNING_DEVELOPMENT_SERVER = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,18 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if RUNNING_DEVELOPMENT_SERVER:
+if RUNNING_DEVELOPMENT_SERVER == "True":
     SECRET_KEY = 'django-insecure-s7!$t5-_^uy$6%8v^-rw!ndwr19-@pht1f1yw#2n&k*a62@+=n'
+    DEBUG = True
+    ALLOWED_HOSTS = ["localhost"]
 else:
     SECRET_KEY = os.environ.get("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("RUNNING_DEVELOPMENT_SERVER", "False") == "True"
-
-ALLOWED_HOSTS = [
-    os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
-]
-
+    DEBUG = False
+    ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(",")
 
 # Application definition
 
@@ -92,13 +88,25 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if RUNNING_DEVELOPMENT_SERVER == "True":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DB_HOST", "db"),
+            'PORT': os.environ.get("DB_PORT", "5432"),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
