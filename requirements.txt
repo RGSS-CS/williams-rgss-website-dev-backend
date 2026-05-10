@@ -6,3 +6,4 @@ django-taggit
 pillow
 dotenv
 psycopg2-binary
+gunicorn
