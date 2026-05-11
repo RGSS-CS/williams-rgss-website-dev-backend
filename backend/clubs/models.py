@@ -10,14 +10,15 @@ class Club(models.Model):
     motto = models.TextField(blank=True, max_length=100)
     tags = TaggableManager()
     image = models.ImageField(default="default.jpg", upload_to="clubs/images")
+    classroom_code = models.CharField(blank=True, max_length=8)
     # TODO: add other neeeded fields
 
     # [DONE] club name
     # [DONE] club motto
-    # club location
+    # [DONE: IN CALENDAR]club location
     # [DONE] club schedule
     # [DONE] club profile picture
-    # club main category
+    # [DONE: IN TAGS] club main category
     # [DONE] club tags
     # [DONE] club social media URLs
     # [DONE] club description
@@ -25,6 +26,7 @@ class Club(models.Model):
     # club execs list
     # a. club exec profile picture
     # b. club exec position
+    # [DONE] club google classroom code
 
     def __str__(self):
         return self.name
