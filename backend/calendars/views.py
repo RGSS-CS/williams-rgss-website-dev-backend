@@ -4,6 +4,8 @@ from datetime import datetime
 from django_ical.utils import build_rrule_from_recurrences_rrule
 from django_ical.views import ICalFeed
 from .models import Calendar, CalendarEvent
+from rest_framework import viewsets
+from .serializers import CalendarSerializer, CalendarEventSerializer
 
 class CalendarFeed(ICalFeed):
     product_id = '-//example.com//Example//EN'
@@ -76,3 +78,11 @@ def get_events(request):
     
     return HttpResponse(json.dumps(events))
 '''
+
+class CalendarViewSet(viewsets.ModelViewSet):
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSerializer
+
+class CalendarEventViewSet(viewsets.ModelViewSet):
+    queryset = CalendarEvent.objects.all()
+    serializer_class = CalendarEventSerializer
