@@ -6,21 +6,22 @@ from PIL import Image
 class Club(models.Model):
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(max_length=100)
-    description = models.TextField(default="", max_length=500)
+    description = models.TextField(blank=True, max_length=500)
+    motto = models.TextField(blank=True, max_length=100)
     tags = TaggableManager()
     image = models.ImageField(default="default.jpg", upload_to="clubs/images")
     # TODO: add other neeeded fields
 
-    # club name
-    # club motto
+    # [DONE] club name
+    # [DONE] club motto
     # club location
-    # club schedule
-    # club profile picture
+    # [DONE] club schedule
+    # [DONE] club profile picture
     # club main category
-    # club tags
-    # club social media URLs
-    # club description
-    # club gallery/images bank
+    # [DONE] club tags
+    # [DONE] club social media URLs
+    # [DONE] club description
+    # [DONE] club gallery/images bank
     # club execs list
     # a. club exec profile picture
     # b. club exec position
@@ -45,7 +46,7 @@ class ClubGalleryImage(models.Model):
     club = models.ForeignKey(Club, related_name='galleryImage', on_delete=models.CASCADE)
     image = models.ImageField(default="default.jpg", upload_to=get_upload_path)
     name = models.CharField(max_length=100)
-    description = models.TextField(default="", max_length=500)
+    description = models.TextField(blank=True, max_length=500)
 
     def save(self):
         super().save()
@@ -56,3 +57,25 @@ class ClubGalleryImage(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+class ClubSocialMedia(models.Model):
+    class Sites(models.TextChoices):
+        INSTAGRAM = "IG", "Instagram"
+        GITHUB = "GH", "GitHub"
+        YOUTUBE = "YT", "YouTube"
+        TIKTOK = "TT", "TikTok"
+        DISCORD = "DC", "Discord"
+        THREADS = "TR", "Threads"
+        FACEBOOK = "FB", "Facebook" # doubt anyone uses this, it's old af
+        TWITTER = "X", "Twitter/X" # i hate this name
+        LINKEDIN = "LI", "LinkedIn" 
+        WEBSITE = "WS", "Website"
+        OTHER = "OT", "Other"
+        # not adding reddit for obvious reasons
+
+    club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE) 
+    site = models.CharField(
+        max_length=2,
+        choices=Sites.choices,
+        default=Sites.OTHER
+    )
