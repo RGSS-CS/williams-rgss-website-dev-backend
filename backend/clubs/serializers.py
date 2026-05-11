@@ -7,10 +7,10 @@ class ClubGalleryImageSerializer(serializers.ModelSerializer):
         fields = ["club.pk", "image", "name", "description"]
 
 class ClubSerializer(serializers.ModelSerializer):
-    galleryImage = ClubGalleryImageSerializer(many=True, read_only=True)
+    galleryImages = ClubGalleryImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Club
-        fields = ["id", "name", "description", "calendar", "galleryImage"]
+        fields = ["id", "name", "description", "motto", "calendar", "galleryImages", "classroom_code"]
         
 # TODO: add serializer for club SM sites
