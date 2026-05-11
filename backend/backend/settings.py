@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
-from . import settings_current as config
+from . import settings_local as config
 # import json
 # import dotenv
 # import sys
