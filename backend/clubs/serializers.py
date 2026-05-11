@@ -13,3 +13,4 @@ class ClubSerializer(serializers.ModelSerializer):
         model = Club
         fields = ["id", "name", "description", "calendar", "galleryImage"]
         
+# TODO: add serializer for club SM sites
