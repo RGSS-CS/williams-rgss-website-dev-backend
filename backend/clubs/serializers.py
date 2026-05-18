@@ -4,7 +4,7 @@ from .models import Club, ClubGalleryImage
 class ClubGalleryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubGalleryImage
-        fields = ["club.pk", "image", "name", "description"]
+        fields = ["id", "club_id", "image", "name", "description"]
 
 class ClubSerializer(serializers.ModelSerializer):
     galleryImages = ClubGalleryImageSerializer(many=True, read_only=True)

@@ -35,10 +35,17 @@ class Command(BaseCommand):
         for i in range(options["club_amount"]):
             name = random_string(50)
             description = random_string(100)
+            motto = random_string(50)
+            # TODO: add image
+            classroom_code = random_string(7)
             club = Club.objects.create(
                 name=name,
-                description=description
+                description=description,
+                motto=motto,
+                classroom_code=classroom_code,
             )
+            for i in range(5):
+                club.tags.add(random_string(10))
 
             for i in range(options["event_amount"]):
                 title = random_string(50)

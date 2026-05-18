@@ -3,7 +3,7 @@ from . import views
 from rest_framework.routers import DefaultRouter
 
 calendarRouter = DefaultRouter()
-calendarRouter.register("json/", views.CalendarViewSet)
+calendarRouter.register("json", views.CalendarViewSet)
 
 eventRouter = DefaultRouter()
 eventRouter.register("", views.CalendarEventViewSet)
