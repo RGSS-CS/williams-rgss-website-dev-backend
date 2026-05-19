@@ -12,4 +12,7 @@ class CalendarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Calendar
-        fields = ["id", "name", "description", "timezone", "filename", "calendarevents", "club_id"]
+        fields = ["id", "name", "description", "timezone", "filename", "club_id"]
+        extra_kwargs = {
+            "calendarevents": {"required": False, "allow_blank": True}
+        }
