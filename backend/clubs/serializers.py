@@ -12,7 +12,7 @@ class ClubSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Club
-        fields = ["id", "name", "description", "motto", "calendar", "classroom_code"]
+        fields = ["id", "name", "description","category", "day_of_meeting", "classroom_code"]
         extra_kwargs = {
             "galleryImages": {"required": False, "allow_blank": True}
         }

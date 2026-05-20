@@ -2,12 +2,21 @@ from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
+import datetime
 
 CLUB_CATEGORY_CHOICES = [
     ("ACADEMIC", "Academic"),
     ("ARTS", "Arts"),
     ("COMMUNITY", "Community"),
     ("SPORTS & RECREATION", "Sports & Recreation")
+]
+
+WEEK_DAYS = [
+    ("MONDAY", "Monday"),
+    ("TUESDAY", "Tuesday"),
+    ("WEDNESDAY", "Wednesday"),
+    ("THURSDAY", "Thursday"),
+    ("FRIDAY", "Friday"),
 ]
 
 def get_upload_path_club(instance, filename):
@@ -20,10 +29,10 @@ class Club(models.Model):
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=500)
-    motto = models.TextField(blank=True, max_length=100)
-    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES, default="ACADEMIC")
+    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES, blank=True)
     image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10)
+    day_of_meeting = models.CharField(max_length=10, choices=WEEK_DAYS, blank=True)
     # TODO: add other neeeded fields
 
     # [DONE] club name
