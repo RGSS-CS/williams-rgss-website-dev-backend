@@ -21,7 +21,7 @@ class Club(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=500)
     motto = models.TextField(blank=True, max_length=100)
-    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES)
+    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES, default="ACADEMIC")
     image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10)
     # TODO: add other neeeded fields
@@ -67,7 +67,8 @@ class ClubGalleryImage(models.Model):
     image = models.ImageField(upload_to=get_upload_path_club_gallery)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=500)
-
+    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES, default="ACADEMIC")
+    
     def save(self):
         super().save()
         

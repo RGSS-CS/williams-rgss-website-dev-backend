@@ -4,10 +4,11 @@ from .models import Club, ClubGalleryImage
 class ClubGalleryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubGalleryImage
-        fields = ["id", "club_id", "image", "name", "description"]
+        fields = ["id", "club_id", "image", "name", "description", "category"]
 
 class ClubSerializer(serializers.ModelSerializer):
-    galleryImages = ClubGalleryImageSerializer(many=True, read_only=True)
+    # Causeing: AssertionError at /club/
+    # galleryImages = ClubGalleryImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Club
