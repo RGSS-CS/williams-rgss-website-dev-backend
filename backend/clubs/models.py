@@ -29,7 +29,7 @@ class Club(models.Model):
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=500)
-    category = models.CharField(max_length=20, choices=CLUB_CATEGORY_CHOICES, blank=True)
+    category = TaggableManager(blank=True) # for filtering by category, e.g. academic, arts, community, sports & recreation
     image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10)
     day_of_meeting = models.CharField(max_length=10, choices=WEEK_DAYS, blank=True)

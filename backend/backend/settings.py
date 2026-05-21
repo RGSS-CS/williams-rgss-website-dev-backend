@@ -35,6 +35,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     "taggit",
+    "taggit_serializer",
     "commands.apps.CommandsConfig",
     "django_ical",
     "corsheaders",
