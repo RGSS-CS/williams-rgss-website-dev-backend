@@ -4,7 +4,7 @@ from taggit.models import Tag
 from .models import Club, ClubGalleryImage
 
 class EventAdminForm(forms.ModelForm):
-    tags = forms.ModelMultipleChoiceField(
+    categories = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=True,
         widget=admin.widgets.FilteredSelectMultiple(
@@ -13,7 +13,11 @@ class EventAdminForm(forms.ModelForm):
     )
     class Meta:
         model = Club
-        fields = '__all__'
+        fields = [
+            "name", "description",
+            "day_of_meeting", "time", "room_num",
+            "classroom_code", "teacher_advisor"
+        ]
         widgets = {
             'time' : forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
         }
