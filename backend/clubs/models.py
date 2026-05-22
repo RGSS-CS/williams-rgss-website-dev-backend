@@ -3,14 +3,6 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
 
-WEEK_DAYS = [
-    ("MONDAY", "Monday"),
-    ("TUESDAY", "Tuesday"),
-    ("WEDNESDAY", "Wednesday"),
-    ("THURSDAY", "Thursday"),
-    ("FRIDAY", "Friday"),
-]
-
 def get_upload_path_club(instance, filename):
     upload_to = f"clubs/{instance.club.pk}/"
     ext = filename.split('.')[-1]
@@ -18,13 +10,26 @@ def get_upload_path_club(instance, filename):
     return filename
 
 class Club(models.Model):
+    class WeekDay(models.TextChoices):
+        MONDAY = "MONDAY", "Monday"
+        TUESDAY = "TUESDAY", "Tuesday"
+        WEDNESDAY = "WEDNESDAY", "Wednesday"
+        THURSDAY = "THURSDAY", "Thursday"
+        FRIDAY = "FRIDAY", "Friday"
+
+    class Repetition(models.TextChoices):
+        WEEKLY = "WEEKLY", "Weekly"
+        BIWEEKLY = "BIWEEKLY", "Biweekly"
+        MONTHLY = "MONTHLY", "Monthly"
+
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=500)
     category = TaggableManager()
+    repetition = models.CharField(blank=True, max_length=10, choices=Repetition.choices)
     image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10)
-    day_of_meeting = models.CharField(max_length=10, choices=WEEK_DAYS, blank=True)
+    day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, blank=True)
     time = models.TimeField(blank=True, null=True)
     room_num = models.IntegerField(blank=True, null=True)
     teacher_advisor = models.CharField(blank=True, max_length=20)

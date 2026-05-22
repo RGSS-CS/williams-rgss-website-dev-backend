@@ -15,7 +15,7 @@ class EventAdminForm(forms.ModelForm):
         model = Club
         fields = [
             "name", "description",
-            "day_of_meeting", "time", "room_num",
+            "day_of_meeting", "time", "repetition", "room_num",
             "classroom_code", "teacher_advisor"
         ]
         widgets = {
@@ -25,7 +25,7 @@ class EventAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields['tags'].initial = self.instance.category.all()
+            self.fields['categories'].initial = self.instance.category.all()
     
     def save(self, commit=True):
         instance = super().save(commit=False)
