@@ -8,8 +8,7 @@ class ClubGalleryImageSerializer(serializers.ModelSerializer):
         fields = ["id", "club_id", "image", "name", "description", "category"]
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
-    # Causeing: AssertionError at /club/
-    # galleryImages = ClubGalleryImageSerializer(many=True, read_only=True)
+
     category = TagListSerializerField()
     class Meta:
         model = Club
