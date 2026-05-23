@@ -35,6 +35,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     "taggit",
+    "taggit_serializer",
     "commands.apps.CommandsConfig",
     "django_ical",
     "corsheaders",
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Toronto'
 
 USE_I18N = True
 
