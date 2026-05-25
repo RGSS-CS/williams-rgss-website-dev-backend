@@ -8,3 +8,4 @@ dotenv
 psycopg2-binary
 gunicorn
 django-taggit-serializer
+django-migration-fixer

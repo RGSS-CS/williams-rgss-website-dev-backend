@@ -34,6 +34,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = [
+    "migration_fixer",
     "taggit",
     "taggit_serializer",
     "commands.apps.CommandsConfig",
