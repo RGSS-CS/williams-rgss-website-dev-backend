@@ -90,8 +90,4 @@ class ClubSocialMedia(models.Model):
         # not adding reddit for obvious reasons
 
     club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE) 
-    site = models.CharField(
-        max_length=2,
-        choices=Sites.choices,
-        default=Sites.OTHER
-    )
+    site = models.CharField(max_length=2, choices=Sites.choices, default=Sites.OTHER)
