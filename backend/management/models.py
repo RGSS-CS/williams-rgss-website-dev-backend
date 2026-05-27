@@ -7,7 +7,7 @@ from address.models import AddressField
 
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
-    site_name = models.CharField(default="RGSS STUCO", max_length=50)
+    site_name = models.CharField(default="SCHOOL STUCO", max_length=50)
     social_media = GenericRelation(SocialMedia)
     favicon = models.ImageField(default="management/default.png", upload_to="management/")
     stuco_image = models.ImageField(default="management/default.png", upload_to="management/")

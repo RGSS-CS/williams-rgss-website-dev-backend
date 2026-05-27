@@ -7,7 +7,7 @@ from clubs.models import Club
 from solo.models import SingletonModel
 
 class CalendarSettings(SingletonModel):
-    vendor = models.CharField(default="Richmond Green Secondary School", max_length=50)
+    vendor = models.CharField(default="SCHOOL", max_length=50)
     product = models.CharField(default="StuCo Website", max_length=50)
     language = models.CharField(default="EN", max_length=2)
 
