@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 def get_upload_path_club(instance, filename):
     upload_to = f"clubs/{instance.club.pk}/"
@@ -89,5 +91,16 @@ class ClubSocialMedia(models.Model):
         OTHER = "OT", "Other"
         # not adding reddit for obvious reasons
 
-    club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE) 
+    # club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveBigIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
     site = models.CharField(max_length=2, choices=Sites.choices, default=Sites.OTHER)
+
+    def __str__(self):
+        return self.site
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"])
+        ]
