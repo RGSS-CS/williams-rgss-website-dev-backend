@@ -36,6 +36,6 @@ volumes:
 
 networks:
   internetwork:
-      driver: bridge
+      external: true
   backend-net:
     driver: bridge
