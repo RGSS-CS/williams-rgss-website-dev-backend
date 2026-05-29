@@ -58,6 +58,27 @@ jobs:
 
       - name: Generate settings_local.py
         run: cp backend/backend/settings_prod.py backend/backend/settings_local.py
+
+      - name: Generate entrypoint.sh
+        run: |
+          cat > backend/entrypoint.sh << 'EOF'
+          #!/bin/sh
+          set -e
+
+          echo "==> Running migration fixer..."
+          python manage.py migrate_or_fix --no-input
+
+          echo "==> Running migrations..."
+          python manage.py migrate --no-input
+
+          echo "==> Collecting static files..."
+          python manage.py collectstatic --no-input --clear
+
+          echo "==> Starting gunicorn..."
+          exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
+          EOF
+          chmod +x backend/entrypoint.sh
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
