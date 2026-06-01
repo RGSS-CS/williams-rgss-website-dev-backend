@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
-from osm_field.fields import OSMField
+from osm_field.fields import OSMField, LatitudeField, LongitudeField
 
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
@@ -35,6 +35,15 @@ class SocialMedia(models.Model):
             models.Index(fields=["content_type", "object_id"])
         ]
 
+class Location(models.Model):
+    location = OSMField()
+    location_lat = LatitudeField()
+    location_lon = LongitudeField()
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveBigIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
     site_name = models.CharField(default="SCHOOL STUCO", max_length=50)
@@ -44,7 +53,7 @@ class SiteSettings(SingletonModel):
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
     # TODO: add website maintainers once users are done
-    school_location = OSMField(blank=True, null=True)
+    school_location = GenericRelation(Location)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
