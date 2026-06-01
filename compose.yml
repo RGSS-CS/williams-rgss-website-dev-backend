@@ -2,8 +2,6 @@ services:
   backend:
     image: ghcr.io/rgss-cs/backend:latest
     container_name: backend
-    ports:
-      - "8000:8000"
     env_file:
       - .env
     restart: unless-stopped
@@ -36,6 +34,6 @@ volumes:
 
 networks:
   internetwork:
-      driver: bridge
+    external: true
   backend-net:
     driver: bridge
