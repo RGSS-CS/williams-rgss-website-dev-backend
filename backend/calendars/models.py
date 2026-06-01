@@ -4,11 +4,22 @@ from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
 from clubs.models import Club
+from solo.models import SingletonModel
+
+class CalendarSettings(SingletonModel):
+    vendor = models.CharField(default="SCHOOL", max_length=50)
+    product = models.CharField(default="StuCo Website", max_length=50)
+    language = models.CharField(default="EN", max_length=2)
+
+    def __str__(self):
+        return "Calendar Configuration"
+
+    class Meta:
+        verbose_name = "Calendar Configuration"
 
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    product_id = settings.CALENDAR_PRODUCT_ID
     timezone = models.TextField(default="america/toronto") # TODO: deal w/ this later, possibly choices? maybe?
     filename = models.TextField(default=f"{name}.ics")
     club = models.OneToOneField(Club, on_delete=models.CASCADE, blank=True, null=True)

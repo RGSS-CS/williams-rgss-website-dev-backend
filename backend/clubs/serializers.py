@@ -8,8 +8,8 @@ class ClubGalleryImageSerializer(serializers.ModelSerializer):
         fields = ["id", "club_id", "image", "name", "description", "category"]
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
-
     category = TagListSerializerField()
+    
     class Meta:
         model = Club
         fields = [

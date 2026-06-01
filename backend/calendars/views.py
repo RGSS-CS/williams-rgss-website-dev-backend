@@ -3,17 +3,23 @@ from django.http import JsonResponse
 from datetime import datetime
 from django_ical.utils import build_rrule_from_recurrences_rrule
 from django_ical.views import ICalFeed
-from .models import Calendar, CalendarEvent
+from .models import CalendarSettings, Calendar, CalendarEvent
 from rest_framework import viewsets
 from .serializers import CalendarSerializer, CalendarEventSerializer
 
 class CalendarFeed(ICalFeed):
-    product_id = '-//example.com//Example//EN'
-    timezone = 'UTC'
-    file_name = "event.ics"
 
     def get_object(self, request, *args, **kwargs):
         return get_object_or_404(Calendar, pk=kwargs.get("pk"))
+    
+    def product_id(self, calendar):
+        return f'-//{CalendarSettings.get_solo().vendor}//{CalendarSettings.get_solo().product}//{CalendarSettings.get_solo().language}'
+
+    def timezone(self, calendar):
+        return calendar.timezone
+
+    def file_name(self, calendar):
+        return calendar.filename
 
     def items(self, calendar):
         # calendar = get_object_or_404(Calendar, filename=self.kwargs.get("calendar"))

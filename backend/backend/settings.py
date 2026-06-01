@@ -34,6 +34,9 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = [
+    "management",
+    "osm_field",
+    "solo",
     "migration_fixer",
     "taggit",
     "taggit_serializer",
@@ -110,7 +113,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 STORAGES = {
-    # ...
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },

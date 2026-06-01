@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
+from management.models import SocialMedia
+from django.contrib.contenttypes.fields import GenericRelation
 
 def get_upload_path_club(instance, filename):
     upload_to = f"clubs/{instance.club.pk}/"
@@ -34,6 +36,7 @@ class Club(models.Model):
     time = models.TimeField(blank=True, null=True)
     room_num = models.IntegerField(blank=True, null=True)
     teacher_advisor = models.CharField(blank=True, max_length=20)
+    social_media = GenericRelation(SocialMedia)
 
     def __str__(self):
         return self.name
@@ -73,21 +76,3 @@ class ClubGalleryImage(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
-
-class ClubSocialMedia(models.Model):
-    class Sites(models.TextChoices):
-        INSTAGRAM = "IG", "Instagram"
-        GITHUB = "GH", "GitHub"
-        YOUTUBE = "YT", "YouTube"
-        TIKTOK = "TT", "TikTok"
-        DISCORD = "DC", "Discord"
-        THREADS = "TR", "Threads"
-        FACEBOOK = "FB", "Facebook" # doubt anyone uses this, it's old af
-        TWITTER = "X", "Twitter/X" # i hate this name
-        LINKEDIN = "LI", "LinkedIn" 
-        WEBSITE = "WS", "Website"
-        OTHER = "OT", "Other"
-        # not adding reddit for obvious reasons
-
-    club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE) 
-    site = models.CharField(max_length=2, choices=Sites.choices, default=Sites.OTHER)
