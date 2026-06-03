@@ -30,15 +30,6 @@ services:
     networks:
       - backend-net
 
-  nginx:
-    image: nginx:alpine
-    depends_on:
-      backend:
-        condition: service_healthy
-    restart: unless-stopped
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-
 volumes:
   postgres_data:
 
