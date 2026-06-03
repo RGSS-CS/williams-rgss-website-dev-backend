@@ -470,3 +470,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,django,python,windows,visualstudiocode,pycharm
 
 backend/backend/settings_local.py
+staticfiles/
