@@ -116,7 +116,7 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
-}`
+}
 
 
 REST_FRAMEWORK = {
