@@ -7,8 +7,7 @@ python manage.py migrate --no-input
 echo "==> Collecting static files..."
 python manage.py collectstatic --no-input --clear
 
-echo "==> Starting gunicorn..."
-exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
+python manage.py runserver
 
 echo "==> Container started successfully!"
 
