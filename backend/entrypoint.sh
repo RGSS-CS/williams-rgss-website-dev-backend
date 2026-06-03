@@ -11,7 +11,7 @@ echo "==> Running deployment checks..."
 python manage.py check --deploy
 
 echo "==> Creating superuser if it doesn't exist..."
-python manage.py createsuperuser --no-input || true
+python manage.py createsuperuser --no-input
 
 echo "==> Starting gunicorn..."
 exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
