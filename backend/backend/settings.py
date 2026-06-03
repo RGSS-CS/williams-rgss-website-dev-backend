@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "migration_fixer",
     "taggit",
     "taggit_serializer",
+    "whitenoise",
     "commands.apps.CommandsConfig",
     "django_ical",
     "corsheaders",
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -114,7 +116,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
