@@ -30,8 +30,11 @@ class Club(models.Model):
         OPEN_TO_EVERYONE = "OPEN TO EVERYONE", "Open To Everyone"
 
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
-    name = models.CharField(max_length=100)
-    preview_description = models.CharField(blank=True, max_length=200)
+    name = models.CharField(max_length=100, help_text="Insert the Name of your club")
+    preview_description = models.CharField(blank=True, 
+                                           max_length=200, 
+                                           help_text="Insert a small description for your club." \
+                                           " The long description is filled below.")
     description = models.TextField(blank=True, max_length=500)
     category = TaggableManager()
     repetition = models.CharField(blank=True, max_length=10, choices=Repetition.choices)
@@ -49,7 +52,8 @@ class Club(models.Model):
     application_form_link = models.URLField(blank=True, 
                                           help_text="This can be either a google classroom invite link" \
                                           " or a application form link")
-    announcement = models.CharField(null=True) #BEN ISSUE
+    announcement = models.CharField(null=True,
+                                    help_text="This is where you announce application news.") #BEN ISSUE
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, blank=True)
     time = models.TimeField(blank=True, null=True)
     room_num = models.IntegerField(blank=True, null=True)
@@ -57,7 +61,9 @@ class Club(models.Model):
                                        max_length=20, 
                                        help_text="Please insert the name of the" \
                                        " teacher. Please insert Mr./Mrs./Ms. , followed by the last name")
-    tagline = models.CharField(blank=True, max_length=30)
+    tagline = models.CharField(blank=True, 
+                               max_length=30,
+                               help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds")
 
     social_media = GenericRelation(SocialMedia)
 
