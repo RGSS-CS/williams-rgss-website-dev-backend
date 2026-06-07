@@ -4,9 +4,6 @@ set -e
 echo "==> Running migrations..."
 python manage.py migrate --no-input
 
-echo "==> Collecting static files..."
-python manage.py collectstatic --no-input --clear
-
 echo "==> Creating/updating superuser..."
 python manage.py shell << 'EOF'
 import os
