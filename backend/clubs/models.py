@@ -42,7 +42,7 @@ class Club(models.Model):
     announcement = models.CharField(null=True, help_text="This is where you announce application news.") #BEN ISSUE
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, blank=True)
     time = models.TimeField(blank=True, null=True)
-    room_num = models.IntegerField(blank=True, null=True)
+    room_num = models.PositiveIntegerField(blank=True, null=True)
     teacher_advisor = models.CharField(blank=True, max_length=20, help_text="Please insert the name of the teacher. Please insert Mr./Mrs./Ms. , followed by the last name")
     tagline = models.CharField(blank=True, max_length=30, help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds'")
 
