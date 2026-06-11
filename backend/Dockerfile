@@ -19,6 +19,8 @@ RUN addgroup --system app && \
 COPY --chown=app:app backend/ .
 COPY --chown=root:root backend/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+RUN cp backend/settings_prod.py backend/settings_local.py
+RUN python manage.py collectstatic --noinput
 
 USER app
 

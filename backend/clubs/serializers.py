@@ -13,9 +13,9 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Club
         fields = [
-            "id", "name", "preview_description", "description",
-            "category", "day_of_meeting", "time", "repetition",
-            "room_num", "classroom_code", "teacher_advisor"
+            "id", "name", "preview_description", "description", "tagline", "category",
+            "day_of_meeting", "time", "repetition", "room_num",
+            "classroom_code", "accepting_applicants", "application_form_link", "teacher_advisor",
             ]
 
 # TODO: add serializer for club SM sites
