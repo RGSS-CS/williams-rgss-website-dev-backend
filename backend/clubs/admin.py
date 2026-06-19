@@ -16,9 +16,9 @@ class EventAdminForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = [
-            "name", "preview_description", "description", "category",
+            "name", "preview_description", "description", "tagline", "category",
             "day_of_meeting", "time", "repetition", "room_num",
-            "classroom_code", "teacher_advisor"
+            "classroom_code", "accepting_applicants", "application_form_link", "teacher_advisor",
         ]
         widgets = {
             'time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),

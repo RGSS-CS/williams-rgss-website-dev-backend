@@ -6,6 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent # this is specifically only fo
 SECRET_KEY = 'django-insecure-s7!$t5-_^uy$6%8v^-rw!ndwr19-@pht1f1yw#2n&k*a62@+=n'
 DEBUG = True
 ALLOWED_HOSTS = ["localhost"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
+CSRF_COOKIE_SECURE = False
 
 DATABASES = {
     'default': {
