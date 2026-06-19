@@ -25,9 +25,9 @@ class Club(models.Model):
         MONTHLY = "MONTHLY", "Monthly"
 
     class AcceptingApplications(models.TextChoices):
-        ACCEPTING = "ACPT", "Accepting"
-        NOT_ACCEPTING = "NACPT", "Not Accepting"
-        OPEN_TO_EVERYONE = "OpnToEvryne", "Open To Everyone"
+        ACCEPTING = "AC", "Accepting"
+        NOT_ACCEPTING = "WA", "Not Accepting"
+        OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(max_length=100, help_text="Insert the Name of your club")
