@@ -10,7 +10,6 @@ def get_upload_path_club(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{upload_to}{instance.club.pk}.{ext}"
     return filename
-
 class Club(models.Model):
     class WeekDay(models.TextChoices):
         MONDAY = "MONDAY", "Monday"
@@ -69,6 +68,16 @@ def get_upload_path_club_gallery(instance, filename):
 def get_upload_path(*args, **kwargs): # fix migration errors
     return get_upload_path_club_gallery(*args, **kwargs)
 
+class WhyJoin(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="why_join_reasons")
+    title = models.CharField(max_length=200)
+    description = models.TextField(max_length=2000)
+
+    class Meta:
+        verbose_name =  "Why Join"
+        verbose_name_plural = "Why Join"
+    def __str__(self):
+        return self.title
 
 class ClubGalleryImage(models.Model):
     club = models.ForeignKey(Club, related_name='galleryImage', on_delete=models.CASCADE)
