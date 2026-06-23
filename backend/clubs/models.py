@@ -10,6 +10,7 @@ def get_upload_path_club(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{upload_to}{instance.club.pk}.{ext}"
     return filename
+
 class Club(models.Model):
     class WeekDay(models.TextChoices):
         MONDAY = "MONDAY", "Monday"
@@ -68,14 +69,39 @@ def get_upload_path_club_gallery(instance, filename):
 def get_upload_path(*args, **kwargs): # fix migration errors
     return get_upload_path_club_gallery(*args, **kwargs)
 
-class WhyJoin(models.Model):
+class ClubWhyJoin(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="why_join_reasons")
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=2000)
+    index = models.IntegerField()
 
     class Meta:
         verbose_name =  "Why Join"
         verbose_name_plural = "Why Join"
+
+    def __str__(self):
+        return self.title
+    
+    # def save(self, *args, **kwargs):
+    #     if ClubWhyJoin.objects.filter(index=self.index).count() > 1:
+    #         for i in ClubWhyJoin.objects.filter(index__gt=self.index):
+    #             i.index += 1
+    #             i.save()
+
+    #     super().save(*args, **kwargs)
+        
+
+class ClubAnnouncement(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(max_length=2000)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement")
+    date_posted = models.DateTimeField(default=timezone.now)
+    pinned = models.BooleanField(default=False, help_text="Whether or not the post should be pinned to the top of the page.")
+
+    class Meta:
+        verbose_name =  "Club Announcement"
+        verbose_name_plural = "Club Announcement"
+
     def __str__(self):
         return self.title
 
