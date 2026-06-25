@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from taggit.models import Tag
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from .models import Club, ClubGalleryImage, WhyJoin
+from .models import Club, ClubGalleryImage, ClubWhyJoin
 
 
 class EventAdminForm(forms.ModelForm):
@@ -57,7 +57,7 @@ class EventAdminForm(forms.ModelForm):
 
 
 class WhyJoinInline(admin.TabularInline):  # or admin.StackedInline
-    model = WhyJoin
+    model = ClubWhyJoin
     extra = 1
 
 
