@@ -9,11 +9,83 @@ class ClubViewSet(viewsets.ModelViewSet):
 class ClubWhyJoinViewSet(viewsets.ModelViewSet):
     serializer_class = ClubWhyJoinSerializer
 
+    ### NOTE: IF MULTIPLE INSTANCES ARE TO BE SUPPORTED HERE, JUST WRAP THESE IN FOR LOOPS
     def perform_create(self, serializer):
-        pass # add logic that adds 1 index to all model instances with higher indexes
+        """
+        INSERT instance
+        |||||||||||||||||||||||||||||||||||  OLD
+                              ^              MOVE HERE
+        ||||||||||||||||||||||SSSSSSSSSSSSS  IDENTIFY SHIFT
+        |||||||||||||||||||||| SSSSSSSSSSSSS SHIFT RIGHT
+        ||||||||||||||||||||||N||||||||||||| NEW
+        """
+        index = serializer.validated_data.get("index") 
+        model_class = self.get_queryset().model
+        change = model_class.objects.filter(index__gte=index)
+        # with transaction.atomic() {
+        for instance in change:
+            instance.index += 1
+            instance.save()
+        # }
+
+        serializer.save()
 
     def perform_update(self, serializer):
-        pass # check if it modifies index, if so, do same as perform_create()
+        index = serializer.validated_data.get("index") 
+        self_inst = self.get_object()
+        model_class = self.get_queryset().model
+
+        if index > self_inst.index:
+            """
+            move instance to RIGHT
+            |||||||||||||O||||||||||||||||||||| OLD
+                                  ^             MOVE HERE
+            ||||||||||||| SSSSSSSSS|||||||||||| IDENTIFY SHIFT
+            |||||||||||||SSSSSSSSS |||||||||||| SHIFT RIGHT
+            ||||||||||||||||||||||N|||||||||||| NEW
+            """
+
+            down = model_class.objects.filter(index_gt=self_inst.index, index_lt=index)
+            # with transaction.atomic() {
+            for instance in down:
+                instance.index -= 1
+                instance.save()
+            # }
+
+        elif index < self_inst.index:
+            """
+            move instance to LEFT
+            ||||||||||||||||||||||O|||||||||||| OLD
+                         ^                      MOVE HERE
+            |||||||||||||SSSSSSSSS |||||||||||| IDENTIFY SHIFT
+            ||||||||||||| SSSSSSSSS|||||||||||| SHIFT LEFT
+            |||||||||||||N||||||||||||||||||||| NEW
+            """
+
+            up = model_class.objects.filter(index__gte=index, index_lt=self_inst.index)
+            # with transaction.atomic() {
+            for instance in up:
+                instance.index += 1
+                instance.save()
+            # }
+        
+        serializer.save()
 
     def perform_destroy(self, instance):
-        pass # add logic that subtracts 1 index to all model instances with higher indexes
+        """
+        DESTROY instance
+        |||||||||||||O||||||||||||||||||||| OLD
+        ||||||||||||| ||||||||||||||||||||| REMOVE OLD
+        ||||||||||||| SSSSSSSSSSSSSSSSSSSSS IDENTIFY SHIFT
+        |||||||||||||SSSSSSSSSSSSSSSSSSSSS  SHIFT LEFT
+        ||||||||||||||||||||||||||||||||||  NEW
+        """
+
+        self_inst = self.get_object()
+        model_class = self.get_queryset().model
+
+        change = model_class.objects.filter(index__gt=self_inst.index)
+        for instance in change:
+            instance.index -= 1
+            instance.save()
+        
