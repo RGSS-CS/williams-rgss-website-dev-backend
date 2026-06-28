@@ -65,6 +65,12 @@
   margin-top: 4px;
 }
 
+/* ── Hide stacked inline heading for the single location entry ── */
+.inline-related h3,
+.inline-group h3 {
+  display: none !important;
+}
+
 /* ── Hide the raw lat/lon inputs — managed exclusively by the map ── */
 .field-location_lat,
 .field-location_lon {
