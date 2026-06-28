@@ -35,10 +35,10 @@ class SocialMedia(models.Model):
             models.Index(fields=["content_type", "object_id"])
         ]
 
-class Location(models.Model):
-    location = OSMField()
-    location_lat = LatitudeField()
-    location_lon = LongitudeField()
+class Location(SingletonModel):
+    location = OSMField(blank=True)
+    location_lat = LatitudeField(null=True, blank=True)
+    location_lon = LongitudeField(null=True, blank=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveBigIntegerField()
@@ -58,12 +58,12 @@ class SiteSettings(SingletonModel):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        img = Image.open(self.stuco_image.path)
-        
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.stuco_image.path)
+        if self.stuco_image and self.stuco_image.name != "management/default.png":
+            img = Image.open(self.stuco_image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.stuco_image.path)
 
     def __str__(self):
         return "Site Configuration"
