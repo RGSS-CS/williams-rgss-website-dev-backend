@@ -18,7 +18,7 @@ class LeafletPickerWidget(forms.TextInput):
         super().__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        # Render the hidden text input (still submitted in POST for osm_field)
+        # Render the hidden location input (still submitted in POST for osm_field)
         text_html = super().render(name, value, attrs, renderer)
 
         map_html = format_html(

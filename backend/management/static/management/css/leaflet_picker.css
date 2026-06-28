@@ -1,7 +1,6 @@
 /* ── Outer wrapper: stretch to full content column width ── */
 .leaflet-picker-wrap {
-  /* The Django admin .form-row uses a fixed-width fieldWrapper.
-     !important is needed to override Django admin's inline field widths. */
+  display: block !important;
   width: 100% !important;
   box-sizing: border-box;
   margin-top: 8px;
@@ -43,10 +42,14 @@
 /* ── Search status / result label ── */
 .leaflet-picker-status {
   font-size: 12px;
-  color: #555;
+  color: #222;
   margin-bottom: 6px;
-  min-height: 16px;
+  min-height: 18px;
   word-break: break-word;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 6px 10px;
 }
 
 /* ── Map container: full width, fixed height ── */
@@ -77,8 +80,9 @@
   display: none !important;
 }
 
-/* ── Make the location text field read-only visually consistent ── */
-#id_location {
+/* ── Make the location text field hidden so only the map UI remains ── */
+#id_location,
+input[id$="-location"] {
   display: none !important;  /* hidden; value synced by JS, submitted in POST */
 }
 
