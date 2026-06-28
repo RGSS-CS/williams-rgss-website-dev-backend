@@ -3,6 +3,7 @@ django-cors-headers
 djangorestframework
 django-ical
 django-taggit
+django-map-widgets
 pillow
 python-dotenv
 psycopg2-binary

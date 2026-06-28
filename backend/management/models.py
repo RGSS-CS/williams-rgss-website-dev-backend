@@ -46,7 +46,7 @@ class Location(models.Model):
 
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
-    site_name = models.CharField(default="SCHOOL STUCO", max_length=50)
+    site_name = models.CharField(default="SCHOOL STUCO", max_length=50, help_text="The name of the School Council")
     social_media = GenericRelation(SocialMedia)
     favicon = models.ImageField(default="management/default.png", upload_to="management/")
     stuco_image = models.ImageField(default="management/default.png", upload_to="management/")
