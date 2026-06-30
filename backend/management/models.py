@@ -35,7 +35,7 @@ class SocialMedia(models.Model):
             models.Index(fields=["content_type", "object_id"])
         ]
 
-class Location(SingletonModel):
+class Location(models.Model):
     location = OSMField(blank=True)
     location_lat = LatitudeField(null=True, blank=True)
     location_lon = LongitudeField(null=True, blank=True)

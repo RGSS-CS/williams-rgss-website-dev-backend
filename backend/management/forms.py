@@ -28,7 +28,7 @@ class LeafletPickerWidget(forms.TextInput):
               <div class="leaflet-picker-search">
                 <input type="text"
                        id="search_{wid}"
-                       placeholder="Search for a place (e.g. Dr. G.W. Williams Secondary School)"
+                       placeholder="Search the school name (e.g. Dr. G.W. Williams Secondary School)"
                        autocomplete="off" />
                 <button type="button" id="search_btn_{wid}">Search</button>
               </div>
