@@ -70,3 +70,18 @@ class SiteSettings(SingletonModel):
 
     class Meta:
         verbose_name = "Site Configuration"
+
+class PageSettings(models.Model):
+    class PageTypes(models.TextChoices):
+        HOME = "HM", "Home"
+        CLUBS = "CL", "Clubs"
+        GALLERY = "GL", "Gallery"
+        ABOUT = "AB", "About"
+
+    internal_site_name = models.CharField(max_length=2, choices=PageTypes.choices)
+    title = models.CharField(max_length=100)
+    subtitle = models.CharField(blank=True, max_length=100)
+    tagline = models.TextField(blank=True, max_length=200)
+
+    def __str__(self):
+        return "Configuration for {self.internal_site_name}"
