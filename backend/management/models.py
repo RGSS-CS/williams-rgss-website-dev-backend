@@ -69,5 +69,5 @@ class SiteSettings(SingletonModel):
     def __str__(self):
         return "Site Configuration"
 
-    class Meta:
+    class Meta: #BEN ISSUE: "Meta" overrides symbol of same name in class "SingletonModel"
         verbose_name = "Site Configuration"
