@@ -36,7 +36,7 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location = OSMField(blank=Truehelp_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", blank=True, null=True)
+    location = OSMField(blank=True, help_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", null=True)
     location_lat = LatitudeField(null=True, blank=True)
     location_lon = LongitudeField(null=True, blank=True)
 
