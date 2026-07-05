@@ -36,7 +36,7 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location = OSMField()
+    location = OSMField(help_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", blank=True, null=True)
     location_lat = LatitudeField()
     location_lon = LongitudeField()
 
@@ -48,10 +48,11 @@ class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
     site_name = models.CharField(default="SCHOOL STUCO", max_length=50)
     social_media = GenericRelation(SocialMedia)
-    favicon = models.ImageField(default="management/default.png", upload_to="management/")
-    stuco_image = models.ImageField(default="management/default.png", upload_to="management/")
+    favicon = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
+    stuco_image = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the image for the club's logo. It should be a square image, preferably 300x300 pixels.")
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
+    school_mascot = models.CharField(blank=True, max_length=50, help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*.")
     # TODO: add website maintainers once users are done
     school_location = GenericRelation(Location)
 
