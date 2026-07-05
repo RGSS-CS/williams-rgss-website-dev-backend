@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.core.exceptions import ValidationError
 from taggit.models import Tag
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from .models import Club, ClubGalleryImage, ClubWhyJoin
@@ -40,19 +41,16 @@ class EventAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance and self.instance.pk:
-            self.fields["category"].initial = [
-                t.pk for t in self.instance.category.all()
-            ]
+            self.fields['category'].initial = [t.pk for t in self.instance.category.all()]
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-
         if commit:
-            instance.save()
-            instance.category.set(
-                self.cleaned_data.get("category", [])
-            )
-
+            try:
+                instance.save()
+                instance.category.set(self.cleaned_data.get('category', []))
+            except Exception as e:
+                raise ValidationError(f"Failed to save: {e}")
         return instance
 
 
@@ -64,7 +62,11 @@ class WhyJoinInline(admin.TabularInline):  # or admin.StackedInline
 @admin.register(Club)
 class EventAdmin(admin.ModelAdmin):
     form = EventAdminForm
-    inlines = [WhyJoinInline]
-
-
-admin.site.register(ClubGalleryImage)
+    def save_model(self, request, obj, form, change):
+        try:
+            # Run full model-level validation before saving
+            obj.full_clean()
+            super().save_model(request, obj, form, change)
+        except ValidationError as e:
+            # Attach the error to the form so admin re-renders with fields intact
+            form.add_error(None, e)

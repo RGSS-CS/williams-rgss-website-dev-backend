@@ -36,9 +36,9 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location = OSMField(help_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", blank=True, null=True)
-    location_lat = LatitudeField()
-    location_lon = LongitudeField()
+    location = OSMField(blank=Truehelp_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", blank=True, null=True)
+    location_lat = LatitudeField(null=True, blank=True)
+    location_lon = LongitudeField(null=True, blank=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveBigIntegerField()
@@ -46,7 +46,7 @@ class Location(models.Model):
 
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
-    site_name = models.CharField(default="SCHOOL STUCO", max_length=50)
+    site_name = models.CharField(default="SCHOOL STUCO", max_length=50, help_text="The name of the School Council")
     social_media = GenericRelation(SocialMedia)
     favicon = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
     stuco_image = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the image for the club's logo. It should be a square image, preferably 300x300 pixels.")
@@ -59,12 +59,12 @@ class SiteSettings(SingletonModel):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        img = Image.open(self.stuco_image.path)
-        
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.stuco_image.path)
+        if self.stuco_image and self.stuco_image.name != "management/default.png":
+            img = Image.open(self.stuco_image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.stuco_image.path)
 
     def __str__(self):
         return "Site Configuration"
