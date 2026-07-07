@@ -17,9 +17,13 @@ RUN addgroup --system app && \
     chown -R app:app /app
 
 COPY --chown=app:app backend/ .
+COPY --chown=root:root backend/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+RUN cp backend/settings_prod.py backend/settings_local.py
+RUN python manage.py collectstatic --noinput
 
 USER app
 
 EXPOSE 8000
 
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+ENTRYPOINT ["/entrypoint.sh"]
