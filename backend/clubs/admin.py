@@ -18,7 +18,7 @@ class EventAdminForm(forms.ModelForm):
         model = Club
         fields = [
             "name", "preview_description", "description", "tagline", "category",
-            "day_of_meeting", "time", "repetition", "room_num",
+            "day_of_meeting", "time", "repetition", "room_num", "announcement",
             "classroom_code", "accepting_applicants", "application_form_link", "teacher_advisor",
         ]
         widgets = {
