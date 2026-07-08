@@ -5,11 +5,11 @@ from taggit.models import Tag
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from .models import Club, ClubGalleryImage, ClubWhyJoin
 
-
-class EventAdminForm(forms.ModelForm):
+class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        required=False,
+        required=True,
+        help_text="The 'Category' that this club will appear in (e.g Engineering if Robotics Club)",
         widget=FilteredSelectMultiple(
             verbose_name="Categories",
             is_stacked=False,
@@ -19,8 +19,8 @@ class EventAdminForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = [
-            "name", "preview_description", "description", "tagline", "category",
-            "day_of_meeting", "time", "repetition", "room_num", "announcement",
+            "name", "preview_description", "description", "tagline", "category", "image",
+            "day_of_meeting", "time", "repetition", "room_number", "announcement",
             "classroom_code", "accepting_applicants", "application_form_link", "teacher_advisor",
         ]
         widgets = {
@@ -53,8 +53,9 @@ class WhyJoinInline(admin.TabularInline):  # or admin.StackedInline
 
 
 @admin.register(Club)
-class EventAdmin(admin.ModelAdmin):
-    form = EventAdminForm
+class ClubsAdmin(admin.ModelAdmin):
+    form = ClubsAdminForm
+    inlines = [WhyJoinInline]
     def save_model(self, request, obj, form, change):
         try:
             # Run full model-level validation before saving
