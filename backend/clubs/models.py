@@ -71,9 +71,9 @@ def get_upload_path(*args, **kwargs): # fix migration errors
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="why_join_reasons")
-    title = models.CharField(max_length=200)
-    description = models.TextField(max_length=2000)
-    index = models.IntegerField()
+    title = models.CharField(max_length=200, help_text="Insert a title for your reason to join the club.")
+    description = models.TextField(max_length=2000, help_text="Insert a detailed description for your reason to join the club.")
+    index = models.IntegerField(help_text="The order in which this reason will be displayed.")
 
     class Meta:
         verbose_name =  "Why Join"
