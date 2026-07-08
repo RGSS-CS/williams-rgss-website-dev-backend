@@ -15,18 +15,32 @@ class ClubsAdminForm(forms.ModelForm):
             is_stacked=False,
         ),
     )
+
     widgets = {
         "time": forms.TimeInput(
             format="%H:%M",
             attrs={"type": "time"},
         ),
     }
+
     class Meta:
         model = Club
         fields = [
-            "name", "preview_description", "description", "tagline", "category", "image",
-            "day_of_meeting", "time", "repetition", "room_number", "announcement",
-            "classroom_code", "accepting_applicants", "application_form_link", "teacher_advisor",
+            "name", 
+            "preview_description", 
+            "description", 
+            "tagline", 
+            "category", 
+            "image",
+            "day_of_meeting", 
+            "time", 
+            "repetition", 
+            "room_number", 
+            "announcement",
+            "classroom_code", 
+            "accepting_applicants", 
+            "application_form_link", 
+            "teacher_advisor",
         ]
 
 
