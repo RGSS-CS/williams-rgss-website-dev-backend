@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "migration_fixer",
     "taggit",
     "taggit_serializer",
+    "colorfield",
     "whitenoise",
     "commands.apps.CommandsConfig",
     "django_ical",

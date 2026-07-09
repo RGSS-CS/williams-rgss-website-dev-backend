@@ -4,6 +4,7 @@ djangorestframework
 django-ical
 django-taggit
 django-map-widgets
+django-colorfield
 pillow
 python-dotenv
 psycopg2-binary

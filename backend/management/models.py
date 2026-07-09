@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
+from colorfield.fields import ColorField
 
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
@@ -53,6 +54,9 @@ class SiteSettings(SingletonModel):
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
     school_mascot = models.CharField(blank=True, max_length=50, help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*.")
+    school_primary_color = ColorField(default="#000000", help_text="This is the primary color of the school. It should be a hex code (e.g., #FF0000).")
+    school_secondary_color = ColorField(default="#FFFFFF", help_text="This is the secondary color of the school. It should be a hex code (e.g., #000000).")
+    school_tertiary_color = ColorField(default="#FF0000", help_text="This is the 'accent' color of the site. It should be a hex code (e.g., #FFFFFF).")
     # TODO: add website maintainers once users are done
     school_location = GenericRelation(Location)
 
