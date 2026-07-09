@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from calendars import urls
 from clubs import urls
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url="https://dev.rgsscs.org/")), ##TODO: Softcode the frontend link
     path('admin/', admin.site.urls),
     path("calendar/", include("calendars.urls")),
     path("club/", include("clubs.urls")),
