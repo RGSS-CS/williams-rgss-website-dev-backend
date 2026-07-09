@@ -18,7 +18,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = ["maintainance_mode", 
-                  "site_name", 
+                  "school_name",
+                  "council_name", 
                   "social_media", 
                   "favicon", 
                   "stuco_image", 
