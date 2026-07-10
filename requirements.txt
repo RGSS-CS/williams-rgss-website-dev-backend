@@ -5,6 +5,7 @@ django-ical
 django-taggit
 django-map-widgets
 django-colorfield
+"django-phonenumber-field[phonenumbers]"
 pillow
 python-dotenv
 psycopg2-binary
