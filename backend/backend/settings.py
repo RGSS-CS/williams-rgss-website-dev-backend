@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "taggit",
     "taggit_serializer",
     "colorfield",
+    "phonenumber_field",
     "whitenoise",
     "commands.apps.CommandsConfig",
     "django_ical",

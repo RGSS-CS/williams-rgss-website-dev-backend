@@ -1,5 +1,9 @@
 from rest_framework import serializers
 from .models import SiteSettings, SocialMedia, Location
+from phonenumber_field.serializerfields import PhoneNumberField #type: ignore
+
+class PhoneNumberSerializer(serializers.Serializer):
+    school_phone = PhoneNumberField(region="CA")
 
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +24,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         fields = ["maintainance_mode", 
                   "school_name",
                   "council_name", 
+                  "school_email",
+                  "school_phone",
                   "social_media", 
                   "favicon", 
                   "stuco_image", 
