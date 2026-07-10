@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
-from colorfield.fields import ColorField
+from colorfield.fields import ColorField # type: ignore
 
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
