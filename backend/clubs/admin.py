@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from taggit.models import Tag
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.admin import widgets
 from .models import Club, ClubGalleryImage, ClubWhyJoin
 
 class ClubsAdminForm(forms.ModelForm):
@@ -16,33 +17,35 @@ class ClubsAdminForm(forms.ModelForm):
         ),
     )
 
-    widgets = {
-        "time": forms.TimeInput(
-            format="%H:%M",
-            attrs={"type": "time"},
-        ),
-    }
-
     class Meta:
         model = Club
         fields = [
-            "name", 
-            "preview_description", 
-            "description", 
-            "tagline", 
-            "category", 
+            "name",
+            "preview_description",
+            "description",
+            "tagline",
+            "category",
             "image",
-            "day_of_meeting", 
-            "time", 
-            "repetition", 
-            "room_number", 
+            "day_of_meeting",
+            "time",
+            "repetition",
+            "room_number",
             "announcement",
-            "classroom_code", 
-            "accepting_applicants", 
-            "application_form_link", 
+            "classroom_code",
+            "accepting_applicants",
+            "application_form_link",
             "teacher_advisor",
         ]
-
+        widgets = {
+            "time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
+            "preview_description": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "description": forms.Textarea(attrs={"rows": 6, "cols": 80}),
+            "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "tagline": forms.TextInput(attrs={"size": 60}),
+            "classroom_code": forms.TextInput(attrs={"size": 20}),
+            "room_number": forms.TextInput(attrs={"size": 10}),
+            "application_form_link": forms.URLInput(attrs={"size": 60}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +64,7 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
-class WhyJoinInline(admin.TabularInline):  # or admin.StackedInline
+class WhyJoinInline(admin.TabularInline):
     model = ClubWhyJoin
     extra = 1
 
@@ -70,11 +73,10 @@ class WhyJoinInline(admin.TabularInline):  # or admin.StackedInline
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
     inlines = [WhyJoinInline]
+
     def save_model(self, request, obj, form, change):
         try:
-            # Run full model-level validation before saving
             obj.full_clean()
             super().save_model(request, obj, form, change)
         except ValidationError as e:
-            # Attach the error to the form so admin re-renders with fields intact
             form.add_error(None, e)
