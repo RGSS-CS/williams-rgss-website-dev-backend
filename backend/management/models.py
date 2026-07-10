@@ -48,6 +48,7 @@ class Location(models.Model):
 
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
+    frontend_url = models.URLField(blank=True, max_length=100, help_text="The external url of frontend")
     school_name = models.CharField(default="SCHOOL", max_length=40, help_text="The name of the school *Use short form S.S (e.g, Richmond Green S.S)")
     council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
     school_email = models.EmailField(blank=True, max_length=50)
