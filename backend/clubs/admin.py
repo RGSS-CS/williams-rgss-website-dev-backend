@@ -32,8 +32,8 @@ class ClubsAdminForm(forms.ModelForm):
             "room_number",
             "announcement",
             "classroom_code",
-            "accepting_applicants",
             "application_form_link",
+            "accepting_applicants",
             "teacher_advisor",
         ]
         widgets = {
