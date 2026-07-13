@@ -5,6 +5,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
+from colorfield.fields import ColorField # type: ignore
+from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
@@ -36,7 +38,7 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location = OSMField(blank=True)
+    location = OSMField(blank=True, help_text="Drag the pin to the location of your club's meeting place. You can also search for a location in the search bar.", null=True)
     location_lat = LatitudeField(null=True, blank=True)
     location_lon = LongitudeField(null=True, blank=True)
 
@@ -46,12 +48,20 @@ class Location(models.Model):
 
 class SiteSettings(SingletonModel):
     maintainance_mode = models.BooleanField(default=False)
-    site_name = models.CharField(default="SCHOOL STUCO", max_length=50, help_text="The name of the School Council")
+    frontend_url = models.URLField(default="http://localhost:3000", max_length=100, help_text="The external url of frontend")
+    school_name = models.CharField(default="SCHOOL", max_length=40, help_text="The name of the school *Use short form S.S (e.g, Richmond Green S.S)")
+    council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
+    school_email = models.EmailField(blank=True, max_length=50)
+    school_phone = PhoneNumberField(blank=True)
     social_media = GenericRelation(SocialMedia)
-    favicon = models.ImageField(default="management/default.png", upload_to="management/")
-    stuco_image = models.ImageField(default="management/default.png", upload_to="management/")
+    favicon = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
+    stuco_image = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the image for the club's logo. It should be a square image, preferably 300x300 pixels.")
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
+    school_mascot = models.CharField(blank=True, max_length=50, help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*.")
+    school_primary_color = ColorField(default="#000000", help_text="This is the primary color of the school. It should be a hex code (e.g., #FF0000).")
+    school_secondary_color = ColorField(default="#FFFFFF", help_text="This is the secondary color of the school. It should be a hex code (e.g., #000000).")
+    school_tertiary_color = ColorField(default="#FF0000", help_text="This is the 'accent' color of the site. It should be a hex code (e.g., #FFFFFF).")
     # TODO: add website maintainers once users are done
     school_location = GenericRelation(Location)
 
@@ -68,5 +78,5 @@ class SiteSettings(SingletonModel):
     def __str__(self):
         return "Site Configuration"
 
-    class Meta:
+    class Meta: #BEN ISSUE: "Meta" overrides symbol of same name in class "SingletonModel"
         verbose_name = "Site Configuration"

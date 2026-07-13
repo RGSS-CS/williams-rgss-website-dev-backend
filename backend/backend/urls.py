@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from calendars import urls
 from clubs import urls
+from .views import redirect_frontend
 
 urlpatterns = [
+    path("", redirect_frontend, name="frontend_redirect"),
     path('admin/', admin.site.urls),
     path("calendar/", include("calendars.urls")),
     path("club/", include("clubs.urls")),
+    path("management/", include("management.urls")),
 ]
