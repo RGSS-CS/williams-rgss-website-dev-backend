@@ -81,7 +81,7 @@ class SiteSettings(SingletonModel):
     class Meta: #BEN ISSUE: "Meta" overrides symbol of same name in class "SingletonModel"
         verbose_name = "Site Configuration"
 
-class PageSettings(models.Model):
+class PageSetting(models.Model):
     class PageTypes(models.TextChoices):
         HOME = "HM", "Home"
         CLUBS = "CL", "Clubs"
