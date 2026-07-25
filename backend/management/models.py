@@ -94,4 +94,4 @@ class PageSetting(models.Model):
     tagline = models.TextField(blank=True, max_length=200)
 
     def __str__(self):
-        return "Configuration for {self.internal_site_name}"
+        return "Page Configurations"
