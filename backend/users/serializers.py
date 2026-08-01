@@ -1,0 +1,28 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
+
+User = get_user_model()
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, validators=validate_password)
+    password2 = serializers.CharField(write_only=True)
+    code = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password", "password2", "first_name", "last_name"]
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError({"password2": "Passwords don't match."})
+        if attrs["code"] not in []: # TODO: implement qr storing and checks
+            raise serializers.ValidationError({"code": "Not implemented. Speak to a developer."})
+            raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop("password2")
+        user = User.objects.create(**validated_data)
+        return user
+    
