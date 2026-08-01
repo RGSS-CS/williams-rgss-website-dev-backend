@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("calendar/", include("calendars.urls")),
     path("club/", include("clubs.urls")),
-    path("/api/register", RegisterView.as_view(), name="register"),
+    path("api/register", RegisterView.as_view(), name="register"),
     path("api/token/", EmailTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
