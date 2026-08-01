@@ -40,12 +40,16 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         user = User.objects.filter(email__iexact=attrs['email']).first()
-        authed_user = authenticate(username=user.username, password=attrs['password'])
+        if user:
+            authed_user = authenticate(username=user.username, password=attrs['password'])
+        else:
+            User().set_password(attrs['password']) # trick to prevent timing exploit
+            authed_user = None
+
         if not authed_user:
             raise serializers.ValidationError("Invalid email or password.")
-        
+                
         refresh = self.get_token(authed_user)
-        if user:
-            update_last_login(None, user)
+        update_last_login(None, authed_user)
 
         return {'refresh': str(refresh), 'access': str(refresh.access_token)}
