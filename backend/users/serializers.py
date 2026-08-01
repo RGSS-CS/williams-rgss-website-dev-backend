@@ -1,6 +1,8 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.models import update_last_login
 
 User = get_user_model()
 
@@ -25,4 +27,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop("password2")
         user = User.objects.create(**validated_data)
         return user
-    
+
+class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        user = User.objects.filter(email__iexact=attrs['email']).first()
+        if not user:
+            raise serializers.ValidationError("Invalid email or password.")
+
+        user = authenticate(username=user.username, password=attrs['password'])
+        token = self.get_token(user)
+        update_last_login(None, user)
+
+        return {'refresh': str(token), 'access': str(token.access_token)}
