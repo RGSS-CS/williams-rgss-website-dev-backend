@@ -8,7 +8,7 @@ from rest_framework.validators import UniqueValidator
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=validate_password)
+    password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
     code = serializers.CharField(write_only=True)
     email = serializers.EmailField(
@@ -18,7 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password", "password2", "first_name", "last_name"]
+        fields = ["username", "email", "password", "password2", "first_name", "last_name", "code"]
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
