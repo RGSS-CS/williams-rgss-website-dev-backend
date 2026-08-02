@@ -13,6 +13,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CSRF_COOKIE_SECURE = True
 
+SIGNING_KEY = os.environ.get("SIGNING_KEY")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
