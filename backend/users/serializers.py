@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import update_last_login
 from rest_framework.validators import UniqueValidator
+from .models import UserJoinCode
 
 User = get_user_model()
 
@@ -23,8 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password2": "Passwords don't match."})
-        if attrs["code"] not in []: # TODO: implement qr storing and checks
-            raise serializers.ValidationError({"code": "Not implemented. Speak to a developer."})
+        if not UserJoinCode.objects.filter(code=attrs["code"]).exists(): # if the code exists
             raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
         return attrs
 
