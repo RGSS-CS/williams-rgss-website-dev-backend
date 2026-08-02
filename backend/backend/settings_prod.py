@@ -13,7 +13,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CSRF_COOKIE_SECURE = True
 
-SIGNING_KEY = os.environ.get("SIGNING_KEY")
+SIGNING_KEY = os.environ.get("SIGNING_KEY", "build-fallback-signing-key")
 
 DATABASES = {
     'default': {
