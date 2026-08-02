@@ -5,8 +5,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent # this is specifically only fo
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = False
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","").split(",")
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS","").split(",")
+ALLOWED_HOSTS = [
+    h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()
+]
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
+]
 CSRF_COOKIE_SECURE = True
 
 DATABASES = {

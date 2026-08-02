@@ -1,47 +1,82 @@
 from django.contrib import admin
 from django import forms
+from django.core.exceptions import ValidationError
 from taggit.models import Tag
-from .models import Club, ClubGalleryImage
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.admin import widgets
+from .models import Club, ClubGalleryImage, ClubWhyJoin
 
-
-class EventAdminForm(forms.ModelForm):
+class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        required=False,
-        widget=admin.widgets.FilteredSelectMultiple(
-            verbose_name="Categories", is_stacked=False
-        )
+        required=True,
+        help_text="The 'Category' that this club will appear in (e.g Engineering if Robotics Club)",
+        widget=FilteredSelectMultiple(
+            verbose_name="Categories",
+            is_stacked=False,
+        ),
     )
 
     class Meta:
         model = Club
         fields = [
-            "name", "preview_description", "description", "category",
-            "day_of_meeting", "time", "repetition", "room_num",
-            "classroom_code", "teacher_advisor"
+            "name",
+            "preview_description",
+            "description",
+            "tagline",
+            "category",
+            "image",
+            "day_of_meeting",
+            "time",
+            "repetition",
+            "room_number",
+            "announcement",
+            "classroom_code",
+            "application_form_link",
+            "accepting_applicants",
+            "teacher_advisor",
         ]
         widgets = {
-            'time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+            "time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
+            "preview_description": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "description": forms.Textarea(attrs={"rows": 6, "cols": 80}),
+            "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "tagline": forms.TextInput(attrs={"size": 60}),
+            "classroom_code": forms.TextInput(attrs={"size": 20}),
+            "room_number": forms.TextInput(attrs={"size": 10}),
+            "application_form_link": forms.URLInput(attrs={"size": 60}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         if self.instance and self.instance.pk:
-            # initial expects a list of PKs for ModelMultipleChoiceField
             self.fields['category'].initial = [t.pk for t in self.instance.category.all()]
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Save instance first so TaggableManager has a PK
         if commit:
-            instance.save()
-            instance.category.set(self.cleaned_data.get('category', []))
+            try:
+                instance.save()
+                instance.category.set(self.cleaned_data.get('category', []))
+            except Exception as e:
+                raise ValidationError(f"Failed to save: {e}")
         return instance
 
 
+class WhyJoinInline(admin.TabularInline):
+    model = ClubWhyJoin
+    extra = 1
+
+
 @admin.register(Club)
-class EventAdmin(admin.ModelAdmin):
-    form = EventAdminForm
+class ClubsAdmin(admin.ModelAdmin):
+    form = ClubsAdminForm
+    inlines = [WhyJoinInline]
 
-
-admin.site.register(ClubGalleryImage)
+    def save_model(self, request, obj, form, change):
+        try:
+            obj.full_clean()
+            super().save_model(request, obj, form, change)
+        except ValidationError as e:
+            form.add_error(None, e)
