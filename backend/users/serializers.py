@@ -38,6 +38,10 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields[self.username_field] # why is this hardcoded as a requirement D:<
+
     def validate(self, attrs):
         user = User.objects.filter(email__iexact=attrs['email']).first()
         if user:
