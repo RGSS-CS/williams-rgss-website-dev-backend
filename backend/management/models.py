@@ -94,4 +94,7 @@ class PageSettings(models.Model):
     tagline = models.TextField(blank=True, max_length=200)
 
     def __str__(self):
-        return "Page Configurations"
+        return self.get_internal_site_name_display()
+    
+    class Meta:
+        verbose_name = "Page Configuration"

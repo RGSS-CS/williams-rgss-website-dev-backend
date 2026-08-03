@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SiteSettings, SocialMedia, Location, PageSetting
+from .models import SiteSettings, SocialMedia, Location, PageSettings
 from phonenumber_field.serializerfields import PhoneNumberField #type: ignore
 
 class PhoneNumberSerializer(serializers.Serializer):
@@ -39,7 +39,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
 class PageSettingsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PageSetting
+        model = PageSettings
         fields = [
             "internal_site_name",
             "title",
