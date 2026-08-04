@@ -89,9 +89,9 @@ class PageSettings(models.Model):
         ABOUT = "AB", "About"
 
     internal_site_name = models.CharField(max_length=2, choices=PageTypes.choices)
-    title = models.CharField(max_length=100)
-    subtitle = models.CharField(blank=True, max_length=100)
-    tagline = models.TextField(blank=True, max_length=200)
+    title = models.CharField(max_length=30, help_text="This is the title of the page. It is the TOP of the title section.")
+    subtitle = models.CharField(blank=True, max_length=30, help_text="This is the subtitle of the page. It is the BOTTOM of the title section (secondary color).")
+    tagline = models.TextField(blank=True, max_length=200, help_text="This is the bullet points of the title. It should be short and tells the user a bit abou the page.")
 
     def __str__(self):
         return self.get_internal_site_name_display()
