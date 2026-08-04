@@ -35,6 +35,8 @@ CSRF_TRUSTED_ORIGINS = config.CSRF_TRUSTED_ORIGINS
 
 CSRF_COOKIE_SECURE = config.CSRF_COOKIE_SECURE
 
+SIGNING_KEY = config.SIGNING_KEY
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,6 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework_simplejwt",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -132,6 +136,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 }
 

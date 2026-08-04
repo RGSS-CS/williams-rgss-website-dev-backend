@@ -14,4 +14,5 @@ django-taggit-serializer
 django-solo
 django-osm-field
 django-migration-fixer
+djangorestframework-simplejwt
 whitenoise
