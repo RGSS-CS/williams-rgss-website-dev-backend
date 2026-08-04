@@ -1,8 +1,12 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
+
+def get_random_code():
+    return get_random_string(length=32)
 
 class UserJoinCode(models.Model):
-    code = models.CharField()
+    code = models.CharField(default=get_random_code, unique=True)
     label = models.CharField()
     description = models.TextField(blank=True)
     expiry = models.DateTimeField(null=True, blank=True)

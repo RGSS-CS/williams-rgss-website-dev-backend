@@ -26,6 +26,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password2": "Passwords don't match."})
         if not UserJoinCode.objects.filter(code=attrs["code"]).exists(): # if the code exists
             raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+        else:
+            join_code = UserJoinCode.objects.filter(code=attrs["code"]).first
+            if not join_code.enabled:
+                raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+            if join_code.is_expired():
+                raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
+            elif join_code.exceeded_max_uses():
+                raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
         return attrs
 
     def create(self, validated_data):
