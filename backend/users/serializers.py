@@ -37,6 +37,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        join_code = UserJoinCode.objects.filter(code=validated_data["code"]).first
+        join_code.uses += 1
+        join_code.save()
+
         validated_data.pop("password2")
         validated_data.pop("code")
         user = User.objects.create_user(**validated_data)
