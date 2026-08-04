@@ -30,7 +30,8 @@ class SiteSettingsAdmin(SingletonModelAdmin):
 
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):
-
+    exclude = ("internal_site_name",)
+    
     def has_add_permission(self, request):
         """Disables the add button in admin"""
         return False
