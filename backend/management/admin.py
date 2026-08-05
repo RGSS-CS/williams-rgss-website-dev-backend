@@ -3,7 +3,7 @@ from django.contrib.contenttypes.admin import GenericStackedInline
 from solo.admin import SingletonModelAdmin
 
 from .forms import LocationAdminForm
-from .models import Location, SiteSettings
+from .models import Location, SiteSettings, PageSettings
 
 
 class LocationInline(GenericStackedInline):
@@ -27,3 +27,15 @@ class LocationInline(GenericStackedInline):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(SingletonModelAdmin):
     inlines = [LocationInline]
+
+@admin.register(PageSettings)
+class PageSettingsAdmin(admin.ModelAdmin):
+    exclude = ("internal_site_name",)
+    
+    def has_add_permission(self, request):
+        """Disables the add button in admin"""
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        """Disables the delete button in admin"""
+        return False
