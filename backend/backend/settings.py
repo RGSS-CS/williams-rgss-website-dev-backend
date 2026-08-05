@@ -164,3 +164,5 @@ MEDIA_URL = "/media/"
 # Calendar stuff
 CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 # CALENDAR_NAME_VALIDATORS = []
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

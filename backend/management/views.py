@@ -1,7 +1,11 @@
 from rest_framework import viewsets
-from .serializers import SiteSettingsSerializer
-from .models import SiteSettings
+from .serializers import PageSettingsSerializer, SiteSettingsSerializer
+from .models import PageSettings, SiteSettings
 
-class ClubViewSet(viewsets.ModelViewSet):
+class SiteSettingsViewSet(viewsets.ModelViewSet):
     queryset = SiteSettings.objects.all()
     serializer_class = SiteSettingsSerializer
+
+class PageSettingsViewSet(viewsets.ModelViewSet):
+    queryset = PageSettings.objects.all()
+    serializer_class = PageSettingsSerializer

@@ -80,3 +80,21 @@ class SiteSettings(SingletonModel):
 
     class Meta: #BEN ISSUE: "Meta" overrides symbol of same name in class "SingletonModel"
         verbose_name = "Site Configuration"
+
+class PageSettings(models.Model):
+    class PageTypes(models.TextChoices):
+        HOME = "HM", "Home"
+        CLUBS = "CL", "Clubs"
+        GALLERY = "GL", "Gallery"
+        ABOUT = "AB", "About"
+
+    internal_site_name = models.CharField(max_length=2, choices=PageTypes.choices)
+    title = models.CharField(max_length=30, help_text="This is the title of the page. It is the TOP of the title section.")
+    subtitle = models.CharField(blank=True, max_length=30, help_text="This is the subtitle of the page. It is the BOTTOM of the title section (secondary color). *NOT REQUIRED")
+    tagline = models.TextField(blank=True, max_length=200, help_text="This is the bullet points of the title. It should be short and tells the user a bit about the page. *NOT REQUIRED")
+
+    def __str__(self):
+        return self.get_internal_site_name_display()
+    
+    class Meta:
+        verbose_name = "Page Configuration"

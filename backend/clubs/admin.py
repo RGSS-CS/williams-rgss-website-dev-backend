@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms.widgets import CheckboxSelectMultiple
 from taggit.models import Tag
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.admin import widgets
 from .models import Club, ClubGalleryImage, ClubWhyJoin
 
@@ -11,9 +11,7 @@ class ClubsAdminForm(forms.ModelForm):
         queryset=Tag.objects.all(),
         required=True,
         help_text="The 'Category' that this club will appear in (e.g Engineering if Robotics Club)",
-        widget=FilteredSelectMultiple(
-            verbose_name="Categories",
-            is_stacked=False,
+        widget=CheckboxSelectMultiple(
         ),
     )
 
