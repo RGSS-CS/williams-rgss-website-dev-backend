@@ -40,7 +40,7 @@ class LeafletPickerWidget(forms.TextInput):
             </div>
             """,
             text_input=text_html,
-            wid=self.widget_id,
+            wid=self.widget_id
         )
         return map_html
 
@@ -49,12 +49,12 @@ class LeafletPickerWidget(forms.TextInput):
         return forms.Media(
             css={"all": [
                 "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-                "management/css/leaflet_picker.css",
+                "management/css/leaflet_picker.css"
             ]},
             js=[
                 "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
-                "management/js/leaflet_picker.js",
-            ],
+                "management/js/leaflet_picker.js"
+            ]
         )
 
 

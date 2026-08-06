@@ -10,9 +10,8 @@ class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=True,
-        help_text="The 'Category' that this club will appear in (e.g Engineering if Robotics Club)",
-        widget=CheckboxSelectMultiple(
-        ),
+        help_text="The 'Category' that this club will appear in (e.g 'Engineering' for Robotics Club)",
+        widget=CheckboxSelectMultiple()
     )
 
     class Meta:
@@ -32,7 +31,7 @@ class ClubsAdminForm(forms.ModelForm):
             "classroom_code",
             "application_form_link",
             "accepting_applicants",
-            "teacher_advisor",
+            "teacher_advisor"
         ]
         widgets = {
             "time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
@@ -42,7 +41,7 @@ class ClubsAdminForm(forms.ModelForm):
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
             "room_number": forms.TextInput(attrs={"size": 10}),
-            "application_form_link": forms.URLInput(attrs={"size": 60}),
+            "application_form_link": forms.URLInput(attrs={"size": 60})
         }
 
     def __init__(self, *args, **kwargs):
