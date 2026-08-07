@@ -20,7 +20,7 @@ class CalendarSettings(SingletonModel):
 class Calendar(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    timezone = models.TextField(default="america/toronto") # TODO: deal w/ this later, possibly choices? maybe?
+    timezone = "America/Toronto"
     filename = models.TextField(default=f"{name}.ics")
     club = models.OneToOneField(Club, on_delete=models.CASCADE, blank=True, null=True)
 
