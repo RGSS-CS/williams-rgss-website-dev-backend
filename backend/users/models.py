@@ -20,9 +20,11 @@ class UserJoinCode(models.Model):
         verbose_name = "School User Registration QR Code"
 
     def is_expired(self) -> bool:
-        if self.expiry and self.expiry > timezone.now():
-            return True
-        
+        if self.expiry is None:
+            return False
+        return self.expiry <= timezone.now()
+
     def exceeded_max_uses(self) -> bool:
-        if self.uses >= self.max_uses:
-            return True
+        if self.max_uses is None:
+            return False
+        return self.uses >= self.max_uses

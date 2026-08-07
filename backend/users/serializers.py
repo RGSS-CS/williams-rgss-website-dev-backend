@@ -24,22 +24,25 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password2": "Passwords don't match."})
-        if not UserJoinCode.objects.filter(code=attrs["code"]).exists(): # if the code exists
+
+        join_code = UserJoinCode.objects.filter(code=attrs["code"]).first()
+        if not join_code:
             raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
-        else:
-            join_code = UserJoinCode.objects.filter(code=attrs["code"]).first
-            if not join_code.enabled:
-                raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
-            if join_code.is_expired():
-                raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
-            elif join_code.exceeded_max_uses():
-                raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
+
+        if not join_code.enabled:
+            raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+        if join_code.is_expired():
+            raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
+        if join_code.exceeded_max_uses():
+            raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
+
         return attrs
 
     def create(self, validated_data):
-        join_code = UserJoinCode.objects.filter(code=validated_data["code"]).first
-        join_code.uses += 1
-        join_code.save()
+        join_code = UserJoinCode.objects.filter(code=validated_data["code"]).first()
+        if join_code is not None:
+            join_code.uses += 1
+            join_code.save()
 
         validated_data.pop("password2")
         validated_data.pop("code")
