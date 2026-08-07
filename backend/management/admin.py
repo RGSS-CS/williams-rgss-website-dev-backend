@@ -21,7 +21,7 @@ class LocationInline(GenericStackedInline):
     extra = 0
     can_delete = False
     verbose_name = "School Location"
-    verbose_name_plural = ""
+    verbose_name_plural = "School Location"
 
 
 @admin.register(SiteSettings)

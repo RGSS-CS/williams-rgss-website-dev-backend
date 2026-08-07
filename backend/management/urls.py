@@ -7,5 +7,5 @@ router.register("site-settings", views.SiteSettingsViewSet, basename="site-setti
 router.register("page-settings", views.PageSettingsViewSet, basename="page-settings")
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("", include(router.urls))
 ]

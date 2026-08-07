@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 name=name,
                 description=description,
                 motto=motto,
-                classroom_code=classroom_code,
+                classroom_code=classroom_code
             )
             for i in range(5):
                 club.tags.add(random_string(10))
