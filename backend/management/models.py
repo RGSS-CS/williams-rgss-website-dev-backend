@@ -38,13 +38,12 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location = OSMField(blank=True, help_text="Click on the map of the school's location. You can also search for it in the search bar.", null=True)
     location_lat = LatitudeField(null=True, blank=True)
     location_lon = LongitudeField(null=True, blank=True)
     location = OSMField(
-        null=True, blank=True,
-        help_text="Drag the pin to the location of your club's meeting place. " \
-        "You can also search for a location in the search bar."
+        null=True, blank=True, 
+        help_text="Click on the map of the school's location. " \
+        "You can also search for it in the search bar."
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
