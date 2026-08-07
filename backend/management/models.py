@@ -38,6 +38,7 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
+    location = OSMField(blank=True, help_text="Click on the map of the school's location. You can also search for it in the search bar.", null=True)
     location_lat = LatitudeField(null=True, blank=True)
     location_lon = LongitudeField(null=True, blank=True)
     location = OSMField(
