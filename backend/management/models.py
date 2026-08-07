@@ -16,12 +16,12 @@ class SocialMedia(models.Model):
         TIKTOK = "TT", "TikTok"
         DISCORD = "DC", "Discord"
         THREADS = "TR", "Threads"
-        FACEBOOK = "FB", "Facebook"
-        REDDIT = "RD", "Reddit"
-        TWITTER = "X", "Twitter/X"
+        FACEBOOK = "FB", "Facebook" # doubt anyone uses this, it's old af
+        TWITTER = "X", "Twitter/X" # i hate this name # me too
         LINKEDIN = "LI", "LinkedIn" 
         WEBSITE = "WS", "Website"
         OTHER = "OT", "Other"
+        # NOTE: DO NOT add Reddit, there is incredible surplus of NSFW content
 
     # club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
