@@ -5,6 +5,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from taggit.models import Tag
 from django.contrib.admin import widgets
 from .models import Club, ClubGalleryImage, ClubWhyJoin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
@@ -52,6 +53,16 @@ class ClubsAdminForm(forms.ModelForm):
 
         if self.instance and self.instance.pk:
             self.fields['category'].initial = [t.pk for t in self.instance.category.all()]
+
+
+        tag_rel = Club.category.through._meta.get_field('tag').remote_field
+
+        self.fields['category'].widget = RelatedFieldWidgetWrapper(
+            self.fields['category'].widget,
+            tag_rel,
+            admin.site,
+            can_add_related=True,
+        )
 
     def save(self, commit=True):
         instance = super().save(commit=False)
