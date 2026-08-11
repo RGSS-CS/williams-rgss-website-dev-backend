@@ -471,3 +471,4 @@ $RECYCLE.BIN/
 
 backend/backend/settings_local.py
 staticfiles/
+cropped/
