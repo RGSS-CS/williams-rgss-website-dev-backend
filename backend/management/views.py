@@ -2,10 +2,10 @@ from rest_framework import viewsets
 from .serializers import PageSettingsSerializer, SiteSettingsSerializer
 from .models import PageSettings, SiteSettings
 
-class SiteSettingsViewSet(viewsets.ModelViewSet):
+class SiteSettingsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SiteSettings.objects.all()
     serializer_class = SiteSettingsSerializer
 
-class PageSettingsViewSet(viewsets.ModelViewSet):
+class PageSettingsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PageSettings.objects.all()
     serializer_class = PageSettingsSerializer

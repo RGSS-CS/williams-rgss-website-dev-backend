@@ -17,7 +17,7 @@ if not username or not password:
 else:
     user, created = User.objects.update_or_create(
         username=username,
-        defaults={"email": email, "is_staff": True, "is_superuser": True},
+        defaults={"email": email, "is_staff": True, "is_superuser": True}
     )
     user.set_password(password)
     user.save()

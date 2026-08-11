@@ -23,7 +23,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             internal_site_name="CL",
             title="Find Your",
             subtitle="Club",
-            tagline="A million ways to get involved, one club at a time",
+            tagline="A million ways to get involved, one club at a time"
         )
 
     if not PageSettings.objects.filter(internal_site_name="HM").exists():

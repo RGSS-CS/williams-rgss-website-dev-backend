@@ -31,9 +31,17 @@ class Club(models.Model):
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
     #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
-    name = models.CharField(max_length=100, help_text="Insert the Name of your club")
-    preview_description = models.TextField(blank=True, max_length=200, help_text="Insert a small description for your club. The long description is filled below.")
-    description = models.TextField(blank=True, max_length=500, help_text="Insert a long description for your club. This is where you can describe your club in detail.")
+    name = models.CharField(
+        max_length=100, help_text="Insert the Name of your club"
+    )
+    preview_description = models.TextField(
+        blank=True, max_length=200, 
+        help_text="Insert a small description for your club. The long description is filled below."
+    )
+    description = models.TextField(
+        blank=True, max_length=500, 
+        help_text="Insert a long description for your club. This is where you can describe your club in detail."
+    )
     category = TaggableManager()
     repetition = models.CharField(blank=True, max_length=10, choices=Repetition.choices, help_text="How often does your club meet? If your club meets on a different schedule, please select 'Weekly' and specify in the description.")
     image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
@@ -71,10 +79,19 @@ def get_upload_path(*args, **kwargs): # fix migration errors
     return get_upload_path_club_gallery(*args, **kwargs)
 
 class ClubWhyJoin(models.Model):
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="why_join_reasons")
-    title = models.CharField(max_length=200, help_text="Insert a title for your reason to join the club.")
-    description = models.TextField(max_length=2000, help_text="Insert a detailed description for your reason to join the club.")
-    index = models.IntegerField(help_text="The order in which this reason will be displayed.")
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="why_join_reasons"
+    )
+    title = models.CharField(
+        max_length=200, help_text="Insert a title for your reason to join the club."
+    )
+    description = models.TextField(
+        max_length=2000, 
+        help_text="Insert a detailed description for your reason to join the club."
+    )
+    index = models.IntegerField(
+        help_text="The order in which this reason will be displayed."
+    )
 
     class Meta:
         verbose_name =  "Why Join"
@@ -96,9 +113,14 @@ class ClubWhyJoin(models.Model):
 class ClubAnnouncement(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=2000)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement")
     date_posted = models.DateTimeField(default=timezone.now)
-    pinned = models.BooleanField(default=False, help_text="Whether or not the post should be pinned to the top of the page.")
+    pinned = models.BooleanField(
+        default=False,
+        help_text="Whether or not the post should be pinned to the top of the page."
+    )
+    club = models.ForeignKey(
+        Club, on_delete=models.CASCADE, related_name="club_announcement"
+    )
 
     class Meta:
         verbose_name =  "Club Announcement"
@@ -108,11 +130,13 @@ class ClubAnnouncement(models.Model):
         return self.title
 
 class ClubGalleryImage(models.Model):
-    club = models.ForeignKey(Club, related_name='galleryImage', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=get_upload_path_club_gallery)
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, max_length=500)
     category = TaggableManager(blank=True)
+    description = models.TextField(blank=True, max_length=500)
+    image = models.ImageField(upload_to=get_upload_path_club_gallery)
+    club = models.ForeignKey(
+        Club, related_name='galleryImage', on_delete=models.CASCADE
+    )
     
     def save(self):
         super().save()

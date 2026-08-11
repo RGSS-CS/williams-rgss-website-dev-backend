@@ -21,21 +21,23 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SiteSettings
-        fields = ["maintainance_mode", 
-                  "school_name",
-                  "council_name", 
-                  "school_email",
-                  "school_phone",
-                  "social_media", 
-                  "favicon", 
-                  "stuco_image", 
-                  "about_stuco", 
-                  "about_school", 
-                  "school_location",
-                  "school_mascot", 
-                  "school_primary_color", 
-                  "school_secondary_color", 
-                  "school_tertiary_color"]
+        fields = [
+            "maintainance_mode", 
+            "school_name",
+            "council_name", 
+            "school_email",
+            "school_phone",
+            "social_media", 
+            "favicon", 
+            "stuco_image", 
+            "about_stuco", 
+            "about_school", 
+            "school_location",
+            "school_mascot", 
+            "school_primary_color", 
+            "school_secondary_color", 
+            "school_tertiary_color"
+        ]
 
 class PageSettingsSerializer(serializers.ModelSerializer):
     class Meta:
