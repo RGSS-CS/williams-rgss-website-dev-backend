@@ -17,7 +17,7 @@ class UserJoinCode(models.Model):
     uses = models.PositiveBigIntegerField(default=0)
 
     class Meta:
-        verbose_name = "School User Registration QR Code"
+        verbose_name = "Student Registration QR Code"
 
     def is_expired(self) -> bool:
         if self.expiry is None:
