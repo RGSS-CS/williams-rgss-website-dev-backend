@@ -31,6 +31,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Generate settings_local.py
+        run: cp backend/backend/settings_dev.py backend/backend/settings_local.py
+
       - name: Run Django tests
         working-directory: ./backend
         run: python manage.py test
