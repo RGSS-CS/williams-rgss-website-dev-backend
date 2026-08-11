@@ -8,6 +8,11 @@ from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 
+def FaviconRename(instance, filename):
+    ext = filename.split('.')[-1]
+
+    return f'management/favicon.{ext}'
+
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
         INSTAGRAM = "IG", "Instagram"
@@ -67,16 +72,8 @@ class SiteSettings(SingletonModel):
     school_email = models.EmailField(blank=True, max_length=50)
     school_phone = PhoneNumberField(blank=True)
     social_media = GenericRelation(SocialMedia)
-    favicon = models.ImageField(
-        default="management/default.png", upload_to="management/", 
-        help_text="This is the icon that appears in the browser tab. " \
-        "It should be a square image, preferably 32x32 pixels."
-    )
-    stuco_image = models.ImageField(
-        default="management/default.png", upload_to="management/", 
-        help_text="This is the image for the club's logo. " \
-        "It should be a square image, preferably 300x300 pixels."
-    )
+    favicon = models.ImageField(default="management/favicon.png", upload_to=FaviconRename, help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
+    stuco_image = models.ImageField(default="management/default.png", upload_to="management/", help_text="This is the image for the club's logo. It should be a square image, preferably 300x300 pixels.")
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
     school_mascot = models.CharField(
