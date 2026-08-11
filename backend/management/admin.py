@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline
 from solo.admin import SingletonModelAdmin
+from image_cropping import ImageCroppingMixin
 
 from .forms import LocationAdminForm
 from .models import Location, SiteSettings, PageSettings
@@ -25,7 +26,7 @@ class LocationInline(GenericStackedInline):
 
 
 @admin.register(SiteSettings)
-class SiteSettingsAdmin(SingletonModelAdmin):
+class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
     inlines = [LocationInline]
 
 @admin.register(PageSettings)
