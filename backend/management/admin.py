@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline
 from solo.admin import SingletonModelAdmin
 from image_cropping import ImageCroppingMixin
+from django.forms import TextInput, Textarea
+from django.db import models
 
 from .forms import LocationAdminForm
 from .models import Location, SiteSettings, PageSettings
@@ -32,7 +34,9 @@ class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):
     exclude = ("internal_site_name",)
-    
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 60})},
+    }
     def has_add_permission(self, request):
         """Disables the add button in admin"""
         return False
