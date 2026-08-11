@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from . import settings_local as config
+from easy_thumbnails.conf import Settings as thumbnail_settings
+
 # import json
 # import dotenv
 # import sys
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
     "osm_field",
     "solo",
     "migration_fixer",
+    'easy_thumbnails',
+    'image_cropping',
     "taggit",
     "taggit_serializer",
     "colorfield",
@@ -165,3 +169,7 @@ CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 # CALENDAR_NAME_VALIDATORS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
