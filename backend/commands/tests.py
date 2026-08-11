@@ -1,3 +1,8 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 
-# Create your tests here.
+from .apps import CommandsConfig
+
+
+class CommandsConfigTests(SimpleTestCase):
+    def test_app_name_is_commands(self):
+        self.assertEqual(CommandsConfig.name, "commands")

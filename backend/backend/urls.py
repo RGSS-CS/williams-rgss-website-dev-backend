@@ -21,15 +21,18 @@ from clubs import urls as clb_urls
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from users.views import RegisterView, EmailTokenObtainPairView
 from .views import redirect_frontend
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path("", redirect_frontend, name="frontend_redirect"),
-    path('admin/', admin.site.urls),
-    path("calendar/", include("calendars.urls")),
-    path("club/", include("clubs.urls")),
-    path("user/register", RegisterView.as_view(), name="register"),
-    path("user/token/", EmailTokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("user/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("user/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path("management/", include("management.urls"))
-]
+    path('api/admin/', admin.site.urls),
+    path("api/calendar/", include("calendars.urls")),
+    path("api/club/", include("clubs.urls")),
+    path("api/register", RegisterView.as_view(), name="register"),
+    path("api/token/", EmailTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("api/management/", include("management.urls")),
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
