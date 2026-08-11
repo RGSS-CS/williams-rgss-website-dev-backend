@@ -177,4 +177,4 @@ THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
-THUMBNAIL_BASEDIR = 'cropped'
+THUMBNAIL_BASEDIR = 'upload/cropped'

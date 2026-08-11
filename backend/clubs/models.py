@@ -6,7 +6,7 @@ from management.models import SocialMedia
 from django.contrib.contenttypes.fields import GenericRelation
 
 def get_upload_path_club(instance, filename):
-    upload_to = f"clubs/{instance.club.pk}/"
+    upload_to = f"upload/clubs/{instance.club.pk}/"
     ext = filename.split('.')[-1]
     filename = f"{upload_to}{instance.club.pk}.{ext}"
     return filename
@@ -44,7 +44,7 @@ class Club(models.Model):
     )
     category = TaggableManager()
     repetition = models.CharField(blank=True, max_length=10, choices=Repetition.choices, help_text="How often does your club meet? If your club meets on a different schedule, please select 'Weekly' and specify in the description.")
-    image = models.ImageField(default="clubs/default.png", upload_to=get_upload_path_club)
+    image = models.ImageField(default="defaults/clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10, null=True, help_text="This does not need an input if there is no google classroom code. *It will not be visable when selected 'Not Accepting' in the field below.")
     accepting_applicants = models.CharField(blank=True, max_length=16, choices=AcceptingApplications.choices, help_text="Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code")
     application_form_link = models.URLField(blank=True, max_length=250, help_text="This can be either a google classroom invite link or a application form link *It will not be visable when selected 'Not Accepting' in the field below.")
