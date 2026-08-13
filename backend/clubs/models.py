@@ -12,6 +12,19 @@ def get_upload_path_club(instance, filename):
     filename = f"{upload_to}{instance.club.pk}.{ext}"
     return filename
 
+class GalleryExtended(models.Model):
+    gallery = models.OneToOneField(
+        Gallery, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name="club", help_text="The photo gallery for this club."
+        )
+
+    tags = TaggableManager(blank=True)
+    class Meta: 
+        verbose_name = "Extra Fields"
+
+    def __str__(self):
+        return self.gallery.title
+
 class Club(models.Model):
     class WeekDay(models.TextChoices):
         MONDAY = "MONDAY", "Monday"
@@ -57,10 +70,8 @@ class Club(models.Model):
     tagline = models.CharField(blank=True, max_length=30, help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds'")
     join_instructions = models.TextField(default="Use the google classroom code or application form link to join.", max_length=500, help_text="This is where you tell the students how to join, such as using a google classroom code or a link to a form. *It will not be visable when selected 'Not Accepting' in the field below.")
     social_media = GenericRelation(SocialMedia)
-    gallery = models.OneToOneField(
-        Gallery, null=True, blank=True, on_delete=models.SET_NULL,
-        related_name="club", help_text="The photo gallery for this club."
-    )
+    gallery = models.ForeignKey(Gallery, on_delete=models.SET_NULL, null=True, blank=True, related_name="clubs",)
+
 
     def __str__(self):
         return self.name

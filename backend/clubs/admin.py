@@ -6,13 +6,16 @@ from taggit.models import Tag
 from django.contrib.admin import widgets
 from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
-from .models import Club, ClubWhyJoin
+from .models import Club, ClubWhyJoin, GalleryExtended
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from photologue.admin import GalleryAdmin as GalleryAdminDefault
+from photologue.models import Gallery
 
 try:
     admin.site.unregister(Site)
 except NotRegistered:
     pass
+
 
 class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
@@ -31,6 +34,7 @@ class ClubsAdminForm(forms.ModelForm):
             "tagline",
             "category",
             "image",
+            "gallery",
             "day_of_meeting",
             "time",
             "repetition",
@@ -81,6 +85,10 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
+class GalleryExtendedInline(admin.StackedInline):
+    model = GalleryExtended
+    can_delete = False
+    
 class WhyJoinInline(admin.TabularInline):
     model = ClubWhyJoin
     extra = 1
@@ -90,27 +98,12 @@ class WhyJoinInline(admin.TabularInline):
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
     inlines = [WhyJoinInline]
-    readonly_fields = ("gallery_admin_link",)
 
-    def gallery_admin_link(self, obj):
-        from django.urls import reverse
-        from django.utils.html import format_html
+class GalleryAdmin(GalleryAdminDefault):
 
-        if not obj.gallery:
-            return "Save this club once to create its gallery."
-        url = reverse("admin:photologue_gallery_change", args=[obj.gallery.pk])
-        return format_html('<a href="{}">Manage photos for this gallery</a>', url)
+    """Define our new one-to-one model as an inline of Photologue's Gallery model."""
 
-    gallery_admin_link.short_description = "Photo gallery"
+    inlines = [GalleryExtendedInline, ]
 
-    def save_model(self, request, obj, form, change):
-        from photologue.models import Gallery
-
-        if not obj.gallery_id:
-            obj.gallery = Gallery.objects.create(title=f"{obj.name or 'Club'} Gallery")
-
-        try:
-            obj.full_clean()
-            super().save_model(request, obj, form, change)
-        except ValidationError as e:
-            form.add_error(None, e)
+admin.site.unregister(Gallery)
+admin.site.register(Gallery, GalleryAdmin)
