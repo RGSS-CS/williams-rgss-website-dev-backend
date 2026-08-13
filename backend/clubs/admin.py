@@ -4,8 +4,15 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import CheckboxSelectMultiple
 from taggit.models import Tag
 from django.contrib.admin import widgets
-from .models import Club, ClubGalleryImage, ClubWhyJoin
+from django.contrib.admin.sites import NotRegistered
+from django.contrib.sites.models import Site
+from .models import Club, ClubWhyJoin
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+
+try:
+    admin.site.unregister(Site)
+except NotRegistered:
+    pass
 
 class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
@@ -83,8 +90,25 @@ class WhyJoinInline(admin.TabularInline):
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
     inlines = [WhyJoinInline]
+    readonly_fields = ("gallery_admin_link",)
+
+    def gallery_admin_link(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+
+        if not obj.gallery:
+            return "Save this club once to create its gallery."
+        url = reverse("admin:photologue_gallery_change", args=[obj.gallery.pk])
+        return format_html('<a href="{}">Manage photos for this gallery</a>', url)
+
+    gallery_admin_link.short_description = "Photo gallery"
 
     def save_model(self, request, obj, form, change):
+        from photologue.models import Gallery
+
+        if not obj.gallery_id:
+            obj.gallery = Gallery.objects.create(title=f"{obj.name or 'Club'} Gallery")
+
         try:
             obj.full_clean()
             super().save_model(request, obj, form, change)

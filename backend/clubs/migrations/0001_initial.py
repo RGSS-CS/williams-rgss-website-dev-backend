@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
             name='ClubGalleryImage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=clubs.models.get_upload_path_club_gallery)),
+                ('image', models.ImageField(upload_to=clubs.models.get_upload_path_club)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField(blank=True, max_length=500)),
                 ('category', taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),

@@ -20,3 +20,4 @@ qrcode[pil]==8.2
 django-image-cropping==1.7
 easy_thumbnails==2.10.1
 requests==2.32.3
+django-photologue==3.16

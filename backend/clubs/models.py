@@ -4,6 +4,7 @@ from taggit.managers import TaggableManager
 from PIL import Image
 from management.models import SocialMedia
 from django.contrib.contenttypes.fields import GenericRelation
+from photologue.models import Gallery
 
 def get_upload_path_club(instance, filename):
     upload_to = f"upload/clubs/{instance.club.pk}/"
@@ -56,6 +57,10 @@ class Club(models.Model):
     tagline = models.CharField(blank=True, max_length=30, help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds'")
     join_instructions = models.TextField(default="Use the google classroom code or application form link to join.", max_length=500, help_text="This is where you tell the students how to join, such as using a google classroom code or a link to a form. *It will not be visable when selected 'Not Accepting' in the field below.")
     social_media = GenericRelation(SocialMedia)
+    gallery = models.OneToOneField(
+        Gallery, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name="club", help_text="The photo gallery for this club."
+    )
 
     def __str__(self):
         return self.name
@@ -69,14 +74,6 @@ class Club(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
-
-def get_upload_path_club_gallery(instance, filename):
-    upload_to = f"clubs/{instance.club.pk}/gallery/"
-    filename = f"{upload_to}{filename}"
-    return filename
-
-def get_upload_path(*args, **kwargs): # fix migration errors
-    return get_upload_path_club_gallery(*args, **kwargs)
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(
@@ -128,22 +125,3 @@ class ClubAnnouncement(models.Model):
 
     def __str__(self):
         return self.title
-
-class ClubGalleryImage(models.Model):
-    name = models.CharField(max_length=100)
-    category = TaggableManager(blank=True)
-    description = models.TextField(blank=True, max_length=500)
-    image = models.ImageField(upload_to=get_upload_path_club_gallery)
-    club = models.ForeignKey(
-        Club, related_name='galleryImage', on_delete=models.CASCADE
-    )
-    
-    def save(self):
-        super().save()
-        
-        img = Image.open(self.image.path)
-        
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
