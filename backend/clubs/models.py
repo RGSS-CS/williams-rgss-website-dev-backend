@@ -6,12 +6,6 @@ from management.models import SocialMedia
 from django.contrib.contenttypes.fields import GenericRelation
 from photologue.models import Gallery
 
-def get_upload_path_club(instance, filename):
-    upload_to = f"upload/clubs/{instance.club.pk}/"
-    ext = filename.split('.')[-1]
-    filename = f"{upload_to}{instance.club.pk}.{ext}"
-    return filename
-
 class GalleryExtended(models.Model):
     gallery = models.OneToOneField(
         Gallery, null=True, blank=True, on_delete=models.SET_NULL,
@@ -44,7 +38,6 @@ class Club(models.Model):
         NOT_ACCEPTING = "WA", "Not Accepting"
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
-    #group = models.OneToOneField(Group, on_delete=models.CASCADE, related_name='group')
     name = models.CharField(
         max_length=100, help_text="Insert the Name of your club"
     )
@@ -58,7 +51,6 @@ class Club(models.Model):
     )
     category = TaggableManager()
     repetition = models.CharField(blank=True, max_length=10, choices=Repetition.choices, help_text="How often does your club meet? If your club meets on a different schedule, please select 'Weekly' and specify in the description.")
-    thumbnail = models.ImageField(default="defaults/clubs/default.png", upload_to=get_upload_path_club)
     classroom_code = models.CharField(blank=True, max_length=10, null=True, help_text="This does not need an input if there is no google classroom code. *It will not be visable when selected 'Not Accepting' in the field below.")
     accepting_applicants = models.CharField(blank=True, max_length=16, choices=AcceptingApplications.choices, help_text="Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code")
     application_form_link = models.URLField(blank=True, max_length=250, help_text="This can be either a google classroom invite link or a application form link *It will not be visable when selected 'Not Accepting' in the field below.")
@@ -78,13 +70,18 @@ class Club(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        
-        img = Image.open(self.image.path)
-        
+        update_fields = kwargs.get("update_fields")
+        if update_fields is not None and "thumbnail" not in update_fields:
+            return
+
+        if not self.thumbnail:
+            return
+        img = Image.open(self.thumbnail.path)
+
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size)
-            img.save(self.image.path)
+            img.save(self.thumbnail.path)
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(

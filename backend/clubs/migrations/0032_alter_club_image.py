@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='club',
             name='image',
-            field=models.ImageField(default='defaults/clubs/default.png', upload_to=clubs.models.get_upload_path_club),
+            field=models.ImageField(default='defaults/clubs/default.png'),
         ),
     ]

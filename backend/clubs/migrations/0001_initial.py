@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField(blank=True, max_length=500)),
                 ('repetition', models.CharField(blank=True, choices=[('WEEKLY', 'Weekly'), ('BIWEEKLY', 'Biweekly'), ('MONTHLY', 'Monthly')], max_length=10)),
-                ('image', models.ImageField(default='clubs/default.png', upload_to=clubs.models.get_upload_path_club)),
+                ('image', models.ImageField(default='clubs/default.png')),
                 ('classroom_code', models.CharField(blank=True, max_length=10)),
                 ('day_of_meeting', models.CharField(blank=True, choices=[('MONDAY', 'Monday'), ('TUESDAY', 'Tuesday'), ('WEDNESDAY', 'Wednesday'), ('THURSDAY', 'Thursday'), ('FRIDAY', 'Friday')], max_length=10)),
                 ('time', models.TimeField(blank=True, null=True)),
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
             name='ClubGalleryImage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=clubs.models.get_upload_path_club)),
+                ('image', models.ImageField()),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField(blank=True, max_length=500)),
                 ('category', taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),

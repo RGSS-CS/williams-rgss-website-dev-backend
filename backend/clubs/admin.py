@@ -32,7 +32,6 @@ class ClubsAdminForm(forms.ModelForm):
             "description",
             "tagline",
             "category",
-            "thumbnail",
             "gallery",
             "day_of_meeting",
             "time",
