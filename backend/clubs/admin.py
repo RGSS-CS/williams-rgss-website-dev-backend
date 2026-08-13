@@ -8,8 +8,7 @@ from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
 from .models import Club, ClubWhyJoin, GalleryExtended
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
-from photologue.admin import GalleryAdmin as GalleryAdminDefault
-from photologue.models import Gallery
+
 
 try:
     admin.site.unregister(Site)
@@ -85,9 +84,7 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
-class GalleryExtendedInline(admin.StackedInline):
-    model = GalleryExtended
-    can_delete = False
+
     
 class WhyJoinInline(admin.TabularInline):
     model = ClubWhyJoin
@@ -99,11 +96,3 @@ class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
     inlines = [WhyJoinInline]
 
-class GalleryAdmin(GalleryAdminDefault):
-
-    """Define our new one-to-one model as an inline of Photologue's Gallery model."""
-
-    inlines = [GalleryExtendedInline, ]
-
-admin.site.unregister(Gallery)
-admin.site.register(Gallery, GalleryAdmin)
