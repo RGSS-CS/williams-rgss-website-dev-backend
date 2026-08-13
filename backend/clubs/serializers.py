@@ -31,7 +31,7 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "id", "name", "preview_description", "description", "tagline", "category",
             "day_of_meeting", "time", "repetition", "room_number", "why_join",
             "classroom_code", "accepting_applicants", "join_instructions", "application_form_link", "teacher_advisor",
-            "gallery_photos",
+            "gallery_photos", "thumbnail"
             ]
 
 # TODO: add serializer for club SM sites
