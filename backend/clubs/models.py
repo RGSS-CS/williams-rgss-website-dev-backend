@@ -70,18 +70,7 @@ class Club(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        update_fields = kwargs.get("update_fields")
-        if update_fields is not None and "thumbnail" not in update_fields:
-            return
 
-        if not self.thumbnail:
-            return
-        img = Image.open(self.thumbnail.path)
-
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.thumbnail.path)
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(
