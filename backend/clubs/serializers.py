@@ -1,17 +1,12 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from photologue.models import Photo
+from photologue_custom.serializers import ClubGalleryPhotoSerializer
 from .models import Club, ClubWhyJoin
 
 class ClubWhyJoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubWhyJoin
         fields = ["title", "description", "index"]
-
-class ClubGalleryPhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Photo
-        fields = ["id", "title", "image", "caption", "date_added"]
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
