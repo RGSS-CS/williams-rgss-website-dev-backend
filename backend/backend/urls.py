@@ -35,4 +35,5 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/management/", include("management.urls")),
+    path("api/photologue/", include('photologue_custom.urls')),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

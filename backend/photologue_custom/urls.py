@@ -1,10 +1,10 @@
-from django.urls import path, include, re_path
-from . import views
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
-router.register("", views.ClubViewSet)
+from .views import GalleryViewSet, PhotoViewSet
 
-urlpatterns = [
-    path("", include(router.urls))
-]
+router = DefaultRouter()
+
+router.register("galleries", GalleryViewSet, basename="gallery")
+router.register("photos", PhotoViewSet, basename="photo")
+
+urlpatterns = router.urls
