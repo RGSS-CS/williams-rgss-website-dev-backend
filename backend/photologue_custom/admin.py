@@ -37,6 +37,10 @@ admin.site.register(Gallery, GalleryAdmin)
 class PhotoAdmin(PhotoAdminDefault):
     form = PhotoAdminForm
     view_on_site = False
+    list_display = (
+        "title", "date_taken", "date_added", "view_count",
+        "admin_thumbnail_safe",
+    )
 
     def admin_thumbnail_safe(self, obj):
         thumb_url = obj.get_admin_thumbnail_url() if hasattr(obj, "get_admin_thumbnail_url") else obj.image.url
