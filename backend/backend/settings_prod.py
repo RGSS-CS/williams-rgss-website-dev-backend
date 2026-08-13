@@ -25,3 +25,5 @@ DATABASES = {
         'PORT': os.environ.get("DB_PORT", "5432")
     }
 }
+
+REAL_ADMIN_URL = os.getenv("REAL_ADMIN_URL", "hyp3ri0n/")

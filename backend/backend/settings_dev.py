@@ -16,3 +16,5 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
+
+REAL_ADMIN_URL = "dev_admin/"

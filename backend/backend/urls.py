@@ -27,7 +27,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", redirect_frontend, name="frontend_redirect"),
-    path('api/admin/', admin.site.urls),
+    path('admin/', include("admin_honeypot.urls", namespace="admin_honeypot")),
+    path(settings.REAL_ADMIN_URL, admin.site.urls),
     path("api/calendar/", include("calendars.urls")),
     path("api/club/", include("clubs.urls")),
     path("api/register", RegisterView.as_view(), name="register"),

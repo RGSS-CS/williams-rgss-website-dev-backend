@@ -37,9 +37,12 @@ CSRF_COOKIE_SECURE = config.CSRF_COOKIE_SECURE
 
 SIGNING_KEY = config.SIGNING_KEY
 
+REAL_ADMIN_URL = config.REAL_ADMIN_URL
+
 # Application definition
 
 INSTALLED_APPS = [
+    "admin_honeypot",
     "management",
     "osm_field",
     "solo",
