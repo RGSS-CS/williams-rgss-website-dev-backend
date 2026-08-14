@@ -45,7 +45,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         url = get_backend().get_thumbnail_url(
             obj.site_logo,
             {
-                "size": (128, 128),
+                "size": (80, 80),
                 "box": obj.site_logo_cropping,
                 "crop": True,
                 "detail": True,

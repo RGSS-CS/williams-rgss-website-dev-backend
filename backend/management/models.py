@@ -88,7 +88,7 @@ class SiteSettings(SingletonModel):
     favicon = models.ImageField(default="defaults/management/default.png", upload_to=FaviconRename, help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
     favicon_cropping = ImageRatioField('favicon', '32x32', help_text="The small icon next to the browser tab title. Save new uploaded image then re-open this page to view your new uploaded photo.")
     site_logo = models.ImageField(default="defaults/management/default.png", upload_to=SiteLogoRename, help_text="This is the icon that represents your school")
-    site_logo_cropping = ImageRatioField('site_logo', '128x128', help_text="Save new uploaded image then re-open this page to view your new uploaded photo.")
+    site_logo_cropping = ImageRatioField('site_logo', '80x80', free_crop = True, help_text="Save new uploaded image then re-open this page to view your new uploaded photo.")
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
     school_mascot = models.CharField(
