@@ -27,21 +27,10 @@ class ClubsAdminForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = [
-            "name",
-            "preview_description",
-            "description",
-            "tagline",
-            "category",
-            "gallery",
-            "day_of_meeting",
-            "time",
-            "repetition",
-            "room_number",
-            "announcement",
-            "classroom_code",
-            "application_form_link",
-            "join_instructions",
-            "accepting_applicants",
+            "name", "preview_description", "description", "tagline",  
+            "category", "gallery", "day_of_meeting", "time",        
+            "repetition", "room_number", "announcement", "classroom_code",
+            "application_form_link", "join_instructions", "accepting_applicants",
             "teacher_advisor"
         ]
         widgets = {

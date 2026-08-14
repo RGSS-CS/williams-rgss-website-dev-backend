@@ -104,8 +104,7 @@ class SiteSettings(SingletonModel):
     )
     school_location = GenericRelation(Location)
 
-    captcha = models.CharField(max_length=20, choices=CaptchaChoice.choices, blank=True )
-
+    captcha = models.JSONField(default=list, blank=True, null=True)
     # TODO: add website maintainers once users are done
 
     def save(self, *args, **kwargs):

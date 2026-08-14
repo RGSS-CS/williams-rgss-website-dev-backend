@@ -4,6 +4,7 @@ from solo.admin import SingletonModelAdmin
 from image_cropping import ImageCroppingMixin
 from django.forms import TextInput, Textarea
 from django.db import models
+from django import forms
 
 from .forms import LocationAdminForm
 from .models import Location, SiteSettings, PageSettings
@@ -27,8 +28,26 @@ class LocationInline(GenericStackedInline):
     verbose_name_plural = "School Location"
 
 
+class SiteSettingsAdminForm(forms.ModelForm):
+    captcha = forms.MultipleChoiceField(
+        choices=SiteSettings.CaptchaChoice.choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+
+    class Meta:
+        model = SiteSettings
+        fields = [
+            'maintainance_mode','frontend_url', 'school_name','council_name',
+            'school_email', 'school_phone', 'favicon', 'favicon_cropping',
+            'stuco_image', 'about_stuco', 'about_school', 'school_mascot',
+            'school_primary_color', 'school_secondary_color', 'school_tertiary_color',
+            'captcha',
+        ]
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
+    forms = SiteSettingsAdminForm
     inlines = [LocationInline]
 
 @admin.register(PageSettings)
