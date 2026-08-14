@@ -39,7 +39,19 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(url) if request else url
 
     def get_cropped_site_image(self, obj):
-        pass
+        if not obj.site_logo:
+            return None
+        request = self.context.get("request")
+        url = get_backend().get_thumbnail_url(
+            obj.site_logo,
+            {
+                "size": (128, 128),
+                "box": obj.site_logo_cropping,
+                "crop": True,
+                "detail": True,
+            },
+        )
+        return request.build_absolute_uri(url) if request else url
     
     class Meta:
         model = SiteSettings
