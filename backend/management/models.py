@@ -58,6 +58,12 @@ class Location(models.Model):
     content_object = GenericForeignKey("content_type", "object_id")
 
 class SiteSettings(SingletonModel):
+    class CaptchaChoice(models.TextChoices):
+        LOGIN = "LOGIN", "Login"
+        REGISTER = "REGISTER", "Register"
+        ENTERING = "ENTERING", "Entering"
+
+
     maintainance_mode = models.BooleanField(default=False)
     frontend_url = models.URLField(
         default="http://localhost:3000", max_length=100, 
@@ -97,6 +103,9 @@ class SiteSettings(SingletonModel):
         "It should be a hex code (e.g., #FFFFFF)."
     )
     school_location = GenericRelation(Location)
+
+    captcha = models.CharField(max_length=20, choices=CaptchaChoice.choices, blank=True )
+
     # TODO: add website maintainers once users are done
 
     def save(self, *args, **kwargs):
