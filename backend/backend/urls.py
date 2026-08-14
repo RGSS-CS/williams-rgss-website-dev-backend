@@ -37,3 +37,5 @@ urlpatterns = [
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("api/management/", include("management.urls")),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "admin_honeypot.views.handler404"
