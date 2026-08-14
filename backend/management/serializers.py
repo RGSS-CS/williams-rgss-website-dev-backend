@@ -21,6 +21,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     school_location = LocationSerializer(many=True, read_only=True)
 
     cropped_favicon = serializers.SerializerMethodField()
+    cropped_site_image = serializers.SerializerMethodField()
  
     def get_cropped_favicon(self, obj):
         if not obj.favicon:
@@ -36,6 +37,9 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             },
         )
         return request.build_absolute_uri(url) if request else url
+
+    def get_cropped_site_image(self, obj):
+        pass
     
     class Meta:
         model = SiteSettings
@@ -47,7 +51,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             "school_phone",
             "social_media", 
             "cropped_favicon", 
-            "stuco_image", 
+            "cropped_site_image", 
             "about_stuco", 
             "about_school", 
             "school_location",
