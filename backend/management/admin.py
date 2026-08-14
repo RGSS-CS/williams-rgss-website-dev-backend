@@ -47,7 +47,7 @@ class SiteSettingsAdminForm(forms.ModelForm):
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
-    forms = SiteSettingsAdminForm
+    form = SiteSettingsAdminForm
     inlines = [LocationInline]
 
 @admin.register(PageSettings)
