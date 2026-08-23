@@ -4,8 +4,17 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import CheckboxSelectMultiple
 from taggit.models import Tag
 from django.contrib.admin import widgets
-from .models import Club, ClubGalleryImage, ClubWhyJoin
+from django.contrib.admin.sites import NotRegistered
+from django.contrib.sites.models import Site
+from .models import Club, ClubWhyJoin, GalleryExtended
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+
+
+try:
+    admin.site.unregister(Site)
+except NotRegistered:
+    pass
+
 
 class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
@@ -18,21 +27,10 @@ class ClubsAdminForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = [
-            "name",
-            "preview_description",
-            "description",
-            "tagline",
-            "category",
-            "image",
-            "day_of_meeting",
-            "time",
-            "repetition",
-            "room_number",
-            "announcement",
-            "classroom_code",
-            "application_form_link",
-            "join_instructions",
-            "accepting_applicants",
+            "name", "preview_description", "description", "tagline",  
+            "category", "gallery", "day_of_meeting", "time",        
+            "repetition", "room_number", "announcement", "classroom_code",
+            "application_form_link", "join_instructions", "accepting_applicants",
             "teacher_advisor"
         ]
         widgets = {
@@ -74,6 +72,8 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
+
+    
 class WhyJoinInline(admin.TabularInline):
     model = ClubWhyJoin
     extra = 1
@@ -84,9 +84,3 @@ class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
     inlines = [WhyJoinInline]
 
-    def save_model(self, request, obj, form, change):
-        try:
-            obj.full_clean()
-            super().save_model(request, obj, form, change)
-        except ValidationError as e:
-            form.add_error(None, e)
