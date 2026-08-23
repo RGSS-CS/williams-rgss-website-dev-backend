@@ -34,10 +34,6 @@ jobs:
       - name: Generate settings_local.py
         run: cp backend/backend/settings_dev.py backend/backend/settings_local.py
 
-      - name: Generate migrations
-        working-directory: ./backend
-        run: python manage.py migrate photologue
-
       - name: Run Django tests
         working-directory: ./backend
         run: python manage.py test
