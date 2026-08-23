@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('clubs', '0032_alter_club_image'),
-        ('photologue', '0014_alter_watermark_image'),
+        ('photologue', '0013_alter_watermark_image'),
     ]
 
     operations = [

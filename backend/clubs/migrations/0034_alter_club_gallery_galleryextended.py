@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('clubs', '0033_club_gallery_delete_clubgalleryimage'),
-        ('photologue', '0014_alter_watermark_image'),
+        ('photologue', '0013_alter_watermark_image'),
         ('taggit', '0006_rename_taggeditem_content_type_object_id_taggit_tagg_content_8fc721_idx'),
     ]
 
