@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate migrations
         working-directory: ./backend
-        run: python manage.py makemigrations
+        run: python manage.py migrate photologue
 
       - name: Run Django tests
         working-directory: ./backend
