@@ -68,10 +68,6 @@ def random_bool() -> bool:
     return random.choice([True, False])
 
 
-def random_hex_color() -> str:
-    return "#{:06X}".format(random.randint(0, 0xFFFFFF))
-
-
 def random_sentence(word_count_range=(4, 12)) -> str:
     words = [random_string(random.randint(3, 9)) for _ in range(random.randint(*word_count_range))]
     return " ".join(words) + "."
@@ -212,9 +208,9 @@ class Command(BaseCommand):
         settings_obj.about_stuco = random_sentence((15, 40))
         settings_obj.about_school = random_sentence((15, 40))
         settings_obj.school_mascot = random_string(10)
-        settings_obj.school_primary_color = random_hex_color()
-        settings_obj.school_secondary_color = random_hex_color()
-        settings_obj.school_tertiary_color = random_hex_color()
+        settings_obj.school_primary_color = "#122647"
+        settings_obj.school_secondary_color = "#47a5bd"
+        settings_obj.school_tertiary_color = "#db9820"
         settings_obj.save()
         self.stdout.write(f"SiteSettings seeded (pk={settings_obj.pk}).")
 
