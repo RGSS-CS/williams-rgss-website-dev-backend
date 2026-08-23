@@ -34,12 +34,9 @@ jobs:
       - name: Generate settings_local.py
         run: cp backend/backend/settings_dev.py backend/backend/settings_local.py
 
-      - name: Debug Photologue migrations
-        run: |
-          python -m pip show django-photologue
-          python -c "import photologue; print('Photologue:', photologue.__file__)"
-          python -c "import photologue, pathlib; p=pathlib.Path(photologue.__file__).parent/'migrations'; print('Migrations:', p); print('\n'.join(sorted(x.name for x in p.glob('*.py')))"
-          python manage.py showmigrations photologue
+      - name: Generate migrations
+        working-directory: ./backend
+        run: python manage.py makemigrations
 
       - name: Run Django tests
         working-directory: ./backend
