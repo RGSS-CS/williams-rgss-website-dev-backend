@@ -35,7 +35,7 @@ jobs:
         run: cp backend/backend/settings_dev.py backend/backend/settings_local.py
       
       - name: Debug
-        run: echo "backend/backend/settings_local.py"
+        run: cat "backend/backend/settings_local.py"
 
       - name: Run Django tests
         working-directory: ./backend
