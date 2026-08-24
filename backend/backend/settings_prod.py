@@ -15,6 +15,9 @@ CSRF_COOKIE_SECURE = True
 
 SIGNING_KEY = os.environ.get("SIGNING_KEY", "build-fallback-signing-key")
 
+FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
+REVALIDATE_SECRET = os.environ.get("REVALIDATE_SECRET", "")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
