@@ -33,6 +33,9 @@ jobs:
 
       - name: Generate settings_local.py
         run: cp backend/backend/settings_dev.py backend/backend/settings_local.py
+      
+      - name: Debug
+        run: print(backend/backend/settings_local.py)
 
       - name: Run Django tests
         working-directory: ./backend
