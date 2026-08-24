@@ -33,6 +33,10 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide',),
             'fields': ('username', 'email', 'password1', 'password2'),
         }),
+        ('Permissions', {
+            'classes': ('wide',),
+            'fields': ('groups',),
+        }),
     )
 
 admin.site.unregister(User)
