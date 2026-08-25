@@ -1,10 +1,17 @@
 from .models import Club
 from rest_framework import viewsets
 from .serializers import ClubSerializer, ClubWhyJoinSerializer
+from rest_framework.permissions import AllowAny, IsAdminUser
 
 class ClubViewSet(viewsets.ModelViewSet):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
+
+    def get_permissions(self):
+        self.permission_classes = [AllowAny]
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
 
 class ClubWhyJoinViewSet(viewsets.ModelViewSet):
     serializer_class = ClubWhyJoinSerializer
