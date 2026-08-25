@@ -26,18 +26,3 @@ class UserJoinCodeForm(forms.ModelForm):
 class UserJoinCodeAdmin(admin.ModelAdmin):
     form = UserJoinCodeForm
     readonly_fields = ('code', 'uses', 'created', 'updated')
-
-class CustomUserAdmin(UserAdmin):
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2'),
-        }),
-        ('Permissions', {
-            'classes': ('wide',),
-            'fields': ('groups',),
-        }),
-    )
-
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
