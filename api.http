@@ -1,9 +1,0 @@
-### Use REST Client for VS Code Extension
-
-POST http://localhost:8000/api/token/
-Content-Type: application/json
-
-{
-    "email": "admin",
-    "password": "test"
-}
