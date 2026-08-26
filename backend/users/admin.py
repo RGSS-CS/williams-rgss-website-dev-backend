@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
 from .models import UserJoinCode
-from django.contrib.admin import widgets
 from django.utils.html import format_html
 import qrcode
 import io
@@ -22,7 +21,7 @@ class UserJoinCodeForm(forms.ModelForm):
         widgets = {
             'label': forms.TextInput(attrs={'size': 40}),
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 60}),
-            'expiry': widgets.AdminSplitDateTime(attrs={'type': 'datetime-local'}),
+            'expiry': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
 @admin.register(UserJoinCode)
