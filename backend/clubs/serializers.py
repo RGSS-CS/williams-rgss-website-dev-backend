@@ -35,4 +35,25 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "gallery"
             ]
 
+class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
+    category = TagListSerializerField()
+    why_join = ClubWhyJoinSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Club
+        fields = [
+            "id", 
+            "name", 
+            "preview_description", 
+            "description", 
+            "tagline", 
+            "category",
+            "day_of_meeting",
+            "time", 
+            "repetition", 
+            "room_number", 
+            "why_join",
+            "teacher_advisor",
+            ]
+
 # TODO: add serializer for club SM sites
