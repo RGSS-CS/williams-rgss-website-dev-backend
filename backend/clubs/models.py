@@ -127,35 +127,35 @@ class ClubAnnouncement(models.Model):
 
     ################# USER ACCESS CONTROLS ####################
 
-    class ClubMembership(models.Model):
-        class Role(models.TextChoices):
-            EXECUTIVE = "EXECUTIVE", "Club Executive"
-            CLUB_ADMIN = "CLUB_ADMIN", "Club Administrator"
+class ClubMembership(models.Model):
+    class Role(models.TextChoices):
+        EXECUTIVE = "EXECUTIVE", "Club Executive"
+        CLUB_ADMIN = "CLUB_ADMIN", "Club Administrator"
 
-        user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='club_memberships')
-        club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="memberships")
-        role = models.CharField(max_length=20, choices=Role.choices, default=Role.EXECUTIVE)
-        bypass_confirmation_restrictions = models.BooleanField(default=False, help_text="This allows execs to publish changes without approval by the club administrator")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='club_memberships')
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="memberships")
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.EXECUTIVE)
+    bypass_confirmation_restrictions = models.BooleanField(default=False, help_text="This allows execs to publish changes without approval by the club administrator")
 
-        created = models.DateTimeField(auto_now_add=True)
-        updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-        class Meta:
-            verbose_name = "Club Executive Membership"
-            verbose_name_plural = "Club Executive Memberships"
+    class Meta:
+        verbose_name = "Club Executive Membership"
+        verbose_name_plural = "Club Executive Memberships"
 
-            constraints = [
-                models.UniqueConstraint(fields=['user', 'club'], name='unique_club_membership')
-            ]
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'club'], name='unique_club_membership')
+        ]
 
-        def __str__(self) -> str:
-            return f"{self.user} - {self.club} ({self.get_role_display()})"
+    def __str__(self) -> str:
+        return f"{self.user} - {self.club} ({self.get_role_display()})"
 
-        def save(self, *args, **kwargs):
-            if self.role != self.Role.EXECUTIVE:
-                self.bypass_confirmation_restrictions = False
+    def save(self, *args, **kwargs):
+        if self.role != self.Role.EXECUTIVE:
+            self.bypass_confirmation_restrictions = False
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 class ClubChanges(models.Model):
     class ApprovalStatus(models.TextChoices):
