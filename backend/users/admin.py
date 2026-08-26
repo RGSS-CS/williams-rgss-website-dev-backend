@@ -33,7 +33,7 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
     def code_preview(self, obj) -> str:
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            url = f"{frontend_url}/private/register?rel=\"{obj.code}\""
+            url = f"{frontend_url}/private/register?rel={obj.code}"
             qr = qrcode.make(url)
             buffer = io.BytesIO()
             qr.save(buffer, format="PNG")
