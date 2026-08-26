@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 from taggit.managers import TaggableManager
 from PIL import Image
 from management.models import SocialMedia
@@ -122,3 +123,56 @@ class ClubAnnouncement(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+    ################# USER ACCESS CONTROLS ####################
+
+    class ClubMembership(models.Model):
+        class Role(models.TextChoices):
+            EXECUTIVE = "EXECUTIVE", "Club Executive"
+            CLUB_ADMIN = "CLUB_ADMIN", "Club Administrator"
+
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='club_memberships')
+        club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="memberships")
+        role = models.CharField(max_length=20, choices=Role.choices, default=Role.EXECUTIVE)
+        bypass_confirmation_restrictions = models.BooleanField(default=False, help_text="This allows execs to publish changes without approval by the club administrator")
+
+        created = models.DateTimeField(auto_now_add=True)
+        updated = models.DateTimeField(auto_now=True)
+
+        class Meta:
+            verbose_name = "Club Executive Membership"
+            verbose_name_plural = "Club Executive Memberships"
+
+            constraints = [
+                models.UniqueConstraint(fields=['user', 'club'], name='unique_club_membership')
+            ]
+
+        def __str__(self) -> str:
+            return f"{self.user} - {self.club} ({self.get_role_display()})"
+
+        def save(self, *args, **kwargs):
+            if self.role != self.Role.EXECUTIVE:
+                self.bypass_confirmation_restrictions = False
+
+            super().save(*args, **kwargs)
+
+class ClubChanges(models.Model):
+    class ApprovalStatus(models.TextChoices):
+        PENDING = "PENDING", "Pending Approval"
+        APPROVED = "APPROVED", "Approved"
+        REJECTED = "REJECTED", "Rejected"
+
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='pending_edits')
+    changes = models.JSONField(help_text="Changed Value")
+    status = models.CharField(max_length=10, choices=ApprovalStatus.choices, default= ApprovalStatus.PENDING)
+    submitted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='submitted_changes')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, default ="Pending Reviewer", related_name='reviewed_club_changes')
+    reviewed_at = models.DateTimeField(null=True, blank = True)
+    review_note = models.TextField(max_length=200, blank=True)
+
+    def __str__(self) -> str:
+        return f"Changes for {self.club} ({self.get_status_display()})"
+
+    
