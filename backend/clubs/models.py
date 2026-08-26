@@ -65,6 +65,12 @@ class Club(models.Model):
     social_media = GenericRelation(SocialMedia)
     gallery = models.ForeignKey(Gallery, on_delete=models.SET_NULL, null=True, blank=True, related_name="clubs",)
 
+    PENDING_APPROVAL_FIELDS = [
+        "name", "preview_description", "description", "tagline",
+        "repetition", "classroom_code", "accepting_applicants",
+        "application_form_link", "announcement", "day_of_meeting", "time",
+        "room_number", "teacher_advisor", "join_instructions",
+    ]
 
     def __str__(self):
         return self.name
@@ -175,4 +181,22 @@ class ClubChanges(models.Model):
     def __str__(self) -> str:
         return f"Changes for {self.club} ({self.get_status_display()})"
 
-    
+    def approve(self, reviewer, note=""):
+        allowed = set(Club.PENDING_APPROVAL_FIELDS)
+        for field, value in self.changes.items():
+            if field in allowed:
+                setattr(self.club, field, value)
+        self.club.save()
+
+        self.status = self.ApprovalStatus.APPROVED
+        self.reviewed_by = reviewer
+        self.reviewed_at = timezone.now()
+        self.review_note = note
+        self.save()
+
+    def reject(self, reviewer, note=""):
+        self.status = self.ApprovalStatus.REJECTED
+        self.reviewed_by = reviewer
+        self.reviewed_at = timezone.now()
+        self.review_note = note
+        self.save()
