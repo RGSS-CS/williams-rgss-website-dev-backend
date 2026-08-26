@@ -28,3 +28,6 @@ class UserJoinCode(models.Model):
         if self.max_uses is None:
             return False
         return self.uses >= self.max_uses
+
+    def __str__(self) -> str:
+        return self.label
