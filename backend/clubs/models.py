@@ -131,7 +131,7 @@ class ClubAnnouncement(models.Model):
         return self.title
     
 
-    ################# USER ACCESS CONTROLS ####################
+################# USER ACCESS CONTROLS ####################
 
 class ClubMembership(models.Model):
     class Role(models.TextChoices):
