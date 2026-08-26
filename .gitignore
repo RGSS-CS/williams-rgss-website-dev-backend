@@ -473,3 +473,5 @@ backend/backend/settings_local.py
 staticfiles/
 upload/
 cropped/
+photologue/
+api.http
