@@ -45,6 +45,18 @@ class ClubsAdminForm(forms.ModelForm):
             "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60}),
         }
 
+    def clean_category(self):
+        categories = self.cleaned_data["category"]
+
+        MAX_CATEGORIES = 3
+
+        if len(categories) > MAX_CATEGORIES:
+            raise ValidationError(
+                f"You can select a maximum of {MAX_CATEGORIES} categories."
+            )
+
+        return categories
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
