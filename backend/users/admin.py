@@ -8,6 +8,7 @@ import base64
 from management.models import SiteSettings
 
 class UserJoinCodeForm(forms.ModelForm):
+    expiry = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
     class Meta:
         model = UserJoinCode
         fields = [
@@ -21,7 +22,6 @@ class UserJoinCodeForm(forms.ModelForm):
         widgets = {
             'label': forms.TextInput(attrs={'size': 40}),
             'description': forms.Textarea(attrs={'rows': 4, 'cols': 60}),
-            'expiry': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
 @admin.register(UserJoinCode)
