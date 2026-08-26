@@ -35,7 +35,7 @@ def create_default_groups(sender, **kwargs):
         permissions = []
         for app_label, codename in perm_specs: 
             try: 
-                permissions.append(Permission.objects.get(content_type_app_label = app_label, codename=codename))
+                permissions.append(Permission.objects.get(content_type__app_label = app_label, codename=codename))
             except Permission.DoesNotExist:
                 continue
 
