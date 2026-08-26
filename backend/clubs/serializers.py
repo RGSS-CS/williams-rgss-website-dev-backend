@@ -53,6 +53,7 @@ class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "repetition", 
             "room_number", 
             "why_join",
+            "accepting_applicants",
             "teacher_advisor",
             ]
 
