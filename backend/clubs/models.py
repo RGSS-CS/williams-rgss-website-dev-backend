@@ -135,8 +135,8 @@ class ClubAnnouncement(models.Model):
 
 class ClubMembership(models.Model):
     class Role(models.TextChoices):
-        EXECUTIVE = "EXECUTIVE", "Club Executive"
-        CLUB_ADMIN = "CLUB_ADMIN", "Club Administrator"
+        EXECUTIVE = "EXC", "Club Executive"
+        CLUB_ADMIN = "ADM", "Club Administrator"
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='club_memberships')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="memberships")
@@ -165,9 +165,9 @@ class ClubMembership(models.Model):
 
 class ClubChanges(models.Model):
     class ApprovalStatus(models.TextChoices):
-        PENDING = "PENDING", "Pending Approval"
-        APPROVED = "APPROVED", "Approved"
-        REJECTED = "REJECTED", "Rejected"
+        PENDING = "PND", "Pending Approval"
+        APPROVED = "APR", "Approved"
+        REJECTED = "RJC", "Rejected"
 
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='pending_edits')
     changes = models.JSONField(help_text="Changed Value")
