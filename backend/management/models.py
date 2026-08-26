@@ -7,6 +7,18 @@ from PIL import Image
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
+from image_cropping import ImageRatioField
+
+
+def FaviconRename(filename):
+    ext = filename.split('.')[-1]
+
+    return f'upload/management/favicon.{ext}'
+
+def SiteLogoRename(filename):
+    ext = filename.split('.')[-1]
+
+    return f'upload/management/logo.{ext}'
 
 class SocialMedia(models.Model):
     class Sites(models.TextChoices):
@@ -51,6 +63,12 @@ class Location(models.Model):
     content_object = GenericForeignKey("content_type", "object_id")
 
 class SiteSettings(SingletonModel):
+    class CaptchaChoice(models.TextChoices):
+        LOGIN = "LOGIN", "Login"
+        REGISTER = "REGISTER", "Register"
+        ENTERING = "ENTERING", "Entering"
+
+
     maintainance_mode = models.BooleanField(default=False)
     frontend_url = models.URLField(
         default="http://localhost:3000", max_length=100, 
@@ -67,16 +85,10 @@ class SiteSettings(SingletonModel):
     school_email = models.EmailField(blank=True, max_length=50)
     school_phone = PhoneNumberField(blank=True)
     social_media = GenericRelation(SocialMedia)
-    favicon = models.ImageField(
-        default="management/default.png", upload_to="management/", 
-        help_text="This is the icon that appears in the browser tab. " \
-        "It should be a square image, preferably 32x32 pixels."
-    )
-    stuco_image = models.ImageField(
-        default="management/default.png", upload_to="management/", 
-        help_text="This is the image for the club's logo. " \
-        "It should be a square image, preferably 300x300 pixels."
-    )
+    favicon = models.ImageField(default="defaults/management/default.png", upload_to=FaviconRename, help_text="This is the icon that appears in the browser tab. It should be a square image, preferably 32x32 pixels.")
+    favicon_cropping = ImageRatioField('favicon', '32x32', help_text="The small icon next to the browser tab title. Save new uploaded image then re-open this page to view your new uploaded photo.")
+    site_logo = models.ImageField(default="defaults/management/default.png", upload_to=SiteLogoRename, help_text="This is the icon that represents your school")
+    site_logo_cropping = ImageRatioField('site_logo', '80x80', free_crop = True, help_text="Save new uploaded image then re-open this page to view your new uploaded photo.")
     about_stuco = models.TextField(blank=True, max_length=500)
     about_school = models.TextField(blank=True, max_length=500)
     school_mascot = models.CharField(
@@ -97,22 +109,24 @@ class SiteSettings(SingletonModel):
         "It should be a hex code (e.g., #FFFFFF)."
     )
     school_location = GenericRelation(Location)
+
+    captcha = models.JSONField(default=list, blank=True)
     # TODO: add website maintainers once users are done
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        if self.stuco_image and self.stuco_image.name != "management/default.png":
-            img = Image.open(self.stuco_image.path)
-            if img.height > 300 or img.width > 300:
-                output_size = (300, 300)
-                img.thumbnail(output_size)
-                img.save(self.stuco_image.path)
+        # if self.stuco_image and self.stuco_image.name != "management/default.png":
+        #     img = Image.open(self.stuco_image.path)
+        #     if img.height > 300 or img.width > 300:
+        #         output_size = (300, 300)
+        #         img.thumbnail(output_size)
+        #         img.save(self.stuco_image.path)
 
     def __str__(self):
         return "Site Configuration"
 
-    class Meta: #BEN ISSUE: "Meta" overrides symbol of same name in class "SingletonModel"
+    class Meta:
         verbose_name = "Site Configuration"
 
 class PageSettings(models.Model):

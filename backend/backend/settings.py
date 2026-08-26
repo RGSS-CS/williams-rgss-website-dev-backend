@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from . import settings_local as config
+from easy_thumbnails.conf import Settings as thumbnail_settings
+
 # import json
 # import dotenv
 # import sys
@@ -37,13 +39,25 @@ CSRF_COOKIE_SECURE = config.CSRF_COOKIE_SECURE
 
 SIGNING_KEY = config.SIGNING_KEY
 
+FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
+REVALIDATE_SECRET = config.REVALIDATE_SECRET
+
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
     "management",
     "osm_field",
     "solo",
     "migration_fixer",
+    'easy_thumbnails',
+    'image_cropping',
     "taggit",
     "taggit_serializer",
     "colorfield",
@@ -56,15 +70,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'photologue',
+    'photologue_custom',
+    'sortedm2m',
     "rest_framework_simplejwt",
     "users"
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware', 
@@ -165,3 +178,9 @@ CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 # CALENDAR_NAME_VALIDATORS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
+
+THUMBNAIL_BASEDIR = 'cropped'
