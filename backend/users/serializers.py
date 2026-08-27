@@ -8,6 +8,30 @@ from .models import UserJoinCode
 
 User = get_user_model()
 
+
+def validate_join_code(code):
+    join_code = UserJoinCode.objects.filter(code=code).first()
+    if not join_code:
+        raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+
+    if not join_code.enabled:
+        raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+    if join_code.is_expired():
+        raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
+    if join_code.exceeded_max_uses():
+        raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
+
+    return join_code
+
+
+class VerifyJoinCodeSerializer(serializers.Serializer):
+    code = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        attrs["join_code"] = validate_join_code(attrs["code"])
+        return attrs
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
@@ -25,16 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password2": "Passwords don't match."})
 
-        join_code = UserJoinCode.objects.filter(code=attrs["code"]).first()
-        if not join_code:
-            raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
-
-        if not join_code.enabled:
-            raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
-        if join_code.is_expired():
-            raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
-        if join_code.exceeded_max_uses():
-            raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
+        validate_join_code(attrs["code"])
 
         return attrs
 
