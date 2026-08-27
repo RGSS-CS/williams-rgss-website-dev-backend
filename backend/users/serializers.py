@@ -2,12 +2,11 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth.models import update_last_login
+from django.contrib.auth.models import update_last_login, Group
 from rest_framework.validators import UniqueValidator
 from .models import UserJoinCode
 
 User = get_user_model()
-
 
 def validate_join_code(code):
     join_code = UserJoinCode.objects.filter(code=code).first()
@@ -61,6 +60,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop("password2")
         validated_data.pop("code")
         user = User.objects.create_user(**validated_data)
+
+        group, _ = Group.objects.get_or_create(name="Public Verified")
+        user.groups.add(group)
         return user
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
