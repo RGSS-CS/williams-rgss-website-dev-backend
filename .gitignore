@@ -474,3 +474,4 @@ staticfiles/
 cropped/
 upload/
 photologue/
+api.http
