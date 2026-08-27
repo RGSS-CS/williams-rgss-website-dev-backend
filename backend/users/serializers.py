@@ -87,4 +87,4 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(authed_user)
         update_last_login(None, authed_user)
 
-        return {'refresh': str(refresh), 'access': str(refresh.access_token)}
+        return {'refresh': str(refresh), 'access': str(refresh.access_token), 'groups': list(authed_user.groups.values_list('name', flat=True))}
