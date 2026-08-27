@@ -68,7 +68,6 @@ INSTALLED_APPS = [
     "guardian",
     "corsheaders",
     "rest_framework",
-    'rest_framework.authtoken',
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
     'photologue',

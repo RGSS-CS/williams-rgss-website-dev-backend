@@ -13,7 +13,6 @@ def validate_join_code(code):
     join_code = UserJoinCode.objects.filter(code=code).first()
     if not join_code:
         raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
-
     if not join_code.enabled:
         raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
     if join_code.is_expired():

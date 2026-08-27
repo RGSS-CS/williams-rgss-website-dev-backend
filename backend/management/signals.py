@@ -74,7 +74,8 @@ def revalidate_frontend_tag(tag: str) -> None:
     except requests.RequestException:
         logger.exception("Failed to revalidate frontend tag=%r", tag)
  
- 
+
+
 @receiver(post_save, sender=SiteSettings)
 @receiver(post_delete, sender=SiteSettings)
 @receiver(post_save, sender=PageSettings)
