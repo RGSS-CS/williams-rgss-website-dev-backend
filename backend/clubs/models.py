@@ -61,7 +61,7 @@ class Club(models.Model):
     room_number = models.PositiveIntegerField(null=True)
     teacher_advisor = models.CharField(max_length=20, help_text="Please insert the name of the teacher. Please insert Mr./Mrs./Ms. , followed by the last name")
     tagline = models.CharField(blank=True, null=True, max_length=30, help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds'")
-    join_instructions = models.TextField(null=True, default="Use the google classroom code or application form link to join.", max_length=500, help_text="This is where you tell the students how to join, such as using a google classroom code or a link to a form. *It will not be visable when selected 'Not Accepting' in the field below.")
+    join_instructions = models.TextField(default="Use the google classroom code or application form link to join.", max_length=500, help_text="This is where you tell the students how to join, such as using a google classroom code or a link to a form. *It will not be visable when selected 'Not Accepting' in the field below.")
     social_media = GenericRelation(SocialMedia)
     gallery = models.ForeignKey(Gallery, on_delete=models.SET_NULL, null=True, blank=True, related_name="clubs",)
 

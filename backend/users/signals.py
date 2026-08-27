@@ -2,7 +2,7 @@ from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
 GROUPS = {
-    "Public Verified User": [],
+    "Public Verified": [],
     "Club Executive": [
         ("clubs", "change_club"),
         ("clubs", "add_clubwhyjoin"),
