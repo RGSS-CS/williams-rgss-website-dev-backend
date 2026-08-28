@@ -50,13 +50,9 @@ class SocialMedia(models.Model):
         ]
 
 class Location(models.Model):
-    location_lat = LatitudeField(null=True, blank=True)
-    location_lon = LongitudeField(null=True, blank=True)
-    location = OSMField(
-        null=True, blank=True, 
-        help_text="Click on the map of the school's location. " \
-        "You can also search for it in the search bar."
-    )
+    location_lat = LatitudeField(null=True)
+    location_lon = LongitudeField(null=True)
+    location = OSMField(null=True, help_text="Click on the map of the school's location. " "You can also search for it in the search bar.")
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveBigIntegerField()
