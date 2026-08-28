@@ -84,10 +84,10 @@ class ClubWhyJoin(models.Model):
         Club, on_delete=models.CASCADE, related_name="why_join_reasons"
     )
     title = models.CharField(
-        max_length=200, help_text="Insert a title for your reason to join the club."
+        max_length=30, help_text="Insert a title for your reason to join the club."
     )
     description = models.TextField(
-        max_length=2000, 
+        max_length=300, 
         help_text="Insert a detailed description for your reason to join the club."
     )
     index = models.IntegerField(
