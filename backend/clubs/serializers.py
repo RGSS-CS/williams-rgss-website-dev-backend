@@ -10,7 +10,7 @@ class ClubWhyJoinSerializer(serializers.ModelSerializer):
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
-    why_join = ClubWhyJoinSerializer(many=True, read_only=True)
+    why_join = ClubWhyJoinSerializer(source="why_join_reasons",many=True, read_only=True)
     gallery = GallerySerializer(read_only = True)
 
     class Meta:
@@ -25,7 +25,7 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
-    why_join = ClubWhyJoinSerializer(many=True, read_only=True)
+    why_join = ClubWhyJoinSerializer(source="why_join_reasons", many=True, read_only=True)
 
     class Meta:
         model = Club
