@@ -19,6 +19,7 @@ FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
 REVALIDATE_SECRET = os.environ.get("REVALIDATE_SECRET", "")
 CAPTCHA_INSTANCE_URL = os.environ.get("CAPTCHA_INSTANCE_URL", '')
 CAPTCHA_SECRET_KEY = os.environ.get("CAPTCHA_SECRET_KEY", '')
+CAPTCHA_SITE_KEY = os.environ.get("CAPTCHA_SITE_KEY", '')
 
 DATABASES = {
     'default': {

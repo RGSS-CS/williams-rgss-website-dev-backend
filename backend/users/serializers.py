@@ -5,8 +5,36 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import update_last_login, Group
 from rest_framework.validators import UniqueValidator
 from .models import UserJoinCode
+from django.conf import settings
+from management.models import SiteSettings
+import requests
 
 User = get_user_model()
+
+def is_captcha_enabled(self):
+    return self in SiteSettings.get_solo().captcha
+
+def verify_captcha_token(token, self):
+    if not is_captcha_enabled(self):
+        return
+    if not token:
+        raise serializers.ValidationError({"captcha_token": "CAPTCHA verification failed. Please try again."})
+
+    api_endpoint = settings.CAPTCHA_INSTANCE_URL
+    secret_key = settings.CAPTCHA_SECRET_KEY
+    site_key = settings.CAPTCHA_SITE_KEY
+
+    url = api_endpoint + site_key
+
+    try:
+        response = requests.post(url, json={'secret':secret_key, 'response': token}, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError):
+        raise serializers.ValidationError({'captcha_token': 'CAPTCHA verification failed. Please try again.'})
+
+    if not data.get('success'):
+        raise serializers.ValidationError({'captcha_token': 'CAPTCHA verification failed. Please try again.'})
 
 def validate_join_code(code):
     join_code = UserJoinCode.objects.filter(code=code).first()
@@ -34,6 +62,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
     code = serializers.CharField(write_only=True)
+    captcha = serializers.CharField(write_only=True, required=False, allow_blank=True)
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -41,9 +70,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password", "password2", "first_name", "last_name", "code"]
+        fields = ["username", "email", "password", "password2", "first_name", "last_name", "code", "captcha"]
 
     def validate(self, attrs):
+        verify_captcha_token(attrs.get('captcha_token',''), SiteSettings.CaptchaChoice.REGISTER)
+
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password2": "Passwords don't match."})
 
@@ -59,6 +90,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         validated_data.pop("password2")
         validated_data.pop("code")
+        validated_data.pop("captcha_token", None)
         user = User.objects.create_user(**validated_data)
 
         group, _ = Group.objects.get_or_create(name="Public Verified")
@@ -68,12 +100,20 @@ class RegisterSerializer(serializers.ModelSerializer):
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
+    captcha = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         del self.fields[self.username_field] # why is this hardcoded as a requirement D:<
 
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['groups'] = list(user.groups.values_list('name', flat=True))
+        return token
+    
     def validate(self, attrs):
+        verify_captcha_token(attrs.get('captcha_token', ''), SiteSettings.CaptchaChoice.LOGIN)
         user = User.objects.filter(email__iexact=attrs['email']).first()
         if user:
             authed_user = authenticate(username=user.username, password=attrs['password'])
@@ -87,4 +127,8 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(authed_user)
         update_last_login(None, authed_user)
 
-        return {'refresh': str(refresh), 'access': str(refresh.access_token), 'groups': list(authed_user.groups.values_list('name', flat=True))}
+        return {
+            'refresh': str(refresh), 
+            'access': str(refresh.access_token), 
+            'groups': list(authed_user.groups.values_list('name', flat=True))
+        }

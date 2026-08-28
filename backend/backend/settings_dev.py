@@ -13,6 +13,7 @@ FRONTEND_REVALIDATE_URL = 'http://localhost:3000/api/revalidate'
 REVALIDATE_SECRET = 'dev-insecure-revalidate-secret'
 CAPTCHA_INSTANCE_URL = 'http://localhost:3001'
 CAPTCHA_SECRET_KEY = ''
+CAPTCHA_SITE_KEY = ''
 
 DATABASES = {
     'default': {
