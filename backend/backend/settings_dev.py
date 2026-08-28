@@ -11,9 +11,8 @@ CSRF_COOKIE_SECURE = False
 SIGNING_KEY = '2f27a65af8d54ca5a4ae0b7a0db2f4dc85ad9e4b4659ce9ec6dcdf95a95f36eb'
 FRONTEND_REVALIDATE_URL = 'http://localhost:3000/api/revalidate'
 REVALIDATE_SECRET = 'dev-insecure-revalidate-secret'
-CAPTCHA_INSTANCE_URL = 'http://localhost:3001'
-CAPTCHA_SECRET_KEY = ''
-CAPTCHA_SITE_KEY = ''
+CAPTCHA_VERIFY_URL = 'https://(url)/siteverify'
+CAP_SECRET = ''
 
 DATABASES = {
     'default': {

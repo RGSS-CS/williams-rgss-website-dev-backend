@@ -20,14 +20,12 @@ def verify_captcha_token(token, self):
     if not token:
         raise serializers.ValidationError({"captcha_token": "CAPTCHA verification failed. Please try again."})
 
-    api_endpoint = settings.CAPTCHA_INSTANCE_URL
-    secret_key = settings.CAPTCHA_SECRET_KEY
-    site_key = settings.CAPTCHA_SITE_KEY
-
-    url = api_endpoint + site_key
-
     try:
-        response = requests.post(url, json={'secret':secret_key, 'response': token}, timeout=5)
+        response = requests.post(
+            settings.CAPTCHA_VERIFY_URL,
+            json={'secret': settings.CAP_SECRET, 'response': token},
+            timeout=5
+        )
         response.raise_for_status()
         data = response.json()
     except (requests.RequestException, ValueError):
@@ -62,7 +60,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True)
     code = serializers.CharField(write_only=True)
-    captcha = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    captcha_token = serializers.CharField(write_only=True, required=False, allow_blank=True)
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -70,10 +68,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password", "password2", "first_name", "last_name", "code", "captcha"]
+        fields = ["username", "email", "password", "password2", "first_name", "last_name", "code", "captcha_token"]
 
     def validate(self, attrs):
-        verify_captcha_token(attrs.get('captcha_token',''), SiteSettings.CaptchaChoice.REGISTER)
+        verify_captcha_token(attrs.get('captcha_token', ''), SiteSettings.CaptchaChoice.REGISTER)
 
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password2": "Passwords don't match."})
@@ -100,7 +98,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
-    captcha = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    captcha_token = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
