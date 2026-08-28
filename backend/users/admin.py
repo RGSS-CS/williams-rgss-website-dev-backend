@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django import forms
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 from .models import UserJoinCode
 from django.utils.html import format_html
 import qrcode
@@ -27,12 +29,12 @@ class UserJoinCodeForm(forms.ModelForm):
 @admin.register(UserJoinCode)
 class UserJoinCodeAdmin(admin.ModelAdmin):
     form = UserJoinCodeForm
-    readonly_fields = ('code', 'code_preview', 'uses', 'created', 'updated')
+    readonly_fields = ('code', 'code_preview', 'code_url', 'uses', 'created', 'updated')
 
     def code_preview(self, obj) -> str:
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            url = f"{frontend_url}/private/register?rel={obj.code}"
+            url = f"{frontend_url}/private/authentication/register?rel={obj.code}"
             qr = qrcode.make(url)
             buffer = io.BytesIO()
             qr.save(buffer, format="PNG")
@@ -43,5 +45,13 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
                 '<img src="data:image/png;base64,{}" style="max-height: 200px;" />',
                 qr_b64
             )
+        else:
+            return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."
+
+    def code_url(self, obj):
+        if obj.code:
+            frontend_url = SiteSettings.get_solo().frontend_url
+            url = f"{frontend_url}/private/authentication/register?rel={obj.code}"
+            return url
         else:
             return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."

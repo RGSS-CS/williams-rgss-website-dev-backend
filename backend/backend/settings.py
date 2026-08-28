@@ -41,6 +41,8 @@ SIGNING_KEY = config.SIGNING_KEY
 
 FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
 REVALIDATE_SECRET = config.REVALIDATE_SECRET
+CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
+CAP_SECRET = config.CAP_SECRET
 
 # Application definition
 
@@ -65,9 +67,9 @@ INSTALLED_APPS = [
     "whitenoise",
     "commands.apps.CommandsConfig",
     "django_ical",
+    "guardian",
     "corsheaders",
     "rest_framework",
-    'rest_framework.authtoken',
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
     'photologue',
@@ -134,6 +136,11 @@ AUTH_PASSWORD_VALIDATORS = [
     }
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage"
@@ -146,9 +153,8 @@ STORAGES = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication"
     ]
 }
 
