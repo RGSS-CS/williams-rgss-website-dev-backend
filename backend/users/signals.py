@@ -10,7 +10,7 @@ GROUPS = {
         ("clubs", "delete_clubwhyjoin"),
         ("clubs", "add_clubannouncement"),
         ("clubs", "change_clubannouncement"),
-        ("clubs", "delete_clubannouncement"),    
+        ("clubs", "delete_clubannouncement")    
     ],
     "Club Administrators" : [
         ("clubs", "can_approve_club_changes"),
@@ -21,7 +21,7 @@ GROUPS = {
         ("clubs", "delete_clubwhyjoin"),
         ("clubs", "add_clubannouncement"),
         ("clubs", "change_clubannouncement"),
-        ("clubs", "delete_clubannouncement"),
+        ("clubs", "delete_clubannouncement")
     ]
 }
 

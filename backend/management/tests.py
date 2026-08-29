@@ -14,7 +14,7 @@ class ManagementModelTests(TestCase):
     def test_page_settings_use_display_name_for_string_representation(self):
         page_settings = PageSettings.objects.create(
             internal_site_name=PageSettings.PageTypes.HOME,
-            title="Welcome",
+            title="Welcome"
         )
 
         self.assertEqual(str(page_settings), "Home")

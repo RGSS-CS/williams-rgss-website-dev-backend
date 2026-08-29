@@ -19,11 +19,11 @@ class UserJoinCodeForm(forms.ModelForm):
             'description',
             'expiry',
             'max_uses',
-            'uses',
+            'uses'
         ]
         widgets = {
             'label': forms.TextInput(attrs={'size': 40}),
-            'description': forms.Textarea(attrs={'rows': 4, 'cols': 60}),
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 60})
         }
 
 @admin.register(UserJoinCode)

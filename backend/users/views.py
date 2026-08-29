@@ -27,7 +27,7 @@ class VerifyRegisterCodeView(generics.GenericAPIView):
                 "valid": True,
                 "label": join_code.label,
             },
-            status=status.HTTP_200_OK,
+            status=status.HTTP_200_OK
         )
 
 

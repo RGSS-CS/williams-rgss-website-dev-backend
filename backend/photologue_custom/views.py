@@ -12,7 +12,7 @@ from .serializers import (
     GalleryCreateSerializer,
     GallerySerializer,
     PhotoSerializer,
-    PhotoUploadSerializer,
+    PhotoUploadSerializer
 )
 
 
@@ -34,7 +34,7 @@ class ClubGalleryView(APIView):
         if club.gallery is None:
             return Response(
                 {"detail": "This club has no gallery yet."},
-                status=status.HTTP_404_NOT_FOUND,
+                status=status.HTTP_404_NOT_FOUND
             )
         return Response(GallerySerializer(club.gallery, context={"request": request}).data)
 
@@ -43,7 +43,7 @@ class ClubGalleryView(APIView):
         if club.gallery is not None:
             return Response(
                 {"detail": "This club already has a gallery.", "gallery_id": club.gallery_id},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         serializer = GalleryCreateSerializer(data=request.data)
@@ -56,7 +56,7 @@ class ClubGalleryView(APIView):
 
         return Response(
             GallerySerializer(gallery, context={"request": request}).data,
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_201_CREATED
         )
 
 
@@ -75,7 +75,7 @@ class ClubGalleryPhotoView(APIView):
         if gallery is None:
             return Response(
                 {"detail": "This club has no gallery yet."},
-                status=status.HTTP_404_NOT_FOUND,
+                status=status.HTTP_404_NOT_FOUND
             )
         return Response(PhotoSerializer(gallery.photos.all(), many=True, context={"request": request}).data)
 
@@ -84,7 +84,7 @@ class ClubGalleryPhotoView(APIView):
         if gallery is None:
             return Response(
                 {"detail": "This club has no gallery yet. Create one first via POST /api/photologue/clubs/<club_id>/gallery/."},
-                status=status.HTTP_404_NOT_FOUND,
+                status=status.HTTP_404_NOT_FOUND
             )
 
         files = request.FILES.getlist("images") or (
@@ -93,7 +93,7 @@ class ClubGalleryPhotoView(APIView):
         if not files:
             return Response(
                 {"detail": "No image(s) provided. Send under 'image' (single) or 'images' (multiple)."},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         caption = request.data.get("caption", "")

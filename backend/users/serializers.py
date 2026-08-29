@@ -37,13 +37,21 @@ def verify_captcha_token(token, self):
 def validate_join_code(code):
     join_code = UserJoinCode.objects.filter(code=code).first()
     if not join_code:
-        raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+        raise serializers.ValidationError(
+            {"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."}
+        )
     if not join_code.enabled:
-        raise serializers.ValidationError({"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."})
+        raise serializers.ValidationError(
+            {"code": "Invalid QR code. If you believe this is a mistake, contact a teacher/admin."}
+        )
     if join_code.is_expired():
-        raise serializers.ValidationError({"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."})
+        raise serializers.ValidationError(
+            {"code": "QR code expired. If you believe this is a mistake, contact a teacher/admin."}
+        )
     if join_code.exceeded_max_uses():
-        raise serializers.ValidationError({"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."})
+        raise serializers.ValidationError(
+            {"code": "QR code has been used too many times. If you believe this is a mistake, contact a teacher/admin."}
+        )
 
     return join_code
 

@@ -22,12 +22,12 @@ class PhotoAdminForm(forms.ModelForm):
         model = Photo
         exclude = ['is_public', 'sites']
         widgets = {
-            "caption": forms.Textarea(attrs={"rows": 1, "cols": 80}),
+            "caption": forms.Textarea(attrs={"rows": 1, "cols": 80})
         }
 
 class GalleryAdmin(GalleryAdminDefault):
     form = GalleryAdminForm
-    inlines = [GalleryExtendedInline, ]
+    inlines = [GalleryExtendedInline]
     view_on_site = False
 
 admin.site.unregister(Gallery)
@@ -39,7 +39,7 @@ class PhotoAdmin(PhotoAdminDefault):
     view_on_site = False
     list_display = (
         "title", "date_taken", "date_added", "view_count",
-        "admin_thumbnail_safe",
+        "admin_thumbnail_safe"
     )
 
     def admin_thumbnail_safe(self, obj):

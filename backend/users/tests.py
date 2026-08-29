@@ -16,7 +16,7 @@ class RegisterSerializerTests(TestCase):
                 "password2": "StrongPass123!",
                 "first_name": "Test",
                 "last_name": "User",
-                "code": "disabled-code",
+                "code": "disabled-code"
             }
         )
 
@@ -34,7 +34,7 @@ class RegisterSerializerTests(TestCase):
                 "password2": "StrongPass123!",
                 "first_name": "New",
                 "last_name": "User",
-                "code": "valid-code",
+                "code": "valid-code"
             }
         )
 

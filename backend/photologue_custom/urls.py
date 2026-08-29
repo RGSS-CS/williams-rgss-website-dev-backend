@@ -10,5 +10,5 @@ router.register("photos", PhotoViewSet, basename="photo")
 
 urlpatterns = [
     path("clubs/<int:club_id>/gallery/", ClubGalleryView.as_view(), name="club-gallery"),
-    path("clubs/<int:club_id>/gallery/photos/", ClubGalleryPhotoView.as_view(), name="club-gallery-photos"),
+    path("clubs/<int:club_id>/gallery/photos/", ClubGalleryPhotoView.as_view(), name="club-gallery-photos")
 ] + router.urls

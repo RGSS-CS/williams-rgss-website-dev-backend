@@ -13,7 +13,7 @@ class PhotoSerializer(serializers.ModelSerializer):
             "title",
             "image",
             "caption",
-            "date_added",
+            "date_added"
         ]
 
 
@@ -27,7 +27,7 @@ class GallerySerializer(serializers.ModelSerializer):
             "title",
             "description",
             "date_added",
-            "photos",
+            "photos"
         ]
 
 
