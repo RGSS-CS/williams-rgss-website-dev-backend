@@ -42,7 +42,7 @@ class SiteSettingsAdminForm(forms.ModelForm):
             'school_email', 'school_phone', 'favicon', 'favicon_cropping',
             'site_logo', 'site_logo_cropping', 'about_stuco', 'about_school', 'school_mascot',
             'school_primary_color', 'school_secondary_color', 'school_tertiary_color',
-            'captcha',
+            'captcha'
         ]
 
 @admin.register(SiteSettings)
@@ -54,7 +54,7 @@ class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
 class PageSettingsAdmin(admin.ModelAdmin):
     exclude = ("internal_site_name",)
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 60})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 60})}
     }
     def has_add_permission(self, request):
         """Disables the add button in admin"""
