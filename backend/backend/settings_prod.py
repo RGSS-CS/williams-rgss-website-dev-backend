@@ -13,6 +13,9 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CSRF_COOKIE_SECURE = True
 
+# TLS is terminated by the reverse proxy before traffic reaches Django.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 SIGNING_KEY = os.environ.get("SIGNING_KEY", "build-fallback-signing-key")
 
 FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
