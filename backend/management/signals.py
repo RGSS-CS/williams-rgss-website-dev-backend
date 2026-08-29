@@ -4,13 +4,12 @@ from django.dispatch import receiver
 from .models import PageSettings, SiteSettings
  
 def on_post_migrate(sender, app_config, *args, **kwargs):
-
     if not PageSettings.objects.filter(internal_site_name="AB").exists():
         PageSettings.objects.create(
             internal_site_name="AB",
             title="About STUCO",
             subtitle="",
-            tagline="What about it? It's the student council...",
+            tagline="What about it? It's the student council..."
         )
 
     if not PageSettings.objects.filter(internal_site_name="GL").exists():
@@ -18,7 +17,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             internal_site_name="GL",
             title="Gallery",
             subtitle="",
-            tagline="Capturing the moments that matter most",
+            tagline="Capturing the moments that matter most"
         )
 
     if not PageSettings.objects.filter(internal_site_name="CL").exists():
@@ -34,10 +33,10 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             internal_site_name="HM",
             title="Welcome To",
             subtitle="STUCO",
-            tagline="Where students come together",
+            tagline="Where students come together"
         )
         
-def revalidate_frontend_tag(tag: str) -> None:
+def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as method called from clubs
     """
     POST to the Next.js revalidation route handler so it drops its
     cached data for the given cacheTag(...) immediately, instead of
@@ -57,9 +56,9 @@ def revalidate_frontend_tag(tag: str) -> None:
  
     if not url or not secret:
         logger.warning(
-            "Skipping frontend revalidation for tag=%r: "
+            "Skipping frontend revalidation for tag=%r: ",
             "FRONTEND_REVALIDATE_URL / REVALIDATE_SECRET not configured",
-            tag,
+            tag
         )
         return
  
@@ -68,7 +67,7 @@ def revalidate_frontend_tag(tag: str) -> None:
             url,
             json={"tag": tag},
             headers={"x-revalidate-secret": secret},
-            timeout=5,
+            timeout=5
         )
         response.raise_for_status()
     except requests.RequestException:
