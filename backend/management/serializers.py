@@ -25,7 +25,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
  
     def get_cropped_favicon(self, obj):
         if not obj.favicon:
-            return None
+            return None 
         request = self.context.get("request")
         url = get_backend().get_thumbnail_url(
             obj.favicon,
@@ -33,8 +33,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "size": (32, 32),
                 "box": obj.favicon_cropping,
                 "crop": True,
-                "detail": True,
-            },
+                "detail": True
+            }
         )
         return request.build_absolute_uri(url) if request else url
 
@@ -48,8 +48,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "size": (80, 80),
                 "box": obj.site_logo_cropping,
                 "crop": True,
-                "detail": True,
-            },
+                "detail": True
+            }
         )
         return request.build_absolute_uri(url) if request else url
     
