@@ -1,7 +1,13 @@
 from rest_framework import viewsets
-from .serializers import SiteSettingsSerializer
-from .models import SiteSettings
+from .serializers import PageSettingsSerializer, SiteSettingsSerializer
+from .models import PageSettings, SiteSettings
+from rest_framework.permissions import IsAdminUser
 
-class ClubViewSet(viewsets.ModelViewSet):
+class SiteSettingsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SiteSettings.objects.all()
     serializer_class = SiteSettingsSerializer
+
+
+class PageSettingsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PageSettings.objects.all()
+    serializer_class = PageSettingsSerializer

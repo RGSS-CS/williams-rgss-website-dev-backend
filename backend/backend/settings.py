@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from . import settings_local as config
+from easy_thumbnails.conf import Settings as thumbnail_settings
+
 # import json
 # import dotenv
 # import sys
@@ -35,30 +37,49 @@ CSRF_TRUSTED_ORIGINS = config.CSRF_TRUSTED_ORIGINS
 
 CSRF_COOKIE_SECURE = config.CSRF_COOKIE_SECURE
 
+SIGNING_KEY = config.SIGNING_KEY
+
+FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
+REVALIDATE_SECRET = config.REVALIDATE_SECRET
+CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
+CAP_SECRET = config.CAP_SECRET
+
 # Application definition
 
 INSTALLED_APPS = [
-    "management",
-    "osm_field",
-    "solo",
-    "migration_fixer",
-    "taggit",
-    "taggit_serializer",
-    "whitenoise",
-    "commands.apps.CommandsConfig",
-    "django_ical",
-    "corsheaders",
-    "rest_framework",
-    'rest_framework.authtoken',
-    "calendars.apps.CalendarsConfig",
-    "clubs.apps.ClubsConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    "management",
+    "osm_field",
+    "solo",
+    "migration_fixer",
+    'easy_thumbnails',
+    'image_cropping',
+    "taggit",
+    "taggit_serializer",
+    "colorfield",
+    "phonenumber_field",
+    "whitenoise",
+    "commands.apps.CommandsConfig",
+    "django_ical",
+    "guardian",
+    "corsheaders",
+    "rest_framework",
+    "calendars.apps.CalendarsConfig",
+    "clubs.apps.ClubsConfig",
+    'photologue',
+    'photologue_custom',
+    'sortedm2m',
+    "rest_framework_simplejwt",
+    "users"
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware', 
@@ -66,11 +87,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -84,10 +104,10 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+                'django.contrib.messages.context_processors.messages'
+            ]
+        }
+    }
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
@@ -103,34 +123,39 @@ DATABASES = config.DATABASES
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
+    }
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage"
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
 }
 
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ],
+    ]
 }
 
 # Internationalization
@@ -157,3 +182,11 @@ MEDIA_URL = "/media/"
 # Calendar stuff
 CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 # CALENDAR_NAME_VALIDATORS = []
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
+
+THUMBNAIL_BASEDIR = 'cropped'

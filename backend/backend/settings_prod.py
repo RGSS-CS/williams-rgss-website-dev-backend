@@ -3,7 +3,7 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent # this is specifically only for use in this file
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "build-fallback-secret-key")
 DEBUG = False
 ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()
@@ -13,6 +13,13 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CSRF_COOKIE_SECURE = True
 
+SIGNING_KEY = os.environ.get("SIGNING_KEY", "build-fallback-signing-key")
+
+FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
+REVALIDATE_SECRET = os.environ.get("REVALIDATE_SECRET", "")
+CAPTCHA_VERIFY_URL = os.environ.get("CAPTCHA_VERIFY_URL", "")
+CAP_SECRET = os.environ.get("CAP_SECRET", "")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -20,6 +27,6 @@ DATABASES = {
         'USER': os.environ.get("POSTGRES_USER"),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
         'HOST': os.environ.get("DB_HOST", "db"),
-        'PORT': os.environ.get("DB_PORT", "5432"),
+        'PORT': os.environ.get("DB_PORT", "5432")
     }
 }
