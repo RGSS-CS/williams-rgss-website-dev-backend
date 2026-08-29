@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
+from pathlib import Path
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
@@ -11,12 +12,12 @@ from image_cropping import ImageRatioField
 
 
 def FaviconRename(filename):
-    ext = filename.split('.')[-1]
+    ext = Path(filename).suffix
 
     return f'upload/management/favicon.{ext}'
 
 def SiteLogoRename(filename):
-    ext = filename.split('.')[-1]
+    ext = Path(filename).suffix
 
     return f'upload/management/logo.{ext}'
 
