@@ -45,7 +45,7 @@ class ClubsAdminForm(forms.ModelForm):
             "classroom_code": forms.TextInput(attrs={"size": 20}),
             "room_number": forms.TextInput(attrs={"size": 10}),
             "application_form_link": forms.URLInput(attrs={"size": 60}),
-            "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60})
         }
 
     def clean_category(self):
@@ -73,7 +73,7 @@ class ClubsAdminForm(forms.ModelForm):
             self.fields['category'].widget,
             tag_rel,
             admin.site,
-            can_add_related=True,
+            can_add_related=True
         )
 
     def save(self, commit=True):
