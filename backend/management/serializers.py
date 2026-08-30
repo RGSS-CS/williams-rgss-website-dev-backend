@@ -3,6 +3,14 @@ from .models import SiteSettings, SocialMedia, Location, PageSettings
 from image_cropping.utils import get_backend
 from phonenumber_field.serializerfields import PhoneNumberField #type: ignore
 
+
+def https_absolute_uri(request, url):
+    """Return a public image URL using HTTPS, even behind a TLS proxy."""
+    if not request:
+        return url
+    return request.build_absolute_uri(url).replace("http://", "https://", 1)
+
+
 class PhoneNumberSerializer(serializers.Serializer):
     school_phone = PhoneNumberField(region="CA")
 
@@ -36,7 +44,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "detail": True
             }
         )
-        return request.build_absolute_uri(url) if request else url
+        return https_absolute_uri(request, url)
 
     def get_cropped_site_image(self, obj):
         if not obj.site_logo:
@@ -51,7 +59,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "detail": True
             }
         )
-        return request.build_absolute_uri(url) if request else url
+        return https_absolute_uri(request, url)
     
     class Meta:
         model = SiteSettings
