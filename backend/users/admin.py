@@ -8,6 +8,7 @@ import qrcode
 import io
 import base64
 from management.models import SiteSettings
+from django.core.exceptions import PermissionDenied
 
 class UserJoinCodeForm(forms.ModelForm):
     expiry = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
@@ -72,5 +73,9 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('username', 'email', 'first_name', 'last_name', 'password1', 'password2'),
         }),
     )
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.username == "frontend":
+            return False
+        return super().has_delete_permission(request, obj)
 
 admin.site.register(CustomUser, CustomUserAdmin)

@@ -1,3 +1,5 @@
+import os
+
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
@@ -41,3 +43,17 @@ def create_default_groups(sender, **kwargs):
 
         if permissions:
             group.permissions.add(*permissions)
+
+@receiver(post_migrate, dispatch_uid="users.signals.create_frontend_user")
+def create_frontend_user(sender, **kwargs):
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    if not User.objects.filter(username="frontend").exists():
+        User.objects.create_user(
+            username="frontend",
+            password=os.environ.get("REVALIDATE_SECRET", ""),
+            is_active=False,
+            is_staff=False,
+            is_superuser=False
+        )
