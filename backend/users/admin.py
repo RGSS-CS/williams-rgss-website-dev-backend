@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from .models import CustomUser
 from .models import UserJoinCode
 from django.utils.html import format_html
 import qrcode
@@ -55,3 +55,5 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
             return url
         else:
             return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."
+
+admin.site.register(CustomUser, UserAdmin)

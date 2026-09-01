@@ -194,3 +194,6 @@ THUMBNAIL_PROCESSORS = (
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 THUMBNAIL_BASEDIR = 'cropped'
+
+
+AUTH_USER_MODEL = "users.CustomUser"
