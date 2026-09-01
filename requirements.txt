@@ -22,3 +22,4 @@ easy_thumbnails==2.10.1
 requests==2.33.0
 django-photologue==3.16
 django-guardian===3.3.3
+better_profanity==0.7.0
