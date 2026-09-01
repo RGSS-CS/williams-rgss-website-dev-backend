@@ -64,14 +64,13 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             "social_media", 
             "cropped_favicon", 
             "cropped_site_image", 
-            "about_stuco", 
-            "about_school", 
             "school_location",
             "school_mascot", 
             "school_primary_color", 
             "school_secondary_color", 
             "school_tertiary_color",
-            "captcha"
+            "captcha",
+            "school_domain"
         ]
 
 class PageSettingsSerializer(serializers.ModelSerializer):
