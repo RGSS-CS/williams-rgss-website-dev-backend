@@ -11,12 +11,12 @@ from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 from image_cropping import ImageRatioField
 
 
-def FaviconRename(filename):
+def FaviconRename(instance, filename):
     ext = Path(filename).suffix
 
     return f'upload/management/favicon.{ext}'
 
-def SiteLogoRename(filename):
+def SiteLogoRename(instance, filename):
     ext = Path(filename).suffix
 
     return f'upload/management/logo.{ext}'
