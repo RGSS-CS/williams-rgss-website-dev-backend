@@ -1,9 +1,14 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.contrib.auth.models import AbstractUser
+
 
 def get_random_code():
     return get_random_string(length=32)
+
+class CustomUser(AbstractUser):
+    pass
 
 class UserJoinCode(models.Model):
     code = models.CharField(
