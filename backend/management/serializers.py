@@ -36,7 +36,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "detail": True
             }
         )
-        return https_absolute_uri(request, url)
+        return url
 
     def get_cropped_site_image(self, obj):
         if not obj.site_logo:
@@ -51,7 +51,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 "detail": True
             }
         )
-        return https_absolute_uri(request, url)
+        return url
     
     class Meta:
         model = SiteSettings
