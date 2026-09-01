@@ -40,9 +40,9 @@ class SiteSettingsAdminForm(forms.ModelForm):
         fields = [
             'maintainance_mode','frontend_url', 'school_name','council_name',
             'school_email', 'school_phone', 'favicon', 'favicon_cropping',
-            'site_logo', 'site_logo_cropping', 'about_stuco', 'about_school', 'school_mascot',
+            'site_logo', 'site_logo_cropping', 'school_mascot',
             'school_primary_color', 'school_secondary_color', 'school_tertiary_color',
-            'captcha'
+            'captcha', 'school_domain'
         ]
 
 @admin.register(SiteSettings)

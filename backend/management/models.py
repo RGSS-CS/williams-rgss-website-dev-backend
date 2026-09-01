@@ -103,8 +103,6 @@ class SiteSettings(SingletonModel):
         help_text="Save new uploaded image then re-open " \
         "this page to view your new uploaded photo."
     )
-    about_stuco = models.TextField(blank=True, max_length=500)
-    about_school = models.TextField(blank=True, max_length=500)
     school_mascot = models.CharField(
         blank=True, max_length=50, 
         help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*."
@@ -125,6 +123,8 @@ class SiteSettings(SingletonModel):
     school_location = GenericRelation(Location)
 
     captcha = models.JSONField(default=list, blank=True)
+
+    school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
     # TODO: add website maintainers once users are done
 
     def save(self, *args, **kwargs):
