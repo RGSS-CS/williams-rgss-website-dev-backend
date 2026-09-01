@@ -8,7 +8,10 @@ def get_random_code():
     return get_random_string(length=32)
 
 class CustomUser(AbstractUser):
-    pass
+    title = models.CharField(max_length=50, blank=True, null=True, help_text="The role applied for student council.")
+
+    def __str__(self):
+        return self.username
 
 class UserJoinCode(models.Model):
     code = models.CharField(
