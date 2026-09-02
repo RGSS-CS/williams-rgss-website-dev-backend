@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .models import UserJoinCode
-from .qr_codes import NONCE_SIZE, build_registration_url
+from .qr_codes import build_registration_url
 from .serializers import RegisterSerializer
 
 
@@ -26,7 +26,7 @@ class RegistrationQRCodeTests(TestCase):
         encrypted_code = parse_qs(parsed.query)["rel"][0]
         payload = base64.urlsafe_b64decode(encrypted_code.encode("ascii"))
         plaintext = AESGCM(base64.urlsafe_b64decode(settings.AES_KEY)).decrypt(
-            payload[:NONCE_SIZE], payload[NONCE_SIZE:], None
+            payload[:12], payload[12:], None
         )
 
         self.assertEqual(parsed.path, "/private/authentication/register")
