@@ -1,14 +1,36 @@
 from django.contrib.auth import get_user_model
+import base64
+from urllib.parse import parse_qs, urlsplit
+
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .models import UserJoinCode
+from .qr_codes import NONCE_SIZE, build_registration_url
 from .serializers import RegisterSerializer
 
 
 User = get_user_model()
+
+
+class RegistrationQRCodeTests(TestCase):
+    def test_registration_url_contains_an_aes_gcm_encrypted_join_code(self):
+        join_code = "registration-code"
+        url = build_registration_url("https://frontend.example/", join_code)
+
+        parsed = urlsplit(url)
+        encrypted_code = parse_qs(parsed.query)["rel"][0]
+        payload = base64.urlsafe_b64decode(encrypted_code.encode("ascii"))
+        plaintext = AESGCM(base64.urlsafe_b64decode(settings.AES_KEY)).decrypt(
+            payload[:NONCE_SIZE], payload[NONCE_SIZE:], None
+        )
+
+        self.assertEqual(parsed.path, "/private/authentication/register")
+        self.assertEqual(plaintext.decode("utf-8"), join_code)
 
 
 class CustomUserModelTests(TestCase):
