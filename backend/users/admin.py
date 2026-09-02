@@ -63,6 +63,10 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
         else:
             return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."
 
+
+############################################# FOR CUSTOM USER ADMINISTRATION #############################################
+
+
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name')
     search_fields = ('username', 'email', 'first_name', 'last_name')
