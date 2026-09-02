@@ -9,8 +9,7 @@ import io
 import base64
 from management.models import SiteSettings
 from django.core.exceptions import PermissionDenied
-from django.conf import settings
-from cryptography.fernet import Fernet
+from .qr_codes import build_registration_url
 
 class UserJoinCodeForm(forms.ModelForm):
     expiry = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
@@ -37,9 +36,7 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
     def code_preview(self, obj) -> str:
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            f = Fernet(settings.FERNET_KEY.encode())
-            token = f.encrypt(obj.code.encode())
-            url = f"{frontend_url}/private/authentication/register?rel='{token}'"
+            url = build_registration_url(frontend_url, obj.code)
             qr = qrcode.make(url)
             buffer = io.BytesIO()
             qr.save(buffer, format="PNG")
@@ -56,10 +53,7 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
     def code_url(self, obj):
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            f = Fernet(settings.FERNET_KEY.encode())
-            token = f.encrypt(obj.code.encode())
-            url = f"{frontend_url}/private/authentication/register?rel='{token}'"
-            return url
+            return build_registration_url(frontend_url, obj.code)
         else:
             return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."
 

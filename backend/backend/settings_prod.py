@@ -22,7 +22,7 @@ FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
 REVALIDATE_SECRET = os.environ.get("REVALIDATE_SECRET", "")
 CAPTCHA_VERIFY_URL = os.environ.get("CAPTCHA_VERIFY_URL", "")
 CAP_SECRET = os.environ.get("CAP_SECRET", "")
-FERNET_KEY = os.environ.get("FERNET_KEY", "")
+AES_KEY = os.environ.get("AES_KEY", "")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
