@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
 
 class UserJoinCode(models.Model):
     code = models.CharField(
-        default=get_random_code, unique=True, verbose_name="Security Code"
+        default=get_random_code, unique=True, verbose_name="Security Code", help_text="Unencrypted registration code -- DO NOT SHARE"
     )
     label = models.CharField(
         max_length=50, blank=True, verbose_name="Title", 
