@@ -36,7 +36,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 CSRF_TRUSTED_ORIGINS = config.CSRF_TRUSTED_ORIGINS
 
 CSRF_COOKIE_SECURE = config.CSRF_COOKIE_SECURE
-
+FERNET_KEY = config.FERNET_KEY
 # The public deployment terminates TLS before requests reach Django. Trust its
 # protocol header so build_absolute_uri() produces HTTPS media URLs.
 SECURE_PROXY_SSL_HEADER = getattr(config, "SECURE_PROXY_SSL_HEADER", None)
