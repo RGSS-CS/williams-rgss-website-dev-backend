@@ -86,7 +86,7 @@ class SiteSettings(SingletonModel):
     school_phone = PhoneNumberField(blank=True)
     social_media = GenericRelation(SocialMedia)
     favicon = models.ImageField(
-        default="defaults/management/default.png", upload_to=FaviconRename, 
+        blank=True, upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
         "It should be a square image, preferably 32x32 pixels."
     )
@@ -95,7 +95,7 @@ class SiteSettings(SingletonModel):
         "Save new uploaded image then re-open this page to view your new uploaded photo."
     )
     site_logo = models.ImageField(
-        default="defaults/management/default.png", upload_to=SiteLogoRename, 
+        blank=True, upload_to=SiteLogoRename,
         help_text="This is the icon that represents your school"
     )
     site_logo_cropping = ImageRatioField(

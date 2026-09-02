@@ -9,6 +9,8 @@ class ManagementModelTests(TestCase):
 
         self.assertFalse(site_settings.maintainance_mode)
         self.assertEqual(site_settings.school_name, "SCHOOL")
+        self.assertFalse(site_settings.favicon)
+        self.assertFalse(site_settings.site_logo)
         self.assertEqual(str(site_settings), "Site Configuration")
 
     def test_page_settings_use_display_name_for_string_representation(self):
