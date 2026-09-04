@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.conf import settings
 from taggit.managers import TaggableManager
 from PIL import Image
-from management.models import SocialMedia
 from django.contrib.contenttypes.fields import GenericRelation
 from photologue.models import Gallery
 
@@ -91,7 +90,6 @@ class Club(models.Model):
         "using a google classroom code or a link to a form. *It will not be " \
         "visible when selected 'Not Accepting' in the field below."
     )
-    social_media = GenericRelation(SocialMedia)
     gallery = models.ForeignKey(
         Gallery, on_delete=models.SET_NULL, null=True, blank=True, related_name="clubs"
     )

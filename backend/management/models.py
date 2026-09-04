@@ -21,35 +21,6 @@ def SiteLogoRename(instance, filename):
 
     return f'upload/management/logo.{ext}'
 
-class SocialMedia(models.Model):
-    class Sites(models.TextChoices):
-        INSTAGRAM = "IG", "Instagram"
-        GITHUB = "GH", "GitHub"
-        YOUTUBE = "YT", "YouTube"
-        TIKTOK = "TT", "TikTok"
-        DISCORD = "DC", "Discord"
-        THREADS = "TR", "Threads"
-        FACEBOOK = "FB", "Facebook" # doubt anyone uses this, it's old af
-        TWITTER = "X", "Twitter/X" # i hate this name # me too
-        LINKEDIN = "LI", "LinkedIn" 
-        WEBSITE = "WS", "Website"
-        OTHER = "OT", "Other"
-        # NOTE: DO NOT add Reddit, there is incredible surplus of NSFW content
-
-    # club = models.ForeignKey(Club, related_name='socialMedia', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveBigIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-    site = models.CharField(max_length=2, choices=Sites.choices, default=Sites.OTHER)
-
-    def __str__(self):
-        return self.site
-    
-    class Meta:
-        indexes = [
-            models.Index(fields=["content_type", "object_id"])
-        ]
-
 class Location(models.Model):
     location_lat = LatitudeField(null=True)
     location_lon = LongitudeField(null=True)
@@ -84,7 +55,6 @@ class SiteSettings(SingletonModel):
     )
     school_email = models.EmailField(blank=True, max_length=50)
     school_phone = PhoneNumberField(blank=True)
-    social_media = GenericRelation(SocialMedia)
     favicon = models.ImageField(
         blank=True, upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
@@ -125,8 +95,7 @@ class SiteSettings(SingletonModel):
     captcha = models.JSONField(default=list, blank=True)
 
     school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
-    # TODO: add website maintainers once users are done
-
+    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
@@ -142,6 +111,28 @@ class SiteSettings(SingletonModel):
 
     class Meta:
         verbose_name = "Site Configuration"
+
+class SchoolSocialMedia(models.Model):
+    class Sites(models.TextChoices):
+        INSTAGRAM = "IG", "Instagram"
+        YOUTUBE = "YT", "YouTube"
+        LINKEDIN = "LI", "LinkedIn" 
+        OTHER = "OT", "Other"
+
+    site_settings = models.ForeignKey(SiteSettings, on_delete=models.PROTECT, related_name="social_media",
+    )    
+    social_type = models.CharField(choices=Sites, null=True, max_length=2)
+    title = models.CharField(max_length=20, null=True, help_text="This is needed only to override the default site title")
+    link = models.URLField(max_length=500, null=True)
+
+    class Meta:
+        verbose_name="Social Media"
+        verbose_name_plural="Social Media"
+
+    def __str__(self):
+        return self.title
+
+
 
 class PageSettings(models.Model):
     class PageTypes(models.TextChoices):
