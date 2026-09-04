@@ -122,7 +122,7 @@ class SchoolSocialMedia(models.Model):
     site_settings = models.ForeignKey(SiteSettings, on_delete=models.PROTECT, related_name="social_media",
     )    
     social_type = models.CharField(choices=Sites, null=True, max_length=2)
-    title = models.CharField(max_length=20, null=True, help_text="This is needed only to override the default site title")
+    title = models.CharField(max_length=20, null=True, blank=True, help_text="This is needed only to override the default site title")
     link = models.URLField(max_length=500, null=True)
 
     class Meta:
