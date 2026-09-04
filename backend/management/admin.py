@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.contenttypes.admin import GenericStackedInline
+from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
 from solo.admin import SingletonModelAdmin
 from image_cropping import ImageCroppingMixin
 from django.forms import TextInput, Textarea
@@ -7,7 +7,7 @@ from django.db import models
 from django import forms
 
 from .forms import LocationAdminForm
-from .models import Location, SiteSettings, PageSettings
+from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia
 
 
 class LocationInline(GenericStackedInline):
@@ -45,10 +45,14 @@ class SiteSettingsAdminForm(forms.ModelForm):
             'captcha', 'school_domain'
         ]
 
+class SocialMediaInline(admin.TabularInline):
+    model = SchoolSocialMedia
+    extra = 1
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
     form = SiteSettingsAdminForm
-    inlines = [LocationInline]
+    inlines = [LocationInline, SocialMediaInline]
 
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):

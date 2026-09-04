@@ -1,23 +1,23 @@
 from rest_framework import serializers
-from .models import SiteSettings, SocialMedia, Location, PageSettings
+from .models import SiteSettings, SchoolSocialMedia, Location, PageSettings
 from image_cropping.utils import get_backend
 from phonenumber_field.serializerfields import PhoneNumberField #type: ignore
 
 class PhoneNumberSerializer(serializers.Serializer):
     school_phone = PhoneNumberField(region="CA")
 
-class SocialMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SocialMedia
-        fields = ["site", "content_type", "object_id"]
-
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ["location", "location_lat", "location_lon", "content_type", "object_id"]
 
+class SocialMediaSeralizer(serializers.ModelSerializer):
+    class Meta: 
+        model = SchoolSocialMedia
+        fields = ['social_type', 'title', 'link']
+
 class SiteSettingsSerializer(serializers.ModelSerializer):
-    social_media = SocialMediaSerializer(many=True, read_only=True)
+    social_media = SocialMediaSeralizer(many=True, read_only=True)
     school_location = LocationSerializer(many=True, read_only=True)
 
     cropped_favicon = serializers.SerializerMethodField()

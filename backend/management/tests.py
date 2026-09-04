@@ -1,6 +1,7 @@
 from django.test import TestCase
+from django.urls import reverse
 
-from .models import PageSettings, SiteSettings
+from .models import PageSettings, SchoolSocialMedia, SiteSettings
 
 
 class ManagementModelTests(TestCase):
@@ -20,3 +21,52 @@ class ManagementModelTests(TestCase):
         )
 
         self.assertEqual(str(page_settings), "Home")
+
+
+class SchoolSocialMediaTests(TestCase):
+    def setUp(self):
+        self.site_settings = SiteSettings.get_solo()
+
+    def test_social_media_is_available_through_site_settings(self):
+        instagram = SchoolSocialMedia.objects.create(
+            site_settings=self.site_settings,
+            social_type=SchoolSocialMedia.Sites.INSTAGRAM,
+            title="Student Council Instagram",
+            link="https://www.instagram.com/example_school/",
+        )
+
+        self.assertEqual(list(self.site_settings.social_media.all()), [instagram])
+        self.assertEqual(str(instagram), "Student Council Instagram")
+
+    def test_site_settings_endpoint_returns_social_media_details(self):
+        SchoolSocialMedia.objects.create(
+            site_settings=self.site_settings,
+            social_type=SchoolSocialMedia.Sites.INSTAGRAM,
+            title="Instagram",
+            link="https://www.instagram.com/example_school/",
+        )
+        SchoolSocialMedia.objects.create(
+            site_settings=self.site_settings,
+            social_type=SchoolSocialMedia.Sites.YOUTUBE,
+            title="YouTube",
+            link="https://www.youtube.com/@example_school",
+        )
+
+        response = self.client.get(reverse("site-settings-list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()[0]["social_media"],
+            [
+                {
+                    "social_type": SchoolSocialMedia.Sites.INSTAGRAM,
+                    "title": "Instagram",
+                    "link": "https://www.instagram.com/example_school/",
+                },
+                {
+                    "social_type": SchoolSocialMedia.Sites.YOUTUBE,
+                    "title": "YouTube",
+                    "link": "https://www.youtube.com/@example_school",
+                },
+            ],
+        )
