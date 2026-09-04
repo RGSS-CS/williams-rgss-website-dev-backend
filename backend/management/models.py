@@ -130,7 +130,7 @@ class SchoolSocialMedia(models.Model):
         verbose_name_plural="Social Media"
 
     def __str__(self):
-        return self.title
+        return self.social_type
 
 
 
