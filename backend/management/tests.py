@@ -36,7 +36,20 @@ class SchoolSocialMediaTests(TestCase):
         )
 
         self.assertEqual(list(self.site_settings.social_media.all()), [instagram])
-        self.assertEqual(str(instagram), "Student Council Instagram")
+        self.assertEqual(str(instagram), "IG")
+
+    def test_social_media_string_representation_handles_optional_title(self):
+        for title in ("", None):
+            with self.subTest(title=title):
+                instagram = SchoolSocialMedia.objects.create(
+                    site_settings=self.site_settings,
+                    social_type=SchoolSocialMedia.Sites.INSTAGRAM,
+                    title=title,
+                    link="https://www.instagram.com/example_school/",
+                )
+
+                instagram.refresh_from_db()
+                self.assertEqual(str(instagram), "IG")
 
     def test_site_settings_endpoint_returns_social_media_details(self):
         SchoolSocialMedia.objects.create(
