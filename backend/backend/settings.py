@@ -41,6 +41,10 @@ AES_KEY = config.AES_KEY
 # protocol header so build_absolute_uri() produces HTTPS media URLs.
 SECURE_PROXY_SSL_HEADER = getattr(config, "SECURE_PROXY_SSL_HEADER", None)
 
+# The public deployment terminates TLS before requests reach Django. Trust its
+# protocol header so build_absolute_uri() produces HTTPS media URLs.
+SECURE_PROXY_SSL_HEADER = getattr(config, "SECURE_PROXY_SSL_HEADER", None)
+
 SIGNING_KEY = config.SIGNING_KEY
 
 FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL

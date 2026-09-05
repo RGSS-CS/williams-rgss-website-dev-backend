@@ -6,6 +6,18 @@ from photologue.models import Gallery, Photo
 
 
 class PhotoSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        if not obj.image:
+            return None
+
+        request = self.context.get("request")
+        if not request:
+            return obj.image.url
+
+        return request.build_absolute_uri(obj.image.url).replace("http://", "https://", 1)
+
     class Meta:
         model = Photo
         fields = [
