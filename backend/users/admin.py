@@ -1,13 +1,15 @@
 from django.contrib import admin
 from django import forms
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from .models import CustomUser
 from .models import UserJoinCode
 from django.utils.html import format_html
 import qrcode
 import io
 import base64
 from management.models import SiteSettings
+from django.core.exceptions import PermissionDenied
+from .qr_codes import build_registration_url
 
 class UserJoinCodeForm(forms.ModelForm):
     expiry = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
@@ -34,7 +36,7 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
     def code_preview(self, obj) -> str:
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            url = f"{frontend_url}/private/authentication/register?rel={obj.code}"
+            url = build_registration_url(frontend_url, obj.code)
             qr = qrcode.make(url)
             buffer = io.BytesIO()
             qr.save(buffer, format="PNG")
@@ -51,7 +53,29 @@ class UserJoinCodeAdmin(admin.ModelAdmin):
     def code_url(self, obj):
         if obj.code:
             frontend_url = SiteSettings.get_solo().frontend_url
-            url = f"{frontend_url}/private/authentication/register?rel={obj.code}"
-            return url
+            return build_registration_url(frontend_url, obj.code)
         else:
             return "Error: it seems that the code field is null, or in Python, None. This shouldn't have happened."
+
+
+############################################# FOR CUSTOM USER ADMINISTRATION #############################################
+
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name')
+    search_fields = ('username', 'email', 'first_name', 'last_name')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'first_name', 'last_name', 'password1', 'password2'),
+        }),
+    )
+
+admin.site.register(CustomUser, CustomUserAdmin)

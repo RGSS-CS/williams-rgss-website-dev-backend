@@ -4,7 +4,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent # this is specifically only for use in this file
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "build-fallback-secret-key")
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False")
 ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()
 ]
@@ -22,7 +22,7 @@ FRONTEND_REVALIDATE_URL = os.environ.get("REVALIDATE_URL", "")
 REVALIDATE_SECRET = os.environ.get("REVALIDATE_SECRET", "")
 CAPTCHA_VERIFY_URL = os.environ.get("CAPTCHA_VERIFY_URL", "")
 CAP_SECRET = os.environ.get("CAP_SECRET", "")
-
+AES_KEY = os.environ.get("AES_KEY", "")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

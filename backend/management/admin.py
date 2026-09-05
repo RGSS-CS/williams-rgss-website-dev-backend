@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.contenttypes.admin import GenericStackedInline
+from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
 from solo.admin import SingletonModelAdmin
 from image_cropping import ImageCroppingMixin
 from django.forms import TextInput, Textarea
@@ -7,7 +7,7 @@ from django.db import models
 from django import forms
 
 from .forms import LocationAdminForm
-from .models import Location, SiteSettings, PageSettings
+from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia
 
 
 class LocationInline(GenericStackedInline):
@@ -40,15 +40,19 @@ class SiteSettingsAdminForm(forms.ModelForm):
         fields = [
             'maintainance_mode','frontend_url', 'school_name','council_name',
             'school_email', 'school_phone', 'favicon', 'favicon_cropping',
-            'site_logo', 'site_logo_cropping', 'about_stuco', 'about_school', 'school_mascot',
+            'site_logo', 'site_logo_cropping', 'school_mascot',
             'school_primary_color', 'school_secondary_color', 'school_tertiary_color',
-            'captcha'
+            'captcha', 'school_domain'
         ]
+
+class SocialMediaInline(admin.TabularInline):
+    model = SchoolSocialMedia
+    extra = 1
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
     form = SiteSettingsAdminForm
-    inlines = [LocationInline]
+    inlines = [LocationInline, SocialMediaInline]
 
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):

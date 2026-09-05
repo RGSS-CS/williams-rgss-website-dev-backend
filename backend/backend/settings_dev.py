@@ -14,6 +14,7 @@ FRONTEND_REVALIDATE_URL = 'http://localhost:3000/api/revalidate'
 REVALIDATE_SECRET = 'dev-insecure-revalidate-secret'
 CAPTCHA_VERIFY_URL = 'https://(url)/siteverify'
 CAP_SECRET = ''
+AES_KEY = 'UiMzEG1ZzRM0BglYWjBcvP8Mwrxxxja8gL_yRkFwWKM='
 
 DATABASES = {
     'default': {

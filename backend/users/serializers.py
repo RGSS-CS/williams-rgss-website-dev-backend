@@ -8,7 +8,9 @@ from .models import UserJoinCode
 from django.conf import settings
 from management.models import SiteSettings
 import requests
+from better_profanity import profanity
 
+profanity.load_censor_words()  # Load default profanity words
 User = get_user_model()
 
 def is_captcha_enabled(self):
@@ -85,6 +87,18 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password2": "Passwords don't match."})
 
         validate_join_code(attrs["code"])
+
+        if attrs['username'] and profanity.contains_profanity(attrs['username']):
+            raise serializers.ValidationError({"username": "Username contains inappropriate language."})
+
+        if attrs['first_name'] and profanity.contains_profanity(attrs['first_name']):
+            raise serializers.ValidationError({"first_name": "First name contains inappropriate language."})
+
+        if attrs['last_name'] and profanity.contains_profanity(attrs['last_name']):
+            raise serializers.ValidationError({"last_name": "Last name contains inappropriate language."})
+
+        if attrs['email'] and profanity.contains_profanity(attrs['email']):
+            raise serializers.ValidationError({"email": "Email contains inappropriate language."})
 
         return attrs
 

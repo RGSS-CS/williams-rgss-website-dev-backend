@@ -1,13 +1,19 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.contrib.auth.models import AbstractUser
+
 
 def get_random_code():
     return get_random_string(length=32)
 
+class CustomUser(AbstractUser):
+    def __str__(self):
+        return self.username
+
 class UserJoinCode(models.Model):
     code = models.CharField(
-        default=get_random_code, unique=True, verbose_name="Security Code"
+        default=get_random_code, unique=True, verbose_name="Security Code", help_text="Unencrypted registration code -- DO NOT SHARE"
     )
     label = models.CharField(
         max_length=50, blank=True, verbose_name="Title", 
