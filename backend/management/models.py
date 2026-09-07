@@ -53,8 +53,8 @@ class SiteSettings(SingletonModel):
         default="STUCO", max_length=10, 
         help_text="The name of the council (e.g, SAC)"
     )
-    school_email = models.EmailField(blank=True, max_length=50)
-    school_phone = PhoneNumberField(blank=True)
+    school_email = models.EmailField(null=True, max_length=50)
+    school_phone = PhoneNumberField(null=True, help_text="The phone number should include the area code (+1), followed by the digits with no spaces or a non-numerial character.")
     favicon = models.ImageField(
         blank=True, upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
@@ -147,12 +147,12 @@ class PageSettings(models.Model):
         help_text="This is the title of the page. It is the TOP of the title section."
     )
     subtitle = models.CharField(
-        blank=True, max_length=30, 
+        blank=True, null=True, max_length=30, 
         help_text="This is the subtitle of the page. It is the BOTTOM of the " \
         "title section (secondary color). *NOT REQUIRED"
     )
     tagline = models.TextField(
-        blank=True, max_length=200, 
+        blank=True, null=True, max_length=200, 
         help_text="This is the bullet points of the title. It should be short and tells the user" \
         " a bit about the page. *NOT REQUIRED"
     )
