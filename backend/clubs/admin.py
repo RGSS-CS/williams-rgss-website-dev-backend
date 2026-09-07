@@ -9,7 +9,7 @@ from taggit.models import Tag
 from django.contrib.admin import widgets
 from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
-from .models import Club, ClubWhyJoin, GalleryExtended, ClubMembership
+from .models import Club, ClubWhyJoin, GalleryExtended, ClubMembership, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 
@@ -32,7 +32,7 @@ class ClubsAdminForm(forms.ModelForm):
         fields = [
             "name", "preview_description", "description", "tagline",  
             "category", "gallery", "day_of_meeting", "time",        
-            "repetition", "room_number", "announcement", "classroom_code",
+            "repetition", "room_number", "classroom_code",
             "application_form_link", "join_instructions", "accepting_applicants",
             "teacher_advisor"
         ]
@@ -87,7 +87,9 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
-
+class ClubAnnouncementInline(admin.TabularInline):
+    model = ClubAnnouncement
+    extra = 1
     
 class WhyJoinInline(admin.TabularInline):
     model = ClubWhyJoin
@@ -112,7 +114,7 @@ class ClubMemberInline(admin.TabularInline):
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
-    inlines = [WhyJoinInline]
+    inlines = [WhyJoinInline, ClubAnnouncementInline]
 
 @admin.register(ClubMembership)
 class ClubMembershipAdmin(admin.ModelAdmin):

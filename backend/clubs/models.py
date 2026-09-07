@@ -69,9 +69,6 @@ class Club(models.Model):
         help_text="This can be either a google classroom invite link or a application" \
         " form link *It will not be visable when selected 'Not Accepting' in the field below."
     )
-    announcement = models.CharField(
-        null=True,blank=True, help_text="This is where you announce application news."  #BEN ISSUE
-    )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
     room_number = models.PositiveIntegerField(null=True)
@@ -141,8 +138,8 @@ class ClubWhyJoin(models.Model):
         
 
 class ClubAnnouncement(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(max_length=2000)
+    title = models.CharField(max_length=200, null=True)
+    description = models.TextField(max_length=500, null=True)
     date_posted = models.DateTimeField(default=timezone.now)
     pinned = models.BooleanField(
         default=False,
