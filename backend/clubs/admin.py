@@ -87,8 +87,22 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
+class ClubAnnouncementAdminForm(forms.ModelForm):
+    class Meta:
+        model = ClubAnnouncement
+        fields = ['title', 'description', 'popup', 'expiry']
+        field_classes = {'expiry': forms.DateTimeField}
+        widgets = {
+            'expiry': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'step': '1'},
+                format='%Y-%m-%dT%H:%M:%S',
+            ),
+        }
+
+
 class ClubAnnouncementInline(admin.StackedInline):
     model = ClubAnnouncement
+    form = ClubAnnouncementAdminForm
     fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
     max_num = 1
