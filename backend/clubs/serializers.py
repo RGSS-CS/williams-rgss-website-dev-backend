@@ -4,6 +4,7 @@ from .models import Club, ClubWhyJoin, ClubMembership, ClubChanges, ClubAnnounce
 from photologue_custom.serializers import GallerySerializer
 
 class ClubWhyJoinSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = ClubWhyJoin
         fields = ["title", "description", "index"]
@@ -15,10 +16,9 @@ class ClubAnnouncementSerializer(serializers.ModelSerializer):
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
-    why_join = ClubWhyJoinSerializer(source="why_join_reasons",many=True)
+    why_join = ClubWhyJoinSerializer(source="why_join_reasons",many=True,max_length=10)
     gallery = GallerySerializer()
-    announcement = ClubAnnouncementSerializer(
-        source="club_announcement")
+    announcement = ClubAnnouncementSerializer(source="club_announcement",max_length=1)
 
     class Meta:
         model = Club

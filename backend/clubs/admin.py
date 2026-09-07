@@ -95,7 +95,11 @@ class ClubAnnouncementInline(admin.StackedInline):
 
 class WhyJoinInline(admin.StackedInline):
     model = ClubWhyJoin
-    extra = 1
+    extra = 3
+    max_num = 10
+
+    class Meta:
+        verbose_name = "Why Join?"
 
 
 class ClubMemberInline(admin.TabularInline):
