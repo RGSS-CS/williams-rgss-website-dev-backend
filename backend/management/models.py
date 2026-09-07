@@ -69,7 +69,7 @@ class SiteSettings(SingletonModel):
         help_text="This is the icon that represents your school"
     )
     site_logo_cropping = ImageRatioField(
-        'site_logo', '80x80', free_crop = True, 
+        'site_logo', '160x160', free_crop = True, 
         help_text="Save new uploaded image then re-open " \
         "this page to view your new uploaded photo."
     )
