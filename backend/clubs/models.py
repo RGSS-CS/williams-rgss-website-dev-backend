@@ -128,26 +128,13 @@ class ClubWhyJoin(models.Model):
     def __str__(self):
         return self.title
     
-    # def save(self, *args, **kwargs):
-    #     if ClubWhyJoin.objects.filter(index=self.index).count() > 1:
-    #         for i in ClubWhyJoin.objects.filter(index__gt=self.index):
-    #             i.index += 1
-    #             i.save()
-
-    #     super().save(*args, **kwargs)
-        
-
 class ClubAnnouncement(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = models.TextField(max_length=500, null=True)
     date_posted = models.DateTimeField(default=timezone.now, help_text="This does not reflect the post status of the announcement, it only reads the current date/time.")
-    pinned = models.BooleanField(
-        default=False,
-        help_text="Whether or not the post should be pinned to the top of the page."
-    )
-    club = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="club_announcement"
-    )
+    popup = models.BooleanField(default=False, help_text="Determines whether popup is enabled for this announcement. Regardless, it will be shown in the announcements section.")
+    expiry = models.DateTimeField(null=True, help_text="When does this post expire? When expired, it will be marked as resolved in the announcment section.")
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement")
 
     class Meta:
         verbose_name =  "Club Announcement"

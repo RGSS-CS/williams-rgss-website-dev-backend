@@ -89,7 +89,7 @@ class ClubsAdminForm(forms.ModelForm):
 
 class ClubAnnouncementInline(admin.StackedInline):
     model = ClubAnnouncement
-    fields = ['title','description','pinned','date_posted']
+    fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
     max_num = 1
 
