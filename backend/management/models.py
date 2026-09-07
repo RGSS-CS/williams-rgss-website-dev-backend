@@ -66,7 +66,7 @@ class SiteSettings(SingletonModel):
     )
     site_logo = models.ImageField(
         blank=True, upload_to=SiteLogoRename,
-        help_text="This is the icon that represents your school"
+        help_text="This is the icon that represents your school. This image will be displayed on the navigation bar and the homepage."
     )
     site_logo_cropping = ImageRatioField(
         'site_logo', '160x160', free_crop = True, 
