@@ -75,7 +75,8 @@ INSTALLED_APPS = [
     'photologue_custom',
     'sortedm2m',
     "rest_framework_simplejwt",
-    "users"
+    "users",
+    'galleries'
 ]
 
 SITE_ID = 1
