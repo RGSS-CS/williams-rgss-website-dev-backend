@@ -70,7 +70,7 @@ class Club(models.Model):
         " form link *It will not be visable when selected 'Not Accepting' in the field below."
     )
     announcement = models.CharField(
-        null=True, help_text="This is where you announce application news."  #BEN ISSUE
+        null=True,blank=True, help_text="This is where you announce application news."  #BEN ISSUE
     )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
