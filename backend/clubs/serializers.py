@@ -17,7 +17,8 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
     why_join = ClubWhyJoinSerializer(source="why_join_reasons",many=True)
     gallery = GallerySerializer()
-    announement = ClubAnnouncementSerializer()
+    announcement = ClubAnnouncementSerializer(
+        source="club_announcement")
 
     class Meta:
         model = Club
