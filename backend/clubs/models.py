@@ -49,7 +49,7 @@ class Club(models.Model):
         null=True, max_length=500, 
         help_text="Insert a long description for your club. This is where you can describe your club in detail."
     )
-    category = TaggableManager()
+    category = TaggableManager(blank=True)
     repetition = models.CharField(
         null=True, max_length=10, choices=Repetition.choices, 
         help_text="How often does your club meet? If your club meets on a different schedule," \
@@ -140,7 +140,7 @@ class ClubWhyJoin(models.Model):
 class ClubAnnouncement(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = models.TextField(max_length=500, null=True)
-    date_posted = models.DateTimeField(default=timezone.now)
+    date_posted = models.DateTimeField(default=timezone.now, help_text="This does not reflect the post status of the announcement, it only reads the current date/time.")
     pinned = models.BooleanField(
         default=False,
         help_text="Whether or not the post should be pinned to the top of the page."

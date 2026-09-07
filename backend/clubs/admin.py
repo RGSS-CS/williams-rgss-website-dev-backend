@@ -87,11 +87,13 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
-class ClubAnnouncementInline(admin.TabularInline):
+class ClubAnnouncementInline(admin.StackedInline):
     model = ClubAnnouncement
-    extra = 1
-    
-class WhyJoinInline(admin.TabularInline):
+    fields = ['title','description','pinned','date_posted']
+    readonly_fields = ['date_posted']
+    max_num = 1
+
+class WhyJoinInline(admin.StackedInline):
     model = ClubWhyJoin
     extra = 1
 
