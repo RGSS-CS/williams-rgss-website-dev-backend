@@ -22,15 +22,25 @@ class MassImport(models.Model):
     class FileType(models.TextChoices):
          PHOTOS = 'PH', 'Photos'
          VIDEOS = 'VI', 'Videos'
-
+    name = models.CharField(null=True, blank=True, help_text='The name will automatically be generated based on the ZIP file name.')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Videos or Photo files only.')
     file_type = models.CharField(max_length=2, choices=FileType)
+    upload_date = models.DateTimeField(auto_now_add=True)
     upload_status = models.CharField(max_length=5, null=True)
 
     class Meta:
         verbose_name = 'ZIP Upload'
         verbose_name_plural = 'ZIP Upload'
+
+    def __str__(self):
+         return self.name
+
+    def save(self, *args, **kwargs):
+         club_name = self.club.name
+         file = self.zip_file.name
+         self.name = f'{file} - {club_name[:17]}'
+         super().save(*args, **kwargs)
 
 class Photos(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True, help_text='If left blank, it will automatically generate a name for you.')

@@ -61,6 +61,17 @@ class PhotoAdmin(admin.ModelAdmin):
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PhotoAdmin, self).get_form(request, obj, **kwargs)
+
+        field = form.base_fields['club']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field.widget.can_delete_related = False
+        field.widget.can_view_related = False
+
+        return form
+
 ############################## VIDEO FILES ####################################
 
 class VideoAdminForm(forms.ModelForm):
@@ -87,13 +98,32 @@ class VideoAdmin(admin.ModelAdmin):
     readonly_fields = ('created_date','modified_date')
     form = VideoAdminForm
 
-class MassImportAdminForm(forms.ModelForm):
-    zip_file = forms.FileField(required=True, widget=AdminFileWidget())
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(VideoAdmin, self).get_form(request, obj, **kwargs)
+
+        field = form.base_fields['club']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field.widget.can_delete_related = False
+        field.widget.can_view_related = False
+
+        return form
 
 
-
+############################## ZIP Files ##############################
 
 @admin.register(MassImport)
 class MassImportAdmin(admin.ModelAdmin):
-    fields = ('zip_file', 'file_type', 'club','upload_status')
-    readonly_fields = ('upload_status',)
+    fields = ('name','zip_file', 'file_type', 'club','upload_date','upload_status')
+    readonly_fields = ('upload_status','name','upload_date')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(MassImportAdmin, self).get_form(request, obj, **kwargs)
+
+        field = form.base_fields['club']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field.widget.can_delete_related = False
+        field.widget.can_view_related = False
+
+        return form
