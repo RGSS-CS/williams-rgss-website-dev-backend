@@ -49,6 +49,8 @@ class Photos(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
+    shown_in_gallery = models.BooleanField(default=False,help_text='Select this option if you want the photo to be shown in the gallery.')
+    shown_in_main_page = models.BooleanField(default=False,help_text="Select this option if you want the photo to be shown in your club's homepage")
 
     class Meta:
         verbose_name_plural = 'Photos'
@@ -77,6 +79,8 @@ class Videos(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
+    shown_in_gallery = models.BooleanField(default=False,help_text='Select this option if you want the photo to be shown in the gallery.')
+    shown_in_main_page = models.BooleanField(default=False,help_text="Select this option if you want the photo to be shown in your club's homepage")
 
     class Meta: 
         verbose_name = 'Videos'
