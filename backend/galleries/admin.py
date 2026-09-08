@@ -57,7 +57,7 @@ class PhotoAdminForm(forms.ModelForm):
     
 @admin.register(Photos)
 class PhotoAdmin(admin.ModelAdmin):
-    fields = ('name', 'description', 'image', 'club', 'created_date', 'modified_date')
+    fields = ('name', 'description', 'image', 'club','shown_in_gallery','shown_in_main_page', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
 
@@ -94,7 +94,7 @@ class VideoAdminForm(forms.ModelForm):
 
 @admin.register(Videos)
 class VideoAdmin(admin.ModelAdmin):
-    fields = ('name', 'description','link', 'video_file', 'club', 'created_date', 'modified_date')
+    fields = ('name', 'description','link', 'video_file', 'club','shown_in_gallery','shown_in_main_page', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = VideoAdminForm
 
