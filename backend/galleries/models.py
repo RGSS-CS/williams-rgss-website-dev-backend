@@ -35,6 +35,7 @@ class Videos(models.Model):
          OTHER = 'OT', 'Other'
 
     name = models.CharField(max_length=50)
+    description = models.TextField(max_length=100, null=True, blank=True, help_text="This is like a video description about what the video is about. *OPTIONAL.")
     link = models.URLField(max_length=500, blank=True, null=True, help_text='Not required, only needed for Youtube and Google Drive(Use embed code)')
     video_file = models.FileField(upload_to=video_upload_path)
     created_date = models.DateTimeField(auto_now_add=True)
