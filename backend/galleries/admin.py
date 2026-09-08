@@ -14,8 +14,9 @@ def validate_upload_mime(file, allowed_types):
         mime = puremagic.from_string(file.read(1024), mime=True)
     except (puremagic.PureError, ValueError) as exc:
         raise ValidationError('Unable to identify the uploaded file type.')
+    finally:
+        file.seek(0)
 
-    file.seek(0)
     if mime not in allowed_types:
         raise ValidationError(f'Invalid file type. Allowed types: {allowed_types}')
 
@@ -50,8 +51,8 @@ class PhotoAdminForm(forms.ModelForm):
                     raise ValidationError(f'Image is too large. Max dimensions: {max_dim[0]}x{max_dim[1]}')
         except (IOError, SyntaxError) as e:
             raise ValidationError(f'Invalid image file: {str(e)}')
-
-        file.seek(0)
+        finally:
+            file.seek(0)
         
         return file
     

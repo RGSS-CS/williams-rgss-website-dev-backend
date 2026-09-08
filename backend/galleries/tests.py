@@ -65,12 +65,19 @@ class GalleryUploadTests(SimpleTestCase):
             self.assertEqual(upload.tell(), 0)
 
     def test_image_dimensions(self):
-        for size in [(99, 100), (100, 99), (4001, 100), (100, 4001)]:
-            upload = self.photo(size=size)
-            form = PhotoForm(data={}, files={'image': upload})
-            self.assertFalse(form.is_valid())
-            self.assertIn('dimensions', str(form.errors))
-            self.assertEqual(upload.tell(), 0)
+        for size, valid in [
+            ((99, 100), False), ((100, 99), False),
+            ((100, 100), True),
+            ((10000, 100), True), ((100, 10000), True),
+            ((10001, 100), False), ((100, 10001), False),
+        ]:
+            with self.subTest(size=size):
+                upload = self.photo(size=size)
+                form = PhotoForm(data={}, files={'image': upload})
+                self.assertEqual(form.is_valid(), valid, form.errors)
+                if not valid:
+                    self.assertIn('dimensions', str(form.errors))
+                self.assertEqual(upload.tell(), 0)
 
     def test_disallowed_image(self):
         form = PhotoForm(data={}, files={'image': self.photo('GIF')})
