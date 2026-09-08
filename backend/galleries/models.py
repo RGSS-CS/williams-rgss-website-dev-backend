@@ -2,6 +2,7 @@ from django.db import models
 from clubs.models import Club
 from pathlib import Path
 from uuid import uuid4
+from django.utils.crypto import get_random_string
 
 
 def photo_upload_path(instance, filename):
@@ -14,7 +15,7 @@ def video_upload_path(instance, filename):
 
 
 class Photos(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True, blank=True, help_text='If left blank, it will automatically generate a name for you.')
     description = models.TextField(max_length=100,null=True,blank=True, help_text="More like an image caption, to describe what is going on. *OPTIONAL")
     image = models.ImageField(upload_to=photo_upload_path)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -27,6 +28,12 @@ class Photos(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+         if not self.name or not self.name.strip:
+            club_name = self.club.name
+            self.name = f'{club_name[:17]} - {get_random_string(8)}'
+            super().save(*args, **kwargs)
     
 class Videos(models.Model):
     class VideoType(models.TextChoices):
@@ -34,10 +41,10 @@ class Videos(models.Model):
          GOOGLE_DRIVE = 'GD', 'Google Drive'
          OTHER = 'OT', 'Other'
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(max_length=100, null=True, blank=True, help_text="This is like a video description about what the video is about. *OPTIONAL.")
     link = models.URLField(max_length=500, blank=True, null=True, help_text='Not required, only needed for Youtube and Google Drive(Use embed code)')
-    video_file = models.FileField(upload_to=video_upload_path)
+    video_file = models.FileField(upload_to=video_upload_path, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
