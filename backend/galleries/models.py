@@ -6,7 +6,7 @@ from uuid import uuid4
 
 def upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
-        return f"clubs/{instance.club_id}/photos{uuid4().hex}{extension}"
+        return f"clubs/{instance.club_id}/photos/{uuid4().hex}{extension}"
 
 
 class Photos(models.Model):
