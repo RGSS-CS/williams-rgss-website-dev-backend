@@ -57,3 +57,9 @@ class Videos(models.Model):
 
     def __str__(self):
          return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.name or not self.name.strip:
+            club_name = self.club.name
+            self.name = f'{club_name[:17]} - {get_random_string(8)}'
+            super().save(*args, **kwargs)

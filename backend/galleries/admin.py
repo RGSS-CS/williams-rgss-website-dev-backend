@@ -21,7 +21,21 @@ class PhotoAdmin(admin.ModelAdmin):
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
 
+def validate_video_size(upload):
+    if upload.size > 4 * 1024 ** 3:
+        raise ValidationError('The video file is too large. The max size is 4 GiB.')
+
+
+class VideoAdminForm(forms.ModelForm):
+    video_file = forms.FileField(
+        required=False,
+        validators=[validate_video_size],
+        widget=AdminFileWidget(),
+    )
+
+
 @admin.register(Videos)
 class VideoAdmin(admin.ModelAdmin):
     fields = ('name', 'description','link', 'video_file', 'club', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
+    form = VideoAdminForm
