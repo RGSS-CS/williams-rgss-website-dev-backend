@@ -3,6 +3,7 @@ from clubs.models import Club
 from pathlib import Path
 from uuid import uuid4
 from django.utils.crypto import get_random_string
+from django.core.exceptions import ValidationError
 
 
 def photo_upload_path(instance, filename):
@@ -34,7 +35,8 @@ class Photos(models.Model):
             club_name = self.club.name
             self.name = f'{club_name[:17]} - {get_random_string(8)}'
             super().save(*args, **kwargs)
-    
+
+
 class Videos(models.Model):
     class VideoType(models.TextChoices):
          YOUTUBE = "YT", "Youtube"
