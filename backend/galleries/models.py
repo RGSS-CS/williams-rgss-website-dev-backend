@@ -19,9 +19,7 @@ class Photos(models.Model):
 
     class Meta:
         verbose_name_plural = 'Photos'
-        verbose_name = 'Photo'
-
-
+        verbose_name = 'Photos'
 
     def __str__(self):
         return self.name
