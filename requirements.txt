@@ -24,3 +24,4 @@ django-photologue==3.16
 django-guardian===3.3.3
 better_profanity==0.7.0
 cryptography==50.0.1
+python-magic==0.4.27
