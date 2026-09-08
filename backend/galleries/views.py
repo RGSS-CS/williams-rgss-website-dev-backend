@@ -15,7 +15,7 @@ class VideoViewset(viewsets.ModelViewSet):
         return super().get_permissions()
     
 class PhotoViewset(viewsets.ModelViewSet):
-    queryset = Videos.objects.all()
+    queryset = Photos.objects.all()
     serializer_class = PhotoSeralizer
 
     def get_permissions(self):
