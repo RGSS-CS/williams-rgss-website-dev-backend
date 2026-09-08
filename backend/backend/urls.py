@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path("api/calendar/", include("calendars.urls")),
     path("api/club/", include("clubs.urls")),
+    path('api/gallery/', include('galleries.urls')),
     path("api/register/", RegisterView.as_view(), name="register"),
     path("api/register/verify/", VerifyRegisterCodeView.as_view(), name="verify-register-code"),
     path("api/token/", EmailTokenObtainPairView.as_view(), name="token_obtain_pair"),
