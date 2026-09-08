@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminFileWidget
-from .models import Photos, Videos
+from .models import Photos, Videos, MassImport
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 import puremagic
 from PIL import Image
+import zipfile
 
 def validate_upload_mime(file, allowed_types):
     try:
@@ -85,3 +86,14 @@ class VideoAdmin(admin.ModelAdmin):
     fields = ('name', 'description','link', 'video_file', 'club', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = VideoAdminForm
+
+class MassImportAdminForm(forms.ModelForm):
+    zip_file = forms.FileField(required=True, widget=AdminFileWidget())
+
+
+
+
+@admin.register(MassImport)
+class MassImportAdmin(admin.ModelAdmin):
+    fields = ('zip_file', 'file_type', 'club','upload_status')
+    readonly_fields = ('upload_status',)

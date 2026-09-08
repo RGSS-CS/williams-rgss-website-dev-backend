@@ -14,6 +14,23 @@ def video_upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
         return f"clubs/{instance.club_id}/videos/{uuid4().hex}{extension}"
 
+def zip_upload_path(instance, filename):
+     extension = Path(filename).suffix.lower()
+     return f"clubs/{instance.club_id}/temp/zip/{uuid4().hex}{extension}"
+
+class MassImport(models.Model):
+    class FileType(models.TextChoices):
+         PHOTOS = 'PH', 'Photos'
+         VIDEOS = 'VI', 'Videos'
+
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
+    zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Videos or Photo files only.')
+    file_type = models.CharField(max_length=2, choices=FileType)
+    upload_status = models.CharField(max_length=5, null=True)
+
+    class Meta:
+        verbose_name = 'ZIP Upload'
+        verbose_name_plural = 'ZIP Upload'
 
 class Photos(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True, help_text='If left blank, it will automatically generate a name for you.')
@@ -43,7 +60,7 @@ class Videos(models.Model):
          GOOGLE_DRIVE = 'GD', 'Google Drive'
          OTHER = 'OT', 'Other'
 
-    name = models.CharField(max_length=50, null=True, blank=True)
+    name = models.CharField(max_length=50,null=True, blank=True, help_text='If left blank, it will automatically generate a name for you.')
     description = models.TextField(max_length=100, null=True, blank=True, help_text="This is like a video description about what the video is about. *OPTIONAL.")
     link = models.URLField(max_length=500, blank=True, null=True, help_text='Not required, only needed for Youtube and Google Drive(Use embed code)')
     video_file = models.FileField(upload_to=video_upload_path, null=True, blank=True)
