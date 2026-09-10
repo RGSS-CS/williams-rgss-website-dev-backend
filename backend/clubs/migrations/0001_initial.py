@@ -11,10 +11,11 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('photologue', '0013_alter_watermark_image'),
         ('taggit', '0006_rename_taggeditem_content_type_object_id_taggit_tagg_content_8fc721_idx'),
     ]
 
+    # Keep legacy gallery IDs as scalar state until migration 0008 removes them.
+    # This lets existing databases upgrade without the former gallery app.
     operations = [
         migrations.CreateModel(
             name='ClubMembership',
@@ -72,7 +73,7 @@ class Migration(migrations.Migration):
                 ('tagline', models.CharField(blank=True, help_text="The tagline is the title about your club. Make it intruiging such as 'A community of curious minds'", max_length=30, null=True)),
                 ('join_instructions', models.TextField(default='Use the google classroom code or application form link to join.', help_text="This is where you tell the students how to join, such as using a google classroom code or a link to a form. *It will not be visible when selected 'Not Accepting' in the field below.", max_length=500)),
                 ('category', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
-                ('gallery', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='clubs', to='photologue.gallery')),
+                ('gallery', models.BigIntegerField(blank=True, null=True, db_column='gallery_id')),
             ],
         ),
         migrations.CreateModel(

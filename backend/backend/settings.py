@@ -71,9 +71,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
-    'photologue',
-    'photologue_custom',
-    'sortedm2m',
     "rest_framework_simplejwt",
     "users",
     'galleries'
