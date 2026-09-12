@@ -3,7 +3,6 @@ from typing import Any
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms.widgets import CheckboxSelectMultiple
 from django.http import HttpRequest
 from taggit.models import Tag
 from django.contrib.admin import widgets
@@ -23,8 +22,8 @@ class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=True,
-        help_text="The 'Category' that this club will appear in (e.g 'Engineering' for Robotics Club)",
-        widget=CheckboxSelectMultiple()
+        help_text="Select up to 3 categories that this club will appear in (e.g 'Engineering' for Robotics Club).",
+        widget=widgets.FilteredSelectMultiple("categories", is_stacked=False)
     )
 
     class Meta:
