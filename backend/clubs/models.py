@@ -24,7 +24,7 @@ class Club(models.Model):
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
     name = models.CharField(
-        max_length=100, help_text="Insert the Name of your club"
+        max_length=100, unique=True, help_text="Insert the Name of your club"
     )
     preview_description = models.TextField(
         null=True, max_length=200, 
