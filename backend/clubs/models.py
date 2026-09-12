@@ -4,6 +4,7 @@ from django.conf import settings
 from taggit.managers import TaggableManager
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
+
 class Club(models.Model):
     class WeekDay(models.TextChoices):
         MONDAY = "MONDAY", "Monday"
@@ -85,7 +86,6 @@ class Club(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(
