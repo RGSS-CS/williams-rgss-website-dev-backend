@@ -25,8 +25,11 @@
 
     var map = L.map(mapDiv).setView([initLat, initLon], initZoom);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      // OSM requires a Referer; Django defaults to same-origin, which omits it.
+      // Send only the site's origin, keeping admin paths and query strings private.
+      referrerPolicy: "strict-origin-when-cross-origin",
       maxZoom: 19
     }).addTo(map);
 
