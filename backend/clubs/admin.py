@@ -104,11 +104,12 @@ class ClubAnnouncementInline(admin.StackedInline):
     form = ClubAnnouncementAdminForm
     fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
+    extra = 0
     max_num = 1
 
 class WhyJoinInline(admin.StackedInline):
     model = ClubWhyJoin
-    extra = 3
+    extra = 1
     max_num = 10
 
 
