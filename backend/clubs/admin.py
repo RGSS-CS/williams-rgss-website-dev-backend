@@ -31,7 +31,7 @@ class ClubsAdminForm(forms.ModelForm):
         fields = [
             "name", "preview_description", "description", "tagline",  
             "category", "day_of_meeting", "time",
-            "repetition", "room_number", "classroom_code",
+            "repetition", "location", "classroom_code",
             "application_form_link", "join_instructions", "accepting_applicants",
             "teacher_advisor"
         ]
@@ -42,7 +42,7 @@ class ClubsAdminForm(forms.ModelForm):
             "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
-            "room_number": forms.TextInput(attrs={"size": 10}),
+            "location": forms.TextInput(attrs={"size": 10}),
             "application_form_link": forms.URLInput(attrs={"size": 60}),
             "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60})
         }

@@ -36,7 +36,7 @@ class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = [
             "id", "name", "preview_description", "description", 
             "tagline", "category", "day_of_meeting", "time", 
-            "repetition", "room_number", "why_join", "accepting_applicants",
+            "repetition", "location", "why_join", "accepting_applicants",
             "teacher_advisor"
             ]
 
