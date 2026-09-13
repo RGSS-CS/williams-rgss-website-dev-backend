@@ -75,8 +75,6 @@ class Command(BaseCommand):
         settings_obj.council_name = random_string(8)
         settings_obj.school_email = random_email()
         settings_obj.school_phone = random_phone()
-        settings_obj.about_stuco = random_sentence((15, 40))
-        settings_obj.about_school = random_sentence((15, 40))
         settings_obj.school_mascot = random_string(10)
         settings_obj.school_primary_color = "#122647"
         settings_obj.school_secondary_color = "#47a5bd"
