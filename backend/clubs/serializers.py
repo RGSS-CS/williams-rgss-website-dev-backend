@@ -22,7 +22,7 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = [
             "id", "name", "preview_description", "description", 
             "tagline", "category", "day_of_meeting", "time", 
-            "repetition", "room_number", "why_join", "classroom_code", 
+            "repetition", "location", "why_join", "classroom_code", 
             "accepting_applicants", "join_instructions", "application_form_link", 
             "teacher_advisor", "announcement"
             ]
