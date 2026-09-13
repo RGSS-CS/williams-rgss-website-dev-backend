@@ -57,7 +57,7 @@ class Club(models.Model):
     )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
-    room_number = models.PositiveIntegerField(null=True)
+    location = models.CharField(null=True, blank=True, help_text='A room number or general name of the location.')
     teacher_advisor = models.CharField(
         max_length=20, help_text="Please insert the name of the teacher. " \
         "Please insert Mr./Mrs./Ms. , followed by the last name"
