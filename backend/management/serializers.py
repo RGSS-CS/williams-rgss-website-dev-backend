@@ -58,7 +58,6 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         fields = [
             "maintainance_mode", 
             "school_name",
-            "council_name", 
             "school_email",
             "school_phone",
             "social_media", 

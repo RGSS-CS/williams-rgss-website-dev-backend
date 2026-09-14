@@ -49,10 +49,6 @@ class SiteSettings(SingletonModel):
         default="SCHOOL", max_length=40, 
         help_text="The name of the school *Use short form S.S (e.g, Richmond Green S.S)"
     )
-    council_name = models.CharField(
-        default="STUCO", max_length=10, 
-        help_text="The name of the council (e.g, SAC)"
-    )
     school_email = models.EmailField(null=True, max_length=50)
     school_phone = PhoneNumberField(null=True, help_text="The phone number should include the area code (+1), followed by the digits with no spaces or a non-numerial character.")
     favicon = models.ImageField(
