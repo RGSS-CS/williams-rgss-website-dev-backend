@@ -2,16 +2,16 @@ from django.db import models
 from solo.models import SingletonModel
 
 
-class Ticker(models.Model):
-    item = models.CharField(help_text='This should be a short announcement that rotates on the ticker bar at the homepage.')
+class Announcements(SingletonModel):
+    ticker_items = models.TextField(blank=True, null=True, help_text='Every newline represents a new object.', max_length=500)
 
     class Meta:
-        verbose_name = 'Ticker Bar Items'
-        verbose_name_plural = 'Ticker Bar Items'
+        verbose_name = 'Announcement Objects'
+        verbose_name_plural = 'Announcement Objects'
 
     def __str__(self):
-        return(self.item)
-
+        return('')
+    
 class STUCO(SingletonModel):
     council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
     group_photo = models.ImageField(blank=True, null=True, upload_to='upload/stuco/')
