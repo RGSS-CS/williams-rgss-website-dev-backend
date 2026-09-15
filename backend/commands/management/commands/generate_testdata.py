@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from clubs.models import Club, ClubAnnouncement, ClubWhyJoin
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
-from student_council.models import Announcements, STUCO
+from student_council.models import Announcements, SchoolAnnouncements, STUCO
 
 
 def random_string(length: int) -> str:
@@ -94,6 +94,11 @@ class Command(BaseCommand):
         announcements = Announcements.get_solo()
         announcements.ticker_items = "\n".join(random_sentence((4, 8)) for _ in range(3))
         announcements.save()
+        for _ in range(3):
+            SchoolAnnouncements.objects.update_or_create(
+                title=random_sentence((4, 8)),
+                defaults={"contents": random_sentence((30, 70))},
+            )
         for page_type, label in PageSettings.PageTypes.choices:
             PageSettings.objects.update_or_create(
                 internal_site_name=page_type,
