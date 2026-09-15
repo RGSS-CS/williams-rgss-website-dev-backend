@@ -38,7 +38,7 @@ class SiteSettingsAdminForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
         fields = [
-            'maintainance_mode','frontend_url', 'school_name','council_name',
+            'maintainance_mode','frontend_url', 'school_name',
             'school_email', 'school_phone', 'favicon', 'favicon_cropping',
             'site_logo', 'site_logo_cropping', 'school_mascot',
             'school_primary_color', 'school_secondary_color', 'school_tertiary_color',

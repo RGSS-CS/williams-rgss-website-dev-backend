@@ -3,13 +3,12 @@ from typing import Any
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms.widgets import CheckboxSelectMultiple
 from django.http import HttpRequest
 from taggit.models import Tag
 from django.contrib.admin import widgets
 from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
-from .models import Club, ClubWhyJoin, GalleryExtended, ClubMembership
+from .models import Club, ClubWhyJoin, ClubMembership, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 
@@ -23,16 +22,16 @@ class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=True,
-        help_text="The 'Category' that this club will appear in (e.g 'Engineering' for Robotics Club)",
-        widget=CheckboxSelectMultiple()
+        help_text="Select up to 3 categories that this club will appear in (e.g 'Engineering' for Robotics Club).",
+        widget=widgets.FilteredSelectMultiple("categories", is_stacked=False)
     )
 
     class Meta:
         model = Club
         fields = [
             "name", "preview_description", "description", "tagline",  
-            "category", "gallery", "day_of_meeting", "time",        
-            "repetition", "room_number", "announcement", "classroom_code",
+            "category", "day_of_meeting", "time",
+            "repetition", "location", "classroom_code",
             "application_form_link", "join_instructions", "accepting_applicants",
             "teacher_advisor"
         ]
@@ -43,7 +42,7 @@ class ClubsAdminForm(forms.ModelForm):
             "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
-            "room_number": forms.TextInput(attrs={"size": 10}),
+            "location": forms.TextInput(attrs={"size": 10}),
             "application_form_link": forms.URLInput(attrs={"size": 60}),
             "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60})
         }
@@ -87,11 +86,31 @@ class ClubsAdminForm(forms.ModelForm):
         return instance
 
 
+class ClubAnnouncementAdminForm(forms.ModelForm):
+    class Meta:
+        model = ClubAnnouncement
+        fields = ['title', 'description', 'popup', 'expiry']
+        field_classes = {'expiry': forms.DateTimeField}
+        widgets = {
+            'expiry': forms.DateTimeInput(
+                attrs={'type': 'datetime-local', 'step': '1'},
+                format='%Y-%m-%dT%H:%M:%S',
+            ),
+        }
 
-    
-class WhyJoinInline(admin.TabularInline):
+
+class ClubAnnouncementInline(admin.StackedInline):
+    model = ClubAnnouncement
+    form = ClubAnnouncementAdminForm
+    fields = ['title','description','popup','date_posted','expiry']
+    readonly_fields = ['date_posted']
+    extra = 0
+    max_num = 1
+
+class WhyJoinInline(admin.StackedInline):
     model = ClubWhyJoin
     extra = 1
+    max_num = 10
 
 
 class ClubMemberInline(admin.TabularInline):
@@ -112,7 +131,7 @@ class ClubMemberInline(admin.TabularInline):
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
-    inlines = [WhyJoinInline]
+    inlines = [WhyJoinInline, ClubAnnouncementInline]
 
 @admin.register(ClubMembership)
 class ClubMembershipAdmin(admin.ModelAdmin):

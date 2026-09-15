@@ -49,12 +49,8 @@ class SiteSettings(SingletonModel):
         default="SCHOOL", max_length=40, 
         help_text="The name of the school *Use short form S.S (e.g, Richmond Green S.S)"
     )
-    council_name = models.CharField(
-        default="STUCO", max_length=10, 
-        help_text="The name of the council (e.g, SAC)"
-    )
-    school_email = models.EmailField(blank=True, max_length=50)
-    school_phone = PhoneNumberField(blank=True)
+    school_email = models.EmailField(null=True, max_length=50)
+    school_phone = PhoneNumberField(null=True, help_text="The phone number should include the area code (+1), followed by the digits with no spaces or a non-numerial character.")
     favicon = models.ImageField(
         blank=True, upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
@@ -66,10 +62,10 @@ class SiteSettings(SingletonModel):
     )
     site_logo = models.ImageField(
         blank=True, upload_to=SiteLogoRename,
-        help_text="This is the icon that represents your school"
+        help_text="This is the icon that represents your school. This image will be displayed on the navigation bar and the homepage."
     )
     site_logo_cropping = ImageRatioField(
-        'site_logo', '80x80', free_crop = True, 
+        'site_logo', '160x160', free_crop = True, 
         help_text="Save new uploaded image then re-open " \
         "this page to view your new uploaded photo."
     )
@@ -147,12 +143,12 @@ class PageSettings(models.Model):
         help_text="This is the title of the page. It is the TOP of the title section."
     )
     subtitle = models.CharField(
-        blank=True, max_length=30, 
+        blank=True, null=True, max_length=30, 
         help_text="This is the subtitle of the page. It is the BOTTOM of the " \
         "title section (secondary color). *NOT REQUIRED"
     )
     tagline = models.TextField(
-        blank=True, max_length=200, 
+        blank=True, null=True, max_length=200, 
         help_text="This is the bullet points of the title. It should be short and tells the user" \
         " a bit about the page. *NOT REQUIRED"
     )
