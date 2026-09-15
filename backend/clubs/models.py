@@ -77,8 +77,8 @@ class Club(models.Model):
     PENDING_APPROVAL_FIELDS = [
         "name", "preview_description", "description", "tagline",
         "repetition", "classroom_code", "accepting_applicants",
-        "application_form_link", "announcement", "day_of_meeting", "time",
-        "room_number", "teacher_advisor", "join_instructions"
+        "application_form_link", "day_of_meeting", "time",
+        "location", "teacher_advisor", "join_instructions"
     ]
 
     def __str__(self):
