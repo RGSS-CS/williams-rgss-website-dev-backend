@@ -9,7 +9,7 @@ from .apps import CommandsConfig
 
 from clubs.models import Club, ClubAnnouncement, ClubWhyJoin
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
-from student_council.models import Announcements, STUCO
+from student_council.models import Announcements, SchoolAnnouncements, STUCO
 
 
 class GenerateTestDataTests(TestCase):
@@ -56,9 +56,10 @@ class GenerateTestDataTests(TestCase):
         self.assertTrue(council.photo_caption)
         council.full_clean()
         self.assertEqual(len(Announcements.get_solo().ticker_items.splitlines()), 3)
+        self.assertEqual(SchoolAnnouncements.objects.count(), 3)
         self.assertEqual(PageSettings.objects.count(), len(PageSettings.PageTypes))
         self.assertEqual(SchoolSocialMedia.objects.count(), len(SchoolSocialMedia.Sites))
-        for model in (PageSettings, SchoolSocialMedia, Announcements):
+        for model in (PageSettings, SchoolSocialMedia, Announcements, SchoolAnnouncements):
             for obj in model.objects.all():
                 obj.full_clean()
 
@@ -68,6 +69,7 @@ class GenerateTestDataTests(TestCase):
         self.assertFalse(SiteSettings.objects.exists())
         self.assertFalse(STUCO.objects.exists())
         self.assertFalse(Announcements.objects.exists())
+        self.assertFalse(SchoolAnnouncements.objects.exists())
         self.assertFalse(SchoolSocialMedia.objects.exists())
 
     def test_skip_clubs_and_zero_amount_create_no_club_content(self):
@@ -92,11 +94,25 @@ class GenerateTestDataTests(TestCase):
         self.assertEqual(first, list(Club.objects.order_by('name').values('name', 'location', 'description', 'tagline')))
         self.assertEqual(tags, [list(club.category.values_list('name', flat=True)) for club in Club.objects.order_by('name')])
 
+    def test_school_announcements_have_content_and_reproducible_values(self):
+        self.generate(seed='school-news', skip_clubs=True)
+        first = list(SchoolAnnouncements.objects.order_by('title').values('title', 'contents'))
+        self.assertEqual(len(first), 3)
+        for announcement in SchoolAnnouncements.objects.all():
+            self.assertTrue(announcement.title)
+            self.assertTrue(announcement.contents)
+            self.assertIsNotNone(announcement.date_posted)
+            self.assertIsNotNone(announcement.date_modified)
+        SchoolAnnouncements.objects.all().delete()
+        self.generate(seed='school-news', skip_clubs=True)
+        self.assertEqual(first, list(SchoolAnnouncements.objects.order_by('title').values('title', 'contents')))
+
     def test_failure_rolls_back_seeded_data(self):
         with patch('commands.management.commands.generate_testdata.ClubAnnouncement.objects.create', side_effect=RuntimeError('failed')):
             with self.assertRaisesMessage(RuntimeError, 'failed'):
                 self.generate(club_amount=1)
         self.assertFalse(Club.objects.exists())
+        self.assertFalse(SchoolAnnouncements.objects.exists())
         self.assertFalse(STUCO.objects.exists())
         self.assertFalse(SiteSettings.objects.exists())
 

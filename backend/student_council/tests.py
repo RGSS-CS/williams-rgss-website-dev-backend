@@ -1,9 +1,11 @@
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
-from .models import Announcements, STUCO
+from .models import Announcements, SchoolAnnouncements, STUCO
 
 
 class StudentCouncilTests(TestCase):
@@ -42,3 +44,32 @@ class StudentCouncilTests(TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json(), [{'ticker_items': ticker}])
         self.assertEqual(Announcements.objects.count(), 1)
+
+
+class SchoolAnnouncementTests(TestCase):
+    def test_multiple_announcements_preserve_title_and_contents(self):
+        for title, contents in (
+            ('Club fair', 'Meet our clubs.\nFriday in the gym.'),
+            ('Spirit week', 'Wear school colours on Monday.'),
+        ):
+            announcement = SchoolAnnouncements.objects.create(title=title, contents=contents)
+            announcement.full_clean()
+            announcement.refresh_from_db()
+            self.assertEqual(str(announcement), title)
+            self.assertEqual(announcement.contents, contents)
+        self.assertEqual(SchoolAnnouncements.objects.count(), 2)
+
+    def test_edit_updates_modified_date_and_preserves_posted_date(self):
+        posted = timezone.now() - timedelta(days=1)
+        modified = posted + timedelta(hours=2)
+        with patch('django.utils.timezone.now', return_value=posted):
+            announcement = SchoolAnnouncements.objects.create(title='Club fair', contents='Friday')
+        self.assertEqual(announcement.date_posted, posted)
+        self.assertEqual(announcement.date_modified, posted)
+        with patch('django.utils.timezone.now', return_value=modified):
+            announcement.contents = 'Moved to Monday'
+            announcement.save()
+        announcement.refresh_from_db()
+        self.assertEqual(announcement.contents, 'Moved to Monday')
+        self.assertEqual(announcement.date_posted, posted)
+        self.assertEqual(announcement.date_modified, modified)
