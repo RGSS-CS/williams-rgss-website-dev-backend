@@ -15,6 +15,7 @@ class Announcements(SingletonModel):
 class STUCO(SingletonModel):
     council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
     group_photo = models.ImageField(blank=True, null=True, upload_to='upload/stuco/')
+    photo_caption = models.CharField(blank=True, null=True, help_text='Caption for Group Photo.')
 
     class Meta: 
         verbose_name = 'Student Council Settings'
