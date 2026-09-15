@@ -2,10 +2,12 @@ from io import BytesIO
 from unittest.mock import patch
 from django.forms import modelform_factory
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 from PIL import Image
 from .admin import PhotoAdminForm, VideoAdminForm
 from .models import Photos, Videos
+from clubs.models import Club
+from .serializers import PhotoSeralizer, VideoSerializer
 
 PhotoForm = modelform_factory(Photos, form=PhotoAdminForm, fields=['image'])
 VideoForm = modelform_factory(Videos, form=VideoAdminForm, fields=['video_file'])
@@ -95,3 +97,44 @@ class GalleryUploadTests(SimpleTestCase):
         form = PhotoForm(data={}, files={'image': SimpleUploadedFile('photo.png', b'invalid')})
         self.assertFalse(form.is_valid())
         self.assertIn('image', form.errors)
+
+
+
+@patch('requests.post')
+class GalleryModelTests(TestCase):
+    def test_named_media_and_visibility_updates_are_saved(self, request):
+        club = Club.objects.create(name='Photography')
+        for model, serializer, fields in (
+            (Photos, PhotoSeralizer, {'image': 'existing/photo.png'}),
+            (Videos, VideoSerializer, {'link': 'https://example.com/video'}),
+        ):
+            with self.subTest(model=model):
+                media = model.objects.create(club=club, name='Club day', **fields)
+                self.assertIsNotNone(media.pk)
+                media.refresh_from_db()
+                self.assertFalse(media.shown_in_gallery)
+                self.assertFalse(media.shown_in_main_page)
+                media.shown_in_gallery = True
+                media.shown_in_main_page = True
+                media.save()
+                media.refresh_from_db()
+                data = serializer(media).data
+                self.assertTrue(data['shown_in_gallery'])
+                self.assertTrue(data['shown_in_main_page'])
+                self.assertEqual(data['name'], 'Club day')
+
+    def test_blank_names_are_generated_once(self, request):
+        club = Club.objects.create(name='A club with a very long name')
+        for model in (Photos, Videos):
+            for name in (None, '', '   '):
+                with self.subTest(model=model, name=name):
+                    media = model.objects.create(club=club, name=name)
+                    self.assertIsNotNone(media.pk)
+                    media.refresh_from_db()
+                    generated = media.name
+                    self.assertTrue(generated.startswith(club.name[:17] + ' - '))
+                    media.description = 'Updated caption'
+                    media.save()
+                    media.refresh_from_db()
+                    self.assertEqual(media.name, generated)
+                    self.assertEqual(media.description, 'Updated caption')

@@ -73,7 +73,8 @@ INSTALLED_APPS = [
     "clubs.apps.ClubsConfig",
     "rest_framework_simplejwt",
     "users",
-    'galleries'
+    'galleries',
+    'student_council'
 ]
 
 SITE_ID = 1
