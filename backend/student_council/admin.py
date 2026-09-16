@@ -8,7 +8,7 @@ class STUCOAdminForm(forms.ModelForm):
     class Meta:
         model = STUCO
         fields = [
-            'council_name', 'group_photo'
+            'council_name', 'group_photo', 'photo_caption'
         ]
     
 
