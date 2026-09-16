@@ -24,6 +24,8 @@ class Club(models.Model):
         NOT_ACCEPTING = "WA", "Not Accepting"
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
+    visable = models.BooleanField(default=True, help_text='Is it visable to the public?')
+
     name = models.CharField(
         max_length=100, unique=True, help_text="Insert the Name of your club"
     )
