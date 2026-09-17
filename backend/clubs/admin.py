@@ -29,7 +29,7 @@ class ClubsAdminForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = [
-            'visable', "name", "preview_description", "description", "tagline",  
+            'visible', "name", "preview_description", "description", "tagline",  
             "category", "day_of_meeting", "time",
             "repetition", "location", "classroom_code",
             "application_form_link", "join_instructions", "accepting_applicants",

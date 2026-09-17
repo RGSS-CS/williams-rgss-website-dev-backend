@@ -2,7 +2,7 @@ from django.db import models
 from solo.models import SingletonModel
 
 class SchoolAnnouncements(models.Model):
-    title = models.CharField(help_text='The title of the announcement')
+    title = models.CharField(null=True, help_text='The title of the announcement')
     contents = models.TextField(null=True, help_text='The contents of the announcement')
     date_posted = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
