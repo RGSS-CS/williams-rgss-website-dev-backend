@@ -24,7 +24,7 @@ class Club(models.Model):
         NOT_ACCEPTING = "WA", "Not Accepting"
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
-    visable = models.BooleanField(default=True, help_text='Is it visable to the public?')
+    visible = models.BooleanField(default=True, help_text='Is it visible to the public?')
 
     name = models.CharField(
         max_length=100, unique=True, help_text="Insert the Name of your club"
@@ -46,7 +46,7 @@ class Club(models.Model):
     classroom_code = models.CharField(
         max_length=10, null=True, 
         help_text="This does not need an input if there is no google classroom code. "
-        "*It will not be visable when selected 'Not Accepting' in the field below."
+        "*It will not be visible when selected 'Not Accepting' in the field below."
     )
     accepting_applicants = models.CharField(
         null=True, max_length=16, choices=AcceptingApplications.choices, 
@@ -55,7 +55,7 @@ class Club(models.Model):
     application_form_link = models.URLField(
         blank=True, null=True, max_length=250, 
         help_text="This can be either a google classroom invite link or a application" \
-        " form link *It will not be visable when selected 'Not Accepting' in the field below."
+        " form link *It will not be visible when selected 'Not Accepting' in the field below."
     )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
