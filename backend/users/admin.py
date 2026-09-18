@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django import forms
-from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
-from .models import UserJoinCode
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.models import Group as AuthGroup
+from .models import CustomUser, UserJoinCode, Group
 from django.utils.html import format_html
 import qrcode
 import io
@@ -10,6 +10,7 @@ import base64
 from management.models import SiteSettings
 from django.core.exceptions import PermissionDenied
 from .qr_codes import build_registration_url
+
 
 class UserJoinCodeForm(forms.ModelForm):
     expiry = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
@@ -79,3 +80,6 @@ class CustomUserAdmin(UserAdmin):
     )
 
 admin.site.register(CustomUser, CustomUserAdmin)
+
+admin.site.unregister(AuthGroup)
+admin.site.register(Group, GroupAdmin)
