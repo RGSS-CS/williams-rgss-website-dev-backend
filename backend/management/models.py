@@ -40,7 +40,7 @@ class SiteSettings(SingletonModel):
         ENTERING = "ENTERING", "Entering"
 
 
-    maintainance_mode = models.BooleanField(default=False)
+    maintainance_mode = models.BooleanField(default=True, help_text='Disable when site is ready for publishing.')
     frontend_url = models.URLField(
         default="http://localhost:3000", max_length=100, 
         help_text="The external url of frontend"
