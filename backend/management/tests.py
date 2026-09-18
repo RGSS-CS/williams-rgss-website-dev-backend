@@ -8,7 +8,7 @@ class ManagementModelTests(TestCase):
     def test_site_settings_have_expected_defaults(self):
         site_settings = SiteSettings.get_solo()
 
-        self.assertFalse(site_settings.maintainance_mode)
+        self.assertTrue(site_settings.maintainance_mode)
         self.assertEqual(site_settings.school_name, "SCHOOL")
         self.assertFalse(site_settings.favicon)
         self.assertFalse(site_settings.site_logo)
