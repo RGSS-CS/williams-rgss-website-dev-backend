@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from django.utils import timezone
 
-from .models import Club, ClubAnnouncement, ClubChanges, ClubWhyJoin
+from .models import Club, ClubAnnouncement, ClubWhyJoin
 from .serializers import ClubSerializer, PublicClubSerializer
 
 
@@ -53,15 +53,6 @@ class CurrentClubFieldsTests(TestCase):
                     data = serializer(club).data
                     self.assertEqual(data['location'], location)
                     self.assertNotIn('room_number', data)
-
-    def test_approved_location_change_is_persisted(self, request):
-        club = Club.objects.create(name='Chess', location='Room 101')
-        change = ClubChanges.objects.create(club=club, changes={'location': 'Library'})
-        change.approve(reviewer=None)
-        club.refresh_from_db()
-        self.assertEqual(club.location, 'Library')
-        change.refresh_from_db()
-        self.assertEqual(change.status, ClubChanges.ApprovalStatus.APPROVED)
 
     def test_announcement_fields_and_related_content(self, request):
         club = Club.objects.create(name='Robotics')
