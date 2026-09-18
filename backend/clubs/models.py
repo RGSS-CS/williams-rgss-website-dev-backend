@@ -4,20 +4,6 @@ from django.conf import settings
 from taggit.managers import TaggableManager
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
-from photologue.models import Gallery
-
-class GalleryExtended(models.Model):
-    gallery = models.OneToOneField(
-        Gallery, null=True, blank=True, on_delete=models.SET_NULL,
-        related_name="club", help_text="The photo gallery for this club."
-        )
-
-    tags = TaggableManager(blank=True)
-    class Meta: 
-        verbose_name = "Extra Fields"
-
-    def __str__(self):
-        return self.gallery.title
 
 class Club(models.Model):
     class WeekDay(models.TextChoices):
@@ -38,8 +24,10 @@ class Club(models.Model):
         NOT_ACCEPTING = "WA", "Not Accepting"
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
+    visible = models.BooleanField(default=True, help_text='Is it visible to the public?')
+
     name = models.CharField(
-        max_length=100, help_text="Insert the Name of your club"
+        max_length=100, unique=True, help_text="Insert the Name of your club"
     )
     preview_description = models.TextField(
         null=True, max_length=200, 
@@ -49,7 +37,7 @@ class Club(models.Model):
         null=True, max_length=500, 
         help_text="Insert a long description for your club. This is where you can describe your club in detail."
     )
-    category = TaggableManager()
+    category = TaggableManager(blank=True)
     repetition = models.CharField(
         null=True, max_length=10, choices=Repetition.choices, 
         help_text="How often does your club meet? If your club meets on a different schedule," \
@@ -58,7 +46,7 @@ class Club(models.Model):
     classroom_code = models.CharField(
         max_length=10, null=True, 
         help_text="This does not need an input if there is no google classroom code. "
-        "*It will not be visable when selected 'Not Accepting' in the field below."
+        "*It will not be visible when selected 'Not Accepting' in the field below."
     )
     accepting_applicants = models.CharField(
         null=True, max_length=16, choices=AcceptingApplications.choices, 
@@ -67,14 +55,11 @@ class Club(models.Model):
     application_form_link = models.URLField(
         blank=True, null=True, max_length=250, 
         help_text="This can be either a google classroom invite link or a application" \
-        " form link *It will not be visable when selected 'Not Accepting' in the field below."
-    )
-    announcement = models.CharField(
-        null=True, help_text="This is where you announce application news."  #BEN ISSUE
+        " form link *It will not be visible when selected 'Not Accepting' in the field below."
     )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
-    room_number = models.PositiveIntegerField(null=True)
+    location = models.CharField(null=True, blank=True, help_text='A room number or general name of the location.')
     teacher_advisor = models.CharField(
         max_length=20, help_text="Please insert the name of the teacher. " \
         "Please insert Mr./Mrs./Ms. , followed by the last name"
@@ -90,15 +75,12 @@ class Club(models.Model):
         "using a google classroom code or a link to a form. *It will not be " \
         "visible when selected 'Not Accepting' in the field below."
     )
-    gallery = models.ForeignKey(
-        Gallery, on_delete=models.SET_NULL, null=True, blank=True, related_name="clubs"
-    )
 
     PENDING_APPROVAL_FIELDS = [
         "name", "preview_description", "description", "tagline",
         "repetition", "classroom_code", "accepting_applicants",
-        "application_form_link", "announcement", "day_of_meeting", "time",
-        "room_number", "teacher_advisor", "join_instructions"
+        "application_form_link", "day_of_meeting", "time",
+        "location", "teacher_advisor", "join_instructions"
     ]
 
     def __str__(self):
@@ -106,7 +88,6 @@ class Club(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
 
 class ClubWhyJoin(models.Model):
     club = models.ForeignKey(
@@ -131,26 +112,13 @@ class ClubWhyJoin(models.Model):
     def __str__(self):
         return self.title
     
-    # def save(self, *args, **kwargs):
-    #     if ClubWhyJoin.objects.filter(index=self.index).count() > 1:
-    #         for i in ClubWhyJoin.objects.filter(index__gt=self.index):
-    #             i.index += 1
-    #             i.save()
-
-    #     super().save(*args, **kwargs)
-        
-
 class ClubAnnouncement(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(max_length=2000)
-    date_posted = models.DateTimeField(default=timezone.now)
-    pinned = models.BooleanField(
-        default=False,
-        help_text="Whether or not the post should be pinned to the top of the page."
-    )
-    club = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="club_announcement"
-    )
+    title = models.CharField(max_length=200, null=True)
+    description = models.TextField(max_length=500, null=True)
+    date_posted = models.DateTimeField(default=timezone.now, help_text="This does not reflect the post status of the announcement, it only reads the current date/time.")
+    popup = models.BooleanField(default=False, help_text="Determines whether popup is enabled for this announcement. Regardless, it will be shown in the announcements section.")
+    expiry = models.DateTimeField(null=True, help_text="When does this post expire? When expired, it will be marked as resolved in the announcment section.")
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement")
 
     class Meta:
         verbose_name =  "Club Announcement"

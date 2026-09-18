@@ -12,11 +12,12 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('clubs', '0001_initial'),
-        ('photologue', '0013_alter_watermark_image'),
         ('taggit', '0006_rename_taggeditem_content_type_object_id_taggit_tagg_content_8fc721_idx'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
+    # Keep legacy gallery IDs as scalar state until migration 0008 removes them.
+    # This lets existing databases upgrade without the former gallery app.
     operations = [
         migrations.AddField(
             model_name='clubchanges',
@@ -46,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='galleryextended',
             name='gallery',
-            field=models.OneToOneField(blank=True, help_text='The photo gallery for this club.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='club', to='photologue.gallery'),
+            field=models.BigIntegerField(blank=True, null=True, db_column='gallery_id'),
         ),
         migrations.AddField(
             model_name='galleryextended',

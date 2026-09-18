@@ -71,11 +71,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "calendars.apps.CalendarsConfig",
     "clubs.apps.ClubsConfig",
-    'photologue',
-    'photologue_custom',
-    'sortedm2m',
     "rest_framework_simplejwt",
-    "users"
+    "users",
+    'galleries',
+    'student_council'
 ]
 
 SITE_ID = 1
@@ -189,3 +188,6 @@ THUMBNAIL_PROCESSORS = (
 THUMBNAIL_BASEDIR = 'cropped'
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
