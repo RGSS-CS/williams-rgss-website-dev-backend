@@ -59,7 +59,7 @@ class STUCOAdminForm(forms.ModelForm):
     class Meta:
         model = STUCO
         fields = [
-            'council_name', 'group_photo', 'photo_caption'
+            'council_name', 'group_photo', 'photo_caption','stuco_logo'
         ]
     
 
