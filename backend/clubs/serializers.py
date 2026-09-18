@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Club, ClubWhyJoin, ClubMembership, ClubChanges, ClubAnnouncement
+from .models import Club, ClubWhyJoin, ClubAnnouncement
 
 class ClubWhyJoinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,38 +40,4 @@ class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "teacher_advisor"
             ]
 
-class ClubMemberSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ClubMembership
-        fields = [
-            "id", "user", "club", "role",
-            "bypass_confirmation_restrictions",
-            "created", "updated"
-        ]
-        read_only_fields = ["created", "updated"]
-
-class ClubChangesSerializer(serializers.ModelSerializer):
-    submitted_by = serializers.PrimaryKeyRelatedField(read_only = True)
-    reviewed_by = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = ClubChanges
-        fields = [
-            "id", "club", "changes", "status",
-            "submitted_by", "submitted_at",
-            "reviewed_by", "reviewed_at", "review_note",
-        ]
-        read_only_fields = [
-            "status", "submitted_by", "submitted_at",
-            "reviewed_by", "reviewed_at", "review_note",
-        ]
-    def validate_change(self, change):
-        unknown = set(change) - set(Club.PENDING_APPROVAL_FIELDS)
-        if unknown:
-            raise serializers.ValidationError(f"These fields cannot be submitted for approval: {','.join(sorted(unknown))}")
-        return change
-
-class ClubChangesReviewSeralizer(serializers.Serializer):
-    note = serializers.CharField(required= False, allow_blank= True, default="")
-    
 # TODO: add serializer for club SM sites

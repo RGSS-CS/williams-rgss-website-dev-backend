@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
 from taggit.managers import TaggableManager
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
@@ -76,13 +75,6 @@ class Club(models.Model):
         "visible when selected 'Not Accepting' in the field below."
     )
 
-    PENDING_APPROVAL_FIELDS = [
-        "name", "preview_description", "description", "tagline",
-        "repetition", "classroom_code", "accepting_applicants",
-        "application_form_link", "day_of_meeting", "time",
-        "location", "teacher_advisor", "join_instructions"
-    ]
-
     def __str__(self):
         return self.name
     
@@ -126,83 +118,3 @@ class ClubAnnouncement(models.Model):
 
     def __str__(self):
         return self.title
-    
-
-################# USER ACCESS CONTROLS ####################
-
-class ClubMembership(models.Model):
-    class Role(models.TextChoices):
-        EXECUTIVE = "EXC", "Club Executive"
-        CLUB_ADMIN = "ADM", "Club Administrator"
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='club_memberships')
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="memberships")
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.EXECUTIVE)
-    bypass_confirmation_restrictions = models.BooleanField(
-        default=False, help_text="This allows execs to publish " \
-        "changes without approval by the club administrator"
-    )
-
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Club Executive Membership"
-        verbose_name_plural = "Club Executive Memberships"
-
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'club'], name='unique_club_membership')
-        ]
-
-    def __str__(self) -> str:
-        return f"{self.user} - {self.club} ({self.get_role_display()})"
-
-    def save(self, *args, **kwargs):
-        if self.role != self.Role.EXECUTIVE:
-            self.bypass_confirmation_restrictions = False
-
-        super().save(*args, **kwargs)
-
-class ClubChanges(models.Model):
-    class ApprovalStatus(models.TextChoices):
-        PENDING = "PND", "Pending Approval"
-        APPROVED = "APR", "Approved"
-        REJECTED = "RJC", "Rejected"
-
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='pending_edits')
-    changes = models.JSONField(help_text="Changed Value")
-    status = models.CharField(max_length=10, choices=ApprovalStatus.choices, default= ApprovalStatus.PENDING)
-    submitted_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, 
-        null=True, related_name='submitted_changes'
-    )
-    submitted_at = models.DateTimeField(auto_now_add=True)
-    reviewed_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, 
-        related_name='reviewed_club_changes'
-    )
-    reviewed_at = models.DateTimeField(null=True, blank = True)
-    review_note = models.TextField(max_length=200, blank=True)
-
-    def __str__(self) -> str:
-        return f"Changes for {self.club} ({self.get_status_display()})"
-
-    def approve(self, reviewer, note=""):
-        allowed = set(Club.PENDING_APPROVAL_FIELDS)
-        for field, value in self.changes.items():
-            if field in allowed:
-                setattr(self.club, field, value)
-        self.club.save()
-
-        self.status = self.ApprovalStatus.APPROVED
-        self.reviewed_by = reviewer
-        self.reviewed_at = timezone.now()
-        self.review_note = note
-        self.save()
-
-    def reject(self, reviewer, note=""):
-        self.status = self.ApprovalStatus.REJECTED
-        self.reviewed_by = reviewer
-        self.reviewed_at = timezone.now()
-        self.review_note = note
-        self.save()
