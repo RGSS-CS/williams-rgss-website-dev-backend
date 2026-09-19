@@ -92,17 +92,9 @@ class SiteSettings(SingletonModel):
     captcha = models.JSONField(default=list, blank=True)
 
     school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        # if self.stuco_image and self.stuco_image.name != "management/default.png":
-        #     img = Image.open(self.stuco_image.path)
-        #     if img.height > 300 or img.width > 300:
-        #         output_size = (300, 300)
-        #         img.thumbnail(output_size)
-        #         img.save(self.stuco_image.path)
-
     def __str__(self):
         return "Site Configuration"
 
