@@ -197,3 +197,28 @@ class GalleryModelTests(TestCase):
                     media.refresh_from_db()
                     self.assertEqual(media.name, generated)
                     self.assertEqual(media.description, 'Updated caption')
+
+
+class ImageUploadFilenameTests(SimpleTestCase):
+    def test_all_image_fields_generate_unique_uuid4_filenames(self):
+        from pathlib import Path
+        from uuid import UUID
+
+        for model, field_name, directory in [
+            (Photos, 'image', 'clubs/None/photos'),
+            (SiteSettings, 'favicon', 'upload/management'),
+            (SiteSettings, 'site_logo', 'upload/management'),
+            (STUCO, 'group_photo', 'upload/stuco'),
+            (STUCO, 'stuco_logo', 'upload/stuco'),
+        ]:
+            with self.subTest(model=model.__name__, field=field_name):
+                field = model._meta.get_field(field_name)
+                instance = model()
+                names = [field.generate_filename(instance, 'Original Photo.PNG') for _ in range(2)]
+                self.assertNotEqual(*names)
+                for name in names:
+                    path = Path(name)
+                    self.assertEqual(path.parent.as_posix(), directory)
+                    self.assertEqual(path.suffix, '.png')
+                    self.assertEqual(UUID(hex=path.stem).version, 4)
+                    self.assertEqual(UUID(hex=path.stem).hex, path.stem)
