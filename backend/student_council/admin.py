@@ -21,7 +21,7 @@ def validate_upload_mime(file, allowed_types):
 
 
 class STUCOAdminForm(forms.ModelForm):
-    image = forms.ImageField(widget=AdminFileWidget())
+    stuco_logo = forms.ImageField(widget=AdminFileWidget())
 
     def clean_image(self):
         #Check File Size
