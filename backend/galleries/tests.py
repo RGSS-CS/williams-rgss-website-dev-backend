@@ -7,6 +7,10 @@ from PIL import Image
 from .admin import PhotoAdminForm, VideoAdminForm
 from .models import Photos, Videos
 from clubs.models import Club
+from management.admin import SiteSettingsAdminForm
+from management.models import SiteSettings
+from student_council.admin import STUCOAdminForm
+from student_council.models import STUCO
 from .serializers import PhotoSeralizer, VideoSerializer
 
 PhotoForm = modelform_factory(Photos, form=PhotoAdminForm, fields=['image'])
@@ -24,7 +28,7 @@ class GalleryUploadTests(SimpleTestCase):
     def test_existing_files(self):
         for model, factory, field in [(Photos, PhotoForm, 'image'), (Videos, VideoForm, 'video_file')]:
             instance = model(**{field: 'existing.file'})
-            with patch('galleries.admin.puremagic.from_string') as detect:
+            with patch('galleries.validators.puremagic.from_string') as detect:
                 form = factory(data={}, instance=instance)
                 self.assertTrue(form.is_valid(), form.errors)
                 self.assertIs(form.cleaned_data[field], getattr(instance, field))
@@ -98,6 +102,61 @@ class GalleryUploadTests(SimpleTestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('image', form.errors)
 
+
+
+class OtherImageUploadTests(SimpleTestCase):
+    def test_admin_image_fields(self):
+        for model, base_form, field, minimum in [
+            (STUCO, STUCOAdminForm, 'stuco_logo', 100),
+            (STUCO, STUCOAdminForm, 'group_photo', 100),
+            (SiteSettings, SiteSettingsAdminForm, 'site_logo', 100),
+            (SiteSettings, SiteSettingsAdminForm, 'favicon', 32),
+        ]:
+            # Keep the actual admin fields/cleaners without unrelated required fields.
+            factory = modelform_factory(model, form=base_form, fields=[field])
+
+            def form_for(data=None, files=None, instance=None):
+                form = factory(data=data or {}, files=files, instance=instance)
+                for name in list(form.fields):
+                    if name != field:
+                        del form.fields[name]
+                return form
+
+            with self.subTest(field=field):
+                self.assertTrue(form_for().is_valid())
+                instance = model(**{field: 'existing.png'})
+                with patch('galleries.validators.puremagic.from_string') as detect:
+                    form = form_for(instance=instance)
+                    self.assertTrue(form.is_valid(), form.errors)
+                    detect.assert_not_called()
+                form = form_for(data={field + '-clear': 'on'}, instance=instance)
+                self.assertTrue(form.is_valid(), form.errors)
+                self.assertIs(form.cleaned_data[field], False)
+
+            for format, size, oversized, valid in [
+                ('PNG', (minimum, minimum), False, True),
+                ('JPEG', (100, 100), False, True),
+                ('WEBP', (100, 100), False, True),
+                ('GIF', (100, 100), False, False),
+                ('PNG', (minimum - 1, minimum), False, False),
+                ('PNG', (10001, 100), False, False),
+                ('PNG', (100, 100), True, False),
+            ]:
+                with self.subTest(field=field, format=format, size=size, oversized=oversized):
+                    stream = BytesIO()
+                    Image.new('RGB', size).save(stream, format=format)
+                    upload = SimpleUploadedFile('image.' + format.lower(), stream.getvalue())
+                    if oversized:
+                        upload.size = int(2.5 * 1024 * 1024) + 1
+                    form = form_for(files={field: upload})
+                    self.assertEqual(form.is_valid(), valid, form.errors)
+                    if not valid:
+                        self.assertIn(field, form.errors)
+                    self.assertEqual(upload.tell(), 0)
+
+            form = form_for(files={field: SimpleUploadedFile('image.png', b'invalid')})
+            self.assertFalse(form.is_valid())
+            self.assertIn(field, form.errors)
 
 
 @patch('requests.post')
