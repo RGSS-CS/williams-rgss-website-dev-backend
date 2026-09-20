@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminFileWidget
 from .models import Photos, Videos, MassImport
@@ -39,9 +40,9 @@ class VideoAdminForm(forms.ModelForm):
         if not isinstance(file, UploadedFile):
             return file
 
-        max_size = 4 * 1024 ** 3
+        max_size = settings.MAX_VIDEO_UPLOAD_SIZE
         if file.size > max_size:
-            raise ValidationError('The video file is too large. The max size is 4 GiB.')
+            raise ValidationError(f'The video file is too large. The max size is {max_size / (1024 ** 3):g} GiB.')
 
         allowed_mime = ['video/mp4', 'video/x-matroska', 'video/quicktime']
         validate_upload_mime(file, allowed_mime)
