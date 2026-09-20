@@ -5,7 +5,7 @@ from .models import Club, ClubWhyJoin, ClubAnnouncement
 class ClubWhyJoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubWhyJoin
-        fields = ["id", "title", "description", "index"]
+        fields = ["title", "description", "index"]
 
 class ClubAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:

@@ -92,7 +92,7 @@ class ClubWhyJoin(models.Model):
         max_length=300, 
         help_text="Insert a detailed description for your reason to join the club."
     )
-    index = models.IntegerField(
+    index = models.PositiveIntegerField(
         help_text="The order in which this reason will be displayed."
     )
 
