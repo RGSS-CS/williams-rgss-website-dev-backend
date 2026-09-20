@@ -3,61 +3,12 @@ from unittest.mock import patch
 
 from django.utils import timezone
 
-from .models import Club, ClubAnnouncement, ClubWhyJoin
+from .models import Club, ClubAnnouncement
 from .serializers import ClubSerializer, PublicClubSerializer
 
 
 from django.test import TestCase
 
-
-
-class ClubWhyJoinModelTests(TestCase):
-    @patch('requests.post')
-    def test_club_api_returns_reasons_in_saved_order(self, request):
-        from rest_framework.test import APIRequestFactory
-        from .views import ClubViewSet
-
-        club = Club.objects.create(name="Ordered Club")
-        first = ClubWhyJoin.objects.create(
-            club=club, title="First", description="First reason", index=2,
-        )
-        second = ClubWhyJoin.objects.create(
-            club=club, title="Second", description="Second reason", index=0,
-        )
-        third = ClubWhyJoin.objects.create(
-            club=club, title="Third", description="Third reason", index=0,
-        )
-        view = ClubViewSet.as_view({'get': 'retrieve'})
-        factory = APIRequestFactory()
-
-        response = view(factory.get('/api/club/'), pk=club.pk)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            [item['id'] for item in response.data['why_join']],
-            [second.pk, third.pk, first.pk],
-        )
-
-        first.index = 0
-        second.index = 1
-        third.index = 2
-        ClubWhyJoin.objects.bulk_update([first, second, third], ['index'])
-
-        response = view(factory.get('/api/club/'), pk=club.pk)
-
-        self.assertEqual(
-            [(item['id'], item['index']) for item in response.data['why_join']],
-            [(first.pk, 0), (second.pk, 1), (third.pk, 2)],
-        )
-
-    def test_why_join_reasons_are_ordered_by_index(self):
-        club = Club.objects.create(name="Science Club")
-        ClubWhyJoin.objects.create(club=club, title="First reason", description="Desc 1", index=2)
-        ClubWhyJoin.objects.create(club=club, title="Second reason", description="Desc 2", index=1)
-
-        reasons = list(ClubWhyJoin.objects.filter(club=club))
-
-        self.assertEqual([reason.title for reason in reasons], ["Second reason", "First reason"])
 
 
 class ClubSerializerTests(TestCase):

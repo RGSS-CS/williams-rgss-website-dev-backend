@@ -81,29 +81,6 @@ class Club(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-class ClubWhyJoin(models.Model):
-    club = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="why_join_reasons"
-    )
-    title = models.CharField(
-        max_length=30, help_text="Insert a title for your reason to join the club."
-    )
-    description = models.TextField(
-        max_length=300, 
-        help_text="Insert a detailed description for your reason to join the club."
-    )
-    index = models.PositiveIntegerField(
-        help_text="The order in which this reason will be displayed."
-    )
-
-    class Meta:
-        verbose_name =  "Why Join"
-        verbose_name_plural = "Why Join"
-        ordering = ["index", "id"]
-
-    def __str__(self):
-        return self.title
-    
 class ClubAnnouncement(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = models.TextField(max_length=500, null=True)
