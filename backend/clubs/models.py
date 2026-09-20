@@ -43,7 +43,7 @@ class Club(models.Model):
         " please select 'Weekly' and specify in the description."
     )
     classroom_code = models.CharField(
-        max_length=10, null=True, 
+        max_length=10, null=True, blank=True,
         help_text="This does not need an input if there is no google classroom code. "
         "*It will not be visible when selected 'Not Accepting' in the field below."
     )

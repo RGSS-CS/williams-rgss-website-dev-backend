@@ -4,7 +4,7 @@ from .models import STUCO, Announcements
 class STUCOSeralizer(serializers.ModelSerializer):
     class Meta:
         model = STUCO
-        fields = ['council_name', 'group_photo', 'photo_caption']
+        fields = ['council_name', 'group_photo', 'photo_caption', 'stuco_logo']
 
 class AnnouncementSeralizer(serializers.ModelSerializer):
     class Meta:

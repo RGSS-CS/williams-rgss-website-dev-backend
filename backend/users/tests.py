@@ -1,10 +1,13 @@
 from django.contrib.auth import get_user_model
 import base64
 from urllib.parse import parse_qs, urlsplit
+from datetime import timedelta
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -183,3 +186,80 @@ class TokenAPITests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class JoinCodeBoundaryTests(APITestCase):
+    def test_verification_rejects_unusable_codes_without_consuming_uses(self):
+        for options in (
+            {'enabled': False},
+            {'expiry': timezone.now() - timedelta(seconds=1)},
+            {'max_uses': 2, 'uses': 2},
+            {'max_uses': 0},
+        ):
+            with self.subTest(options=options):
+                code = UserJoinCode.objects.create(**options)
+                uses = code.uses
+                response = self.client.post(
+                    reverse('verify-register-code'), {'code': code.code}, format='json'
+                )
+                self.assertEqual(response.status_code, 400)
+                self.assertIn('code', response.data)
+                code.refresh_from_db()
+                self.assertEqual(code.uses, uses)
+
+    def test_verification_does_not_consume_last_available_use(self):
+        code = UserJoinCode.objects.create(max_uses=3, uses=2, label='Library')
+        response = self.client.post(
+            reverse('verify-register-code'), {'code': code.code}, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {'valid': True, 'label': 'Library'})
+        code.refresh_from_db()
+        self.assertEqual(code.uses, 2)
+
+    def test_unknown_and_missing_codes_are_rejected(self):
+        for data in ({'code': 'unknown'}, {}):
+            with self.subTest(data=data):
+                response = self.client.post(reverse('verify-register-code'), data, format='json')
+                self.assertEqual(response.status_code, 400)
+                self.assertIn('code', response.data)
+
+
+class EmailLoginTests(APITestCase):
+    def setUp(self):
+        revalidation = patch('requests.post')
+        revalidation.start()
+        self.addCleanup(revalidation.stop)
+        self.user = User.objects.create_user(
+            username='student', email='student@example.com', password='StrongPass123!'
+        )
+
+    def test_login_is_case_insensitive_and_tokens_include_groups(self):
+        from django.contrib.auth.models import Group
+        from rest_framework_simplejwt.tokens import AccessToken
+
+        group, _ = Group.objects.get_or_create(name='Public Verified')
+        self.user.groups.add(group)
+        response = self.client.post(reverse('token_obtain_pair'), {
+            'email': 'STUDENT@EXAMPLE.COM', 'password': 'StrongPass123!'
+        }, format='json')
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.data['groups'], ['Public Verified'])
+        token = AccessToken(response.data['access'])
+        self.assertEqual(token['groups'], ['Public Verified'])
+        self.assertEqual(str(token['user_id']), str(self.user.pk))
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.last_login)
+
+    def test_wrong_password_and_unknown_email_return_same_error(self):
+        errors = []
+        for email in (self.user.email, 'unknown@example.com'):
+            response = self.client.post(reverse('token_obtain_pair'), {
+                'email': email, 'password': 'WrongPassword123!'
+            }, format='json')
+            self.assertEqual(response.status_code, 400)
+            self.assertNotIn('access', response.data)
+            errors.append(response.data)
+        self.assertEqual(errors[0], errors[1])
+        self.user.refresh_from_db()
+        self.assertIsNone(self.user.last_login)

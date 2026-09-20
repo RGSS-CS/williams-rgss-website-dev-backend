@@ -1,11 +1,16 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth.models import AbstractUser, Group as AuthGroup
 
 def get_random_code():
     return get_random_string(length=32)
+
+class Group(AuthGroup):
+    class Meta:
+        proxy = True
+        verbose_name = 'Groups'
+        verbose_name_plural = 'Groups'
 
 class CustomUser(AbstractUser):
     def __str__(self):
