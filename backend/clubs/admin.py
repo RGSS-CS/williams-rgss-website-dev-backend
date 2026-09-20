@@ -8,7 +8,7 @@ from taggit.models import Tag
 from django.contrib.admin import widgets
 from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
-from .models import Club, ClubWhyJoin, ClubAnnouncement
+from .models import Club, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 
@@ -107,13 +107,7 @@ class ClubAnnouncementInline(admin.StackedInline):
     extra = 0
     max_num = 1
 
-class WhyJoinInline(admin.StackedInline):
-    model = ClubWhyJoin
-    extra = 1
-    max_num = 10
-
-
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
-    inlines = [WhyJoinInline, ClubAnnouncementInline]
+    inlines = [ClubAnnouncementInline]

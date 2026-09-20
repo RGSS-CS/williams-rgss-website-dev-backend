@@ -3,23 +3,12 @@ from unittest.mock import patch
 
 from django.utils import timezone
 
-from .models import Club, ClubAnnouncement, ClubWhyJoin
+from .models import Club, ClubAnnouncement
 from .serializers import ClubSerializer, PublicClubSerializer
 
 
 from django.test import TestCase
 
-
-
-class ClubWhyJoinModelTests(TestCase):
-    def test_why_join_reasons_are_ordered_by_index(self):
-        club = Club.objects.create(name="Science Club")
-        ClubWhyJoin.objects.create(club=club, title="First reason", description="Desc 1", index=2)
-        ClubWhyJoin.objects.create(club=club, title="Second reason", description="Desc 2", index=1)
-
-        reasons = list(ClubWhyJoin.objects.filter(club=club))
-
-        self.assertEqual([reason.title for reason in reasons], ["Second reason", "First reason"])
 
 
 class ClubSerializerTests(TestCase):

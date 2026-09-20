@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.utils import timezone
 
-from clubs.models import Club, ClubAnnouncement, ClubWhyJoin
+from clubs.models import Club, ClubAnnouncement
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
 from student_council.models import Announcements, SchoolAnnouncements, STUCO
 
@@ -135,11 +135,6 @@ class Command(BaseCommand):
                 join_instructions=random_sentence((10, 25), max_length=200),
             )
 
-            for index in range(3):
-                ClubWhyJoin.objects.create(
-                    club=club, title=random_sentence((3, 5), max_length=30),
-                    description=random_sentence((10, 25), max_length=300), index=index,
-                )
             now = timezone.now()
             ClubAnnouncement.objects.create(
                 club=club, title=random_sentence(),
