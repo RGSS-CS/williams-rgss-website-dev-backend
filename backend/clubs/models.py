@@ -99,7 +99,7 @@ class ClubWhyJoin(models.Model):
     class Meta:
         verbose_name =  "Why Join"
         verbose_name_plural = "Why Join"
-        ordering = ["index"]
+        ordering = ["index", "id"]
 
     def __str__(self):
         return self.title

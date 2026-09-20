@@ -5,7 +5,7 @@ from .models import Club, ClubWhyJoin, ClubAnnouncement
 class ClubWhyJoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubWhyJoin
-        fields = ["title", "description", "index"]
+        fields = ["id", "title", "description", "index"]
 
 class ClubAnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,5 +39,3 @@ class PublicClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "repetition", "location", "why_join", "accepting_applicants",
             "teacher_advisor"
             ]
-
-# TODO: add serializer for club SM sites
