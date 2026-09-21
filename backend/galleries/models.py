@@ -52,7 +52,8 @@ class Photos(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        name = self.image.name
         if not self.name or not self.name.strip():
             club_name = self.club.name
-            self.name = f'{club_name[:17]} - {get_random_string(8)}'
+            self.name = f'{club_name[:17]} - {name}'
         super().save(*args, **kwargs)
