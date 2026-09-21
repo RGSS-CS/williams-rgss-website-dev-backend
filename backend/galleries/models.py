@@ -10,11 +10,6 @@ def photo_upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
         return f"clubs/{instance.club_id}/photos/{uuid4().hex}{extension}"
 
-# Historical migrations reference this callable.
-def video_upload_path(instance, filename):
-        extension = Path(filename).suffix.lower()
-        return f"clubs/{instance.club_id}/videos/{uuid4().hex}{extension}"
-
 def zip_upload_path(instance, filename):
      extension = Path(filename).suffix.lower()
      return f"clubs/{instance.club_id}/temp/zip/{uuid4().hex}{extension}"
