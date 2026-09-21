@@ -202,4 +202,3 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
 
 # Maximum accepted file sizes in bytes, enforced by upload validators.
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
-MAX_VIDEO_UPLOAD_SIZE = getattr(config, "MAX_VIDEO_UPLOAD_SIZE", 4 * 1024 ** 3)  # 4 GiB
