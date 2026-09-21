@@ -21,11 +21,11 @@ class UserJoinCode(models.Model):
         default=get_random_code, unique=True, verbose_name="Security Code", help_text="Unencrypted registration code -- DO NOT SHARE"
     )
     label = models.CharField(
-        max_length=50, blank=True, verbose_name="Title", 
+        max_length=50, null=True, verbose_name="Title", 
         help_text="A easily identifiable name for this qr code, e.g. 'Cafeteria'"
     )
     description = models.TextField(
-        blank=True, max_length=300, 
+        blank=True, null=True, max_length=300, 
         help_text="A description of this qr code, e.g. 'For use in the cafeteria only.' (*NOT REQUIRED)"
     )
     expiry = models.DateTimeField(null=True, blank=True)
