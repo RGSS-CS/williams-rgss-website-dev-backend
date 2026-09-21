@@ -198,8 +198,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+# Uploads above 2.5 MiB use temporary disk storage.
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
 # Maximum accepted file sizes in bytes, enforced by upload validators.
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
-MAX_TOTAL_UNCOMPRESSED_SIZE = 2 ** 1024
