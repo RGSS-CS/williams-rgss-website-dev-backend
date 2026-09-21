@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'image_cropping',
     "taggit",
-    "taggit_serializer",
     "colorfield",
     "phonenumber_field",
     "whitenoise",
