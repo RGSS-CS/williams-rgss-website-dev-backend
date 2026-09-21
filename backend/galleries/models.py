@@ -20,12 +20,9 @@ def zip_upload_path(instance, filename):
      return f"clubs/{instance.club_id}/temp/zip/{uuid4().hex}{extension}"
 
 class MassImport(models.Model):
-    class FileType(models.TextChoices):
-         PHOTOS = 'PH', 'Photos'
     name = models.CharField(null=True, blank=True, help_text='The name will automatically be generated based on the ZIP file name.')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Photo files only.')
-    file_type = models.CharField(max_length=2, choices=FileType)
     upload_date = models.DateTimeField(auto_now_add=True)
     upload_status = models.CharField(max_length=5, null=True)
 
