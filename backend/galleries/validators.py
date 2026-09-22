@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import UploadedFile
 from PIL import Image
@@ -20,9 +21,9 @@ def validate_image_upload(file, min_dim=(100, 100)):
     #Check File Size
     if not isinstance(file, UploadedFile):
         return file
-    max_size = 2.5 * 1024 * 1024
+    max_size = settings.MAX_IMAGE_UPLOAD_SIZE
     if file.size > max_size:
-        raise ValidationError(f'The image is too large. Max size is 2.5MB')
+        raise ValidationError(f'The image is too large. Max size is {max_size / (1024 ** 2):g}MB')
 
     #Check MIME Types
     

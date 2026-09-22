@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'image_cropping',
     "taggit",
-    "taggit_serializer",
     "colorfield",
     "phonenumber_field",
     "whitenoise",
@@ -153,7 +152,15 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "1000/hour",
+        "user": "1000/hour",
+    },
 }
 
 # Internationalization
@@ -189,5 +196,10 @@ THUMBNAIL_BASEDIR = 'cropped'
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+# Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+
+# Maximum accepted file sizes in bytes, enforced by upload validators.
+MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
+MAX_VIDEO_UPLOAD_SIZE = getattr(config, "MAX_VIDEO_UPLOAD_SIZE", 4 * 1024 ** 3)  # 4 GiB

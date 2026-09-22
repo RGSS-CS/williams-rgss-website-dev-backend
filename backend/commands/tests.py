@@ -7,7 +7,7 @@ from django.test import SimpleTestCase, TestCase
 
 from .apps import CommandsConfig
 
-from clubs.models import Club, ClubAnnouncement, ClubWhyJoin
+from clubs.models import Club, ClubAnnouncement
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
 from student_council.models import Announcements, SchoolAnnouncements, STUCO
 
@@ -31,12 +31,9 @@ class GenerateTestDataTests(TestCase):
             club.full_clean()
             self.assertTrue(club.location.startswith('Room '))
             self.assertTrue(club.category.exists())
-            self.assertEqual(list(club.why_join_reasons.values_list('index', flat=True)), [0, 1, 2])
             announcement = club.club_announcement.get()
             announcement.full_clean()
             self.assertGreater(announcement.expiry, announcement.date_posted)
-            for reason in club.why_join_reasons.all():
-                reason.full_clean()
 
     def test_seeds_current_settings_models_without_duplicates(self):
         settings = SiteSettings.get_solo()
@@ -77,7 +74,6 @@ class GenerateTestDataTests(TestCase):
             with self.subTest(options=options):
                 self.generate(skip_settings=True, **options)
                 self.assertFalse(Club.objects.exists())
-                self.assertFalse(ClubWhyJoin.objects.exists())
                 self.assertFalse(ClubAnnouncement.objects.exists())
 
     def test_negative_amount_fails_before_writing(self):

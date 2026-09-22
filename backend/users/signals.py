@@ -5,26 +5,20 @@ from django.dispatch import receiver
 
 GROUPS = {
     "Public Verified": [],
-    "Club Executive": [
-        ("clubs", "change_club"),
-        ("clubs", "add_clubwhyjoin"),
-        ("clubs", "change_clubwhyjoin"),
-        ("clubs", "delete_clubwhyjoin"),
-        ("clubs", "add_clubannouncement"),
-        ("clubs", "change_clubannouncement"),
-        ("clubs", "delete_clubannouncement")    
-    ],
-    "Club Administrators" : [
-        ("clubs", "can_approve_club_changes"),
-        ("clubs", "add_club"),
-        ("clubs", "change_club"),
-        ("clubs", "add_clubwhyjoin"),
-        ("clubs", "change_clubwhyjoin"),
-        ("clubs", "delete_clubwhyjoin"),
-        ("clubs", "add_clubannouncement"),
-        ("clubs", "change_clubannouncement"),
-        ("clubs", "delete_clubannouncement")
-    ]
+    # "Club Executive": [
+    #     ("clubs", "change_club"),
+    #     ("clubs", "add_clubannouncement"),
+    #     ("clubs", "change_clubannouncement"),
+    #     ("clubs", "delete_clubannouncement")    
+    # ],
+    # "Club Administrators" : [
+    #     ("clubs", "can_approve_club_changes"),
+    #     ("clubs", "add_club"),
+    #     ("clubs", "change_club"),
+    #     ("clubs", "add_clubannouncement"),
+    #     ("clubs", "change_clubannouncement"),
+    #     ("clubs", "delete_clubannouncement")
+    # ]
 }
 
 @receiver(post_migrate, dispatch_uid="users.signals.create_default_groups")
