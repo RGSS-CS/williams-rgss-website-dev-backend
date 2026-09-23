@@ -7,8 +7,8 @@ from .models import Photos, MassImport
 from management.signals import revalidate_frontend_tag
 
 @receiver(post_save, sender=MassImport)
-def execute_unzip():
-    
+def execute_unzip(sender, instance, **kwargs):
+    pass
 
 @receiver(post_save, sender=Photos)
 @receiver(post_delete, sender=Photos)
