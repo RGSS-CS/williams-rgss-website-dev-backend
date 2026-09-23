@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from . import settings_local as config
 from easy_thumbnails.conf import Settings as thumbnail_settings
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -207,3 +206,20 @@ MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5
 
 
 ### https://django-jazzmin.readthedocs.io/configuration/
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'Student Council Administration',
+    'site_header': 'Student Council Admin',
+    'login_logo': None,
+    'site_brand': 'Student Council Admin',
+    'site_icon': None,
+    "user_avatar": None,
+    'show_ui_builder': False,
+    'usermenu_links': [
+        {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
+    ]
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'dark_mode_theme': 'darkly'
+}
