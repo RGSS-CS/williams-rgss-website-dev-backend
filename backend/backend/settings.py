@@ -46,9 +46,8 @@ CAP_SECRET = config.CAP_SECRET
 # Application definition
 
 INSTALLED_APPS = [
-    'django_daisy',
+    'jazzmin',
     'django.contrib.admin',
-    'django.contrib.humanize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -207,19 +206,4 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
 
 
-DAISY_SETTINGS = {
-    # Branding
-    'SITE_TITLE': 'Student Council Administration',
-    'SITE_HEADER': 'Administration',
-    
-   
-    # Theme Configuration
-    'DEFAULT_THEME': 'dark',  # e.g., 'corporate', 'dark'
-    'DEFAULT_THEME_DARK': None,  # Dark mode default
-    'SHOW_THEME_SELECTOR': True,  # Show/hide theme dropdown
-    'THEME_LIST': [
-        {'name': 'Light', 'value': 'light'},
-        {'name': 'Dark', 'value': 'dark'},
-        # Add custom themes...
-    ],
-}
+### https://django-jazzmin.readthedocs.io/configuration/
