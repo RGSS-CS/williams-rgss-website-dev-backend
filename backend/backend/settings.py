@@ -214,6 +214,7 @@ JAZZMIN_SETTINGS = {
     'site_brand': 'Student Council Admin',
     'site_icon': None,
     "user_avatar": None,
+    'hide_apps': ['taggit'],
     'show_ui_builder': False,
     'usermenu_links': [
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
