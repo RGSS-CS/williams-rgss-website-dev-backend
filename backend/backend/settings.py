@@ -210,10 +210,11 @@ MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5
 JAZZMIN_SETTINGS = {
     'site_title': 'Student Council Administration',
     'site_header': 'Student Council Admin',
-    'login_logo': None,
+    'login_logo': 'management/favicon.svg',
     'site_brand': 'Student Council Admin',
+    'site_logo': 'management/favicon.svg',
     'site_icon': 'management/favicon.svg',
-    'site_logo': None,
+    'custom_css': 'management/admin.css',
     "user_avatar": None,
     'hide_apps': ['taggit'],
     'show_ui_builder': False,
