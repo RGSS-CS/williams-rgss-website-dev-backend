@@ -106,7 +106,6 @@ class ClubAnnouncementInline(admin.StackedInline):
     fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
     extra = 0
-    max_num = 1
 
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):

@@ -9,7 +9,7 @@ class ClubAnnouncementSerializer(serializers.ModelSerializer):
 
 class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
     category = TagListSerializerField()
-    announcement = ClubAnnouncementSerializer(source="club_announcement",many=True,max_length=1)
+    announcement = ClubAnnouncementSerializer(source="club_announcement", many=True)
 
     class Meta:
         model = Club
