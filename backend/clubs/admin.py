@@ -96,6 +96,7 @@ class ClubAnnouncementAdminForm(forms.ModelForm):
                 attrs={'type': 'datetime-local', 'step': '1'},
                 format='%Y-%m-%dT%H:%M:%S',
             ),
+            'description': forms.Textarea(attrs={'rows': 3, 'cols': 60}),
         }
 
 
