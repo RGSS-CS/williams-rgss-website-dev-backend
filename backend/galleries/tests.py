@@ -91,7 +91,11 @@ class OtherImageUploadTests(SimpleTestCase):
                 return form
 
             with self.subTest(field=field):
-                self.assertTrue(form_for().is_valid())
+                required = field in ('stuco_logo', 'favicon', 'site_logo')
+                empty_form = form_for()
+                self.assertEqual(empty_form.is_valid(), not required)
+                if required:
+                    self.assertEqual(empty_form.errors.as_data()[field][0].code, 'required')
                 instance = model(**{field: 'existing.png'})
                 with patch('galleries.validators.puremagic.from_string') as detect:
                     form = form_for(instance=instance)
@@ -99,7 +103,10 @@ class OtherImageUploadTests(SimpleTestCase):
                     detect.assert_not_called()
                 form = form_for(data={field + '-clear': 'on'}, instance=instance)
                 self.assertTrue(form.is_valid(), form.errors)
-                self.assertIs(form.cleaned_data[field], False)
+                if required:
+                    self.assertEqual(form.cleaned_data[field], getattr(instance, field))
+                else:
+                    self.assertIs(form.cleaned_data[field], False)
 
             for format, size, oversized, valid in [
                 ('PNG', (minimum, minimum), False, True),

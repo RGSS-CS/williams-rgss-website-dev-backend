@@ -7,7 +7,7 @@ from galleries.validators import validate_image_upload
 
 
 class STUCOAdminForm(forms.ModelForm):
-    stuco_logo = forms.ImageField(required=False, widget=AdminFileWidget())
+    stuco_logo = forms.ImageField(required=True, widget=AdminFileWidget())
 
     def clean_stuco_logo(self):
         return validate_image_upload(self.cleaned_data['stuco_logo'])
