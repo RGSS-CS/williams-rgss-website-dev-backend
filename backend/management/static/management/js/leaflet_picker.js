@@ -2,6 +2,8 @@
   "use strict";
 
   function initMap(widgetId) {
+    // The admin's hidden empty form is a template, not a live map.
+    if (widgetId.indexOf("__prefix__") !== -1) return;
     var latField     = document.getElementById("id_" + widgetId + "-location_lat");
     var lonField     = document.getElementById("id_" + widgetId + "-location_lon");
     var textField    = document.getElementById("id_" + widgetId + "-location");
@@ -10,7 +12,7 @@
     var searchBtn    = document.getElementById("search_btn_" + widgetId);
     var searchStatus = document.getElementById("search_status_" + widgetId);
 
-    if (!mapDiv || !latField || !lonField) return;
+    if (!mapDiv || !latField || !lonField || mapDiv._leaflet_id) return;
 
     // lat/lon are read-only — set only by map interaction, not keyboard
     [latField, lonField].forEach(function (f) {
@@ -24,6 +26,18 @@
     var initZoom = (latField.value && lonField.value) ? 15 : 13;
 
     var map = L.map(mapDiv).setView([initLat, initLon], initZoom);
+
+    // Admin columns, tabs and sidebars can resize without a window resize.
+    // Leaflet must remeasure its container after those layout changes.
+    if (typeof ResizeObserver !== "undefined") {
+      var resizeObserver = new ResizeObserver(function () {
+        if (mapDiv.clientWidth && mapDiv.clientHeight) {
+          map.invalidateSize({ pan: false, debounceMoveend: true });
+        }
+      });
+      resizeObserver.observe(mapDiv);
+      map.on("unload", function () { resizeObserver.disconnect(); });
+    }
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
