@@ -96,6 +96,7 @@ class ClubAnnouncementAdminForm(forms.ModelForm):
                 attrs={'type': 'datetime-local', 'step': '1'},
                 format='%Y-%m-%dT%H:%M:%S',
             ),
+            'description': forms.Textarea(attrs={'rows': 3, 'cols': 60}),
         }
 
 
@@ -105,7 +106,6 @@ class ClubAnnouncementInline(admin.StackedInline):
     fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
     extra = 0
-    max_num = 1
 
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):

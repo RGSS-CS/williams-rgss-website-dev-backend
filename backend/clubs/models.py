@@ -40,7 +40,7 @@ class Club(models.Model):
     repetition = models.CharField(
         null=True, max_length=10, choices=Repetition.choices, 
         help_text="How often does your club meet? If your club meets on a different schedule," \
-        " please select 'Weekly' and specify in the description."
+        " please select 'Notified'."
     )
     classroom_code = models.CharField(
         max_length=10, null=True, blank=True,
