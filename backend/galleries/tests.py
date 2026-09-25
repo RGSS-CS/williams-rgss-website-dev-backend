@@ -145,15 +145,15 @@ class GalleryModelTests(TestCase):
                 media = model.objects.create(club=club, name='Club day', **fields)
                 self.assertIsNotNone(media.pk)
                 media.refresh_from_db()
-                self.assertFalse(media.shown_in_gallery)
-                self.assertFalse(media.shown_in_main_page)
-                media.shown_in_gallery = True
-                media.shown_in_main_page = True
+                self.assertTrue(media.shown_in_gallery)
+                self.assertTrue(media.shown_in_main_page)
+                media.shown_in_gallery = False
+                media.shown_in_main_page = False
                 media.save()
                 media.refresh_from_db()
                 data = serializer(media).data
-                self.assertTrue(data['shown_in_gallery'])
-                self.assertTrue(data['shown_in_main_page'])
+                self.assertFalse(data['shown_in_gallery'])
+                self.assertFalse(data['shown_in_main_page'])
                 self.assertEqual(data['name'], 'Club day')
 
     def test_blank_names_are_generated_once(self, request):
