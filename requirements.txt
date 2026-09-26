@@ -21,3 +21,4 @@ django-guardian===3.3.3
 better_profanity==0.7.0
 cryptography==50.0.1
 puremagic==2.2.0
+django-jazzmin==3.0.5

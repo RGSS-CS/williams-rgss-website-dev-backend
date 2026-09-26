@@ -4,59 +4,27 @@ from django.forms import modelform_factory
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import SimpleTestCase, TestCase
 from PIL import Image
-from .admin import PhotoAdminForm, VideoAdminForm
-from .models import Photos, Videos
+from .admin import PhotoAdminForm
+from .models import Photos
 from clubs.models import Club
 from management.admin import SiteSettingsAdminForm
 from management.models import SiteSettings
 from student_council.admin import STUCOAdminForm
 from student_council.models import STUCO
-from .serializers import PhotoSeralizer, VideoSerializer
+from .serializers import PhotoSeralizer
 
 PhotoForm = modelform_factory(Photos, form=PhotoAdminForm, fields=['image'])
-VideoForm = modelform_factory(Videos, form=VideoAdminForm, fields=['video_file'])
-MP4 = bytes.fromhex('000000146674797069736f6d')
 
 
 class GalleryUploadTests(SimpleTestCase):
-    def test_optional_and_cleared_video(self):
-        for data, expected in [({}, None), ({'video_file-clear': 'on'}, False)]:
-            form = VideoForm(data=data)
-            self.assertTrue(form.is_valid(), form.errors)
-            self.assertIs(form.cleaned_data['video_file'], expected)
-
     def test_existing_files(self):
-        for model, factory, field in [(Photos, PhotoForm, 'image'), (Videos, VideoForm, 'video_file')]:
+        for model, factory, field in [(Photos, PhotoForm, 'image')]:
             instance = model(**{field: 'existing.file'})
             with patch('galleries.validators.puremagic.from_string') as detect:
                 form = factory(data={}, instance=instance)
                 self.assertTrue(form.is_valid(), form.errors)
                 self.assertIs(form.cleaned_data[field], getattr(instance, field))
                 detect.assert_not_called()
-
-    def test_video_types(self):
-        for content in [MP4, bytes.fromhex('000000146674797071742020'), bytes.fromhex('1a45dfa3') + b'\0' * 20 + b'matroska']:
-            upload = SimpleUploadedFile('video.bin', content)
-            form = VideoForm(data={}, files={'video_file': upload})
-            self.assertTrue(form.is_valid(), form.errors)
-            self.assertEqual(upload.tell(), 0)
-
-    def test_video_size_limit(self):
-        for size, valid in [(4 * 1024 ** 3, True), (4 * 1024 ** 3 + 1, False)]:
-            upload = SimpleUploadedFile('video.mp4', MP4)
-            upload.size = size
-            form = VideoForm(data={}, files={'video_file': upload})
-            self.assertEqual(form.is_valid(), valid)
-            if not valid:
-                self.assertIn('max size is 4 GiB', str(form.errors))
-
-    def test_unknown_and_disallowed_video(self):
-        for content in [b'unknown upload', b'GIF89a' + b'\0' * 100]:
-            upload = SimpleUploadedFile('video.mp4', content, content_type='video/mp4')
-            form = VideoForm(data={}, files={'video_file': upload})
-            self.assertFalse(form.is_valid())
-            self.assertIn('video_file', form.errors)
-            self.assertEqual(upload.tell(), 0)
 
     def photo(self, format='PNG', size=(100, 100)):
         stream = BytesIO()
@@ -123,7 +91,11 @@ class OtherImageUploadTests(SimpleTestCase):
                 return form
 
             with self.subTest(field=field):
-                self.assertTrue(form_for().is_valid())
+                required = field in ('stuco_logo', 'favicon', 'site_logo')
+                empty_form = form_for()
+                self.assertEqual(empty_form.is_valid(), not required)
+                if required:
+                    self.assertEqual(empty_form.errors.as_data()[field][0].code, 'required')
                 instance = model(**{field: 'existing.png'})
                 with patch('galleries.validators.puremagic.from_string') as detect:
                     form = form_for(instance=instance)
@@ -131,7 +103,10 @@ class OtherImageUploadTests(SimpleTestCase):
                     detect.assert_not_called()
                 form = form_for(data={field + '-clear': 'on'}, instance=instance)
                 self.assertTrue(form.is_valid(), form.errors)
-                self.assertIs(form.cleaned_data[field], False)
+                if required:
+                    self.assertEqual(form.cleaned_data[field], getattr(instance, field))
+                else:
+                    self.assertIs(form.cleaned_data[field], False)
 
             for format, size, oversized, valid in [
                 ('PNG', (minimum, minimum), False, True),
@@ -165,26 +140,25 @@ class GalleryModelTests(TestCase):
         club = Club.objects.create(name='Photography')
         for model, serializer, fields in (
             (Photos, PhotoSeralizer, {'image': 'existing/photo.png'}),
-            (Videos, VideoSerializer, {'link': 'https://example.com/video'}),
         ):
             with self.subTest(model=model):
                 media = model.objects.create(club=club, name='Club day', **fields)
                 self.assertIsNotNone(media.pk)
                 media.refresh_from_db()
-                self.assertFalse(media.shown_in_gallery)
-                self.assertFalse(media.shown_in_main_page)
-                media.shown_in_gallery = True
-                media.shown_in_main_page = True
+                self.assertTrue(media.shown_in_gallery)
+                self.assertTrue(media.shown_in_main_page)
+                media.shown_in_gallery = False
+                media.shown_in_main_page = False
                 media.save()
                 media.refresh_from_db()
                 data = serializer(media).data
-                self.assertTrue(data['shown_in_gallery'])
-                self.assertTrue(data['shown_in_main_page'])
+                self.assertFalse(data['shown_in_gallery'])
+                self.assertFalse(data['shown_in_main_page'])
                 self.assertEqual(data['name'], 'Club day')
 
     def test_blank_names_are_generated_once(self, request):
         club = Club.objects.create(name='A club with a very long name')
-        for model in (Photos, Videos):
+        for model in (Photos,):
             for name in (None, '', '   '):
                 with self.subTest(model=model, name=name):
                     media = model.objects.create(club=club, name=name)

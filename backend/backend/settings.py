@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from . import settings_local as config
 from easy_thumbnails.conf import Settings as thumbnail_settings
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,6 +45,7 @@ CAP_SECRET = config.CAP_SECRET
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -198,8 +198,31 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+# Uploads above 2.5 MiB use temporary disk storage.
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
 # Maximum accepted file sizes in bytes, enforced by upload validators.
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
-MAX_VIDEO_UPLOAD_SIZE = getattr(config, "MAX_VIDEO_UPLOAD_SIZE", 4 * 1024 ** 3)  # 4 GiB
+
+
+### https://django-jazzmin.readthedocs.io/configuration/
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'Student Council Administration',
+    'site_header': 'Student Council Admin',
+    'login_logo': 'management/favicon.svg',
+    'site_brand': 'Student Council Admin',
+    'site_logo': 'management/favicon.svg',
+    'site_icon': 'management/favicon.svg',
+    'custom_css': 'management/admin.css',
+    "user_avatar": None,
+    'hide_apps': ['taggit'],
+    'show_ui_builder': False,
+    'usermenu_links': [
+        {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
+    ]
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'default_theme_mode': 'auto'
+}

@@ -1,0 +1,4 @@
+/* Remove the site logo and its layout space while retaining the brand text. */
+.brand-link .brand-image {
+    display: none !important;
+}
