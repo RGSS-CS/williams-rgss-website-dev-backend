@@ -31,7 +31,7 @@ class PhotoAdmin(admin.ModelAdmin):
 
 @admin.register(MassImport)
 class MassImportAdmin(admin.ModelAdmin):
-    fields = ('name','zip_file', 'file_type', 'club','upload_date','upload_status')
+    fields = ('name','zip_file', 'club','upload_date','upload_status')
     readonly_fields = ('upload_status','name','upload_date')
 
     def get_form(self, request, obj=None, **kwargs):
