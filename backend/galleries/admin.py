@@ -26,21 +26,3 @@ class PhotoAdmin(admin.ModelAdmin):
         field.widget.can_view_related = False
 
         return form
-
-############################## ZIP Files ##############################
-
-@admin.register(MassImport)
-class MassImportAdmin(admin.ModelAdmin):
-    fields = ('name','zip_file', 'club','upload_date','upload_status')
-    readonly_fields = ('upload_status','name','upload_date')
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(MassImportAdmin, self).get_form(request, obj, **kwargs)
-
-        field = form.base_fields['club']
-        field.widget.can_add_related = False
-        field.widget.can_change_related = False
-        field.widget.can_delete_related = False
-        field.widget.can_view_related = False
-
-        return form
