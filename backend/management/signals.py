@@ -81,5 +81,5 @@ def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as metho
 @receiver(post_save, sender=PageSettings)
 @receiver(post_delete, sender=PageSettings)
 @receiver(post_migrate)
-def on_management_change(sender, instance, **kwargs):
+def on_management_change(sender, instance=None, **kwargs):
     revalidate_frontend_tag("management")

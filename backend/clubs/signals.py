@@ -13,5 +13,5 @@ from management.signals import revalidate_frontend_tag
 @receiver(post_save, sender=ClubAnnouncement)
 @receiver(post_delete, sender=ClubAnnouncement)
 @receiver(post_migrate)
-def on_club_change(sender, instance, **kwargs):
+def on_club_change(sender, instance=None, **kwargs):
     revalidate_frontend_tag("clubs")
