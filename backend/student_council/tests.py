@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .models import Announcements, SchoolAnnouncements, STUCO
+from .signals import on_club_change
 
 
 class StudentCouncilTests(TestCase):
@@ -44,6 +45,14 @@ class StudentCouncilTests(TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json(), [{'ticker_items': ticker}])
         self.assertEqual(Announcements.objects.count(), 1)
+
+
+class StudentCouncilSignalTests(TestCase):
+    @patch("student_council.signals.revalidate_frontend_tag")
+    def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
+        on_club_change(sender=STUCO, app_config=None)
+
+        revalidate.assert_called_once_with("stuco-settings")
 
 
 class SchoolAnnouncementTests(TestCase):

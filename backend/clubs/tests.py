@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from .models import Club, ClubAnnouncement
 from .serializers import ClubSerializer, PublicClubSerializer
+from .signals import on_club_change
 
 
 class ClubSerializerTests(TestCase):
@@ -32,6 +33,14 @@ class ClubSerializerTests(TestCase):
         self.assertEqual(data["tagline"], "Build together")
         self.assertEqual(data["day_of_meeting"], Club.WeekDay.MONDAY)
         self.assertIn("category", data)
+
+
+class ClubSignalTests(TestCase):
+    @patch("clubs.signals.revalidate_frontend_tag")
+    def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
+        on_club_change(sender=Club, app_config=None)
+
+        revalidate.assert_called_once_with("clubs")
 
 
 @patch('requests.post')
