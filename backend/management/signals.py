@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, post_migrate
 from django.dispatch import receiver
  
 from .models import PageSettings, SiteSettings
@@ -35,6 +35,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             subtitle="STUCO",
             tagline="Where students come together"
         )
+
         
 def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as method called from clubs
     """
@@ -79,5 +80,6 @@ def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as metho
 @receiver(post_delete, sender=SiteSettings)
 @receiver(post_save, sender=PageSettings)
 @receiver(post_delete, sender=PageSettings)
+@receiver(post_migrate)
 def on_management_change(sender, instance, **kwargs):
     revalidate_frontend_tag("management")

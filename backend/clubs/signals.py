@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, post_migrate
 from django.dispatch import receiver
 
 from .models import Club, ClubAnnouncement
@@ -12,5 +12,6 @@ from management.signals import revalidate_frontend_tag
 @receiver(post_delete, sender=Club)
 @receiver(post_save, sender=ClubAnnouncement)
 @receiver(post_delete, sender=ClubAnnouncement)
+@receiver(post_migrate)
 def on_club_change(sender, instance, **kwargs):
     revalidate_frontend_tag("clubs")
