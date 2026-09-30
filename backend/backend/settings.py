@@ -24,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config.SECRET_KEY
 
 DEBUG = config.DEBUG
+DEBUG_PROPAGATE_EXCEPTIONS = config.DEBUG
 
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
@@ -41,7 +42,6 @@ FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
 REVALIDATE_SECRET = config.REVALIDATE_SECRET
 CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
 CAP_SECRET = config.CAP_SECRET
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -146,6 +146,11 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
     }
 }
+
+# Jazzmin 3.x can request a Bootswatch path that is not present as a key in
+# the collected staticfiles manifest. Keep that lookup from crashing admin
+# page rendering; valid collected assets still use their hashed manifest URLs.
+WHITENOISE_MANIFEST_STRICT = False
 
 
 REST_FRAMEWORK = {
