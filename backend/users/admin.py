@@ -9,7 +9,7 @@ import io
 import base64
 from management.models import SiteSettings
 from django.core.exceptions import PermissionDenied
-from .qr_codes import build_registration_url
+from .services.qr_codes import build_registration_url
 
 
 class UserJoinCodeForm(forms.ModelForm):
