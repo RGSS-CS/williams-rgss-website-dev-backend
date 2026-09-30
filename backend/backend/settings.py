@@ -227,6 +227,12 @@ JAZZMIN_SETTINGS = {
     'usermenu_links': [
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
         {'name': 'Licensing', 'url': 'https://raw.githubusercontent.com/RGSS-CS/williams-rgss-website-dev-backend/refs/heads/main/LICENSE', 'new_window': True},
+    ],
+    "topmenu_links": [
+        {'name': 'Home', 'url': '/api/admin'},
+        {'name': 'Clubs', 'url': '/api/admin/clubs'},
+        {'name': 'Site Settings', 'url': '/api/admin/management/'},
+        {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
     ]
 }
 
