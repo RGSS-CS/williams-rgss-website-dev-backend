@@ -73,7 +73,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "users",
     'galleries',
-    'student_council'
+    'student_council',
+    'admin_panel'
 ]
 
 SITE_ID = 1
@@ -210,16 +211,17 @@ MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5
 JAZZMIN_SETTINGS = {
     'site_title': 'Student Council Administration',
     'site_header': 'Student Council Admin',
-    'login_logo': 'management/favicon.svg',
+    'login_logo': 'favicon.svg',
     'site_brand': 'Student Council Admin',
-    'site_logo': 'management/favicon.svg',
-    'site_icon': 'management/favicon.svg',
-    'custom_css': 'management/admin.css',
+    'site_logo': 'favicon.svg',
+    'site_icon': 'favicon.svg',
+    'custom_css': 'admin.css',
     "user_avatar": None,
     'hide_apps': ['taggit'],
     'show_ui_builder': False,
     'usermenu_links': [
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
+        {'name': 'Licensing', 'url': 'https://raw.githubusercontent.com/RGSS-CS/williams-rgss-website-dev-backend/refs/heads/main/LICENSE', 'new_window': True},
     ]
 }
 
