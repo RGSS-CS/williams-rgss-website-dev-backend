@@ -73,16 +73,16 @@ class CurrentClubFieldsTests(TestCase):
         club.delete()
         self.assertFalse(ClubAnnouncement.objects.filter(pk=announcement.pk).exists())
 
-    def test_club_endpoints_return_empty_announcement_lists(self, request):
+    def test_public_club_endpoints_omit_announcements(self, request):
         club = Club.objects.create(name='Chess')
         detail = self.client.get(reverse('club-detail', args=[club.pk]))
         listing = self.client.get(reverse('club-list'))
         self.assertEqual(detail.status_code, 200)
         self.assertEqual(listing.status_code, 200)
-        self.assertEqual(detail.json()['announcement'], [])
-        self.assertEqual(listing.json()[0]['announcement'], [])
+        self.assertNotIn('announcement', detail.json())
+        self.assertNotIn('announcement', listing.json()[0])
 
-    def test_club_endpoints_include_multiple_related_announcements(self, request):
+    def test_club_serializer_includes_multiple_related_announcements(self, request):
         club = Club.objects.create(name='Robotics')
         other = Club.objects.create(name='Chess')
         now = timezone.now()
@@ -96,21 +96,16 @@ class CurrentClubFieldsTests(TestCase):
             )
         ClubAnnouncement.objects.create(club=other, title='Chess only')
 
-        detail = self.client.get(reverse('club-detail', args=[club.pk]))
-        listing = self.client.get(reverse('club-list'))
-        self.assertEqual(detail.status_code, 200)
-        self.assertEqual(listing.status_code, 200)
-        listed_club = next(item for item in listing.json() if item['id'] == club.pk)
-        for data in (detail.json(), listed_club):
-            with self.subTest(data=data):
-                announcements = {item['title']: item for item in data['announcement']}
-                self.assertEqual(set(announcements), {'Build day', 'Previous meeting'})
-                self.assertTrue(announcements['Build day']['popup'])
-                self.assertFalse(announcements['Previous meeting']['popup'])
-                for item in announcements.values():
-                    self.assertEqual(set(item), {
-                        'title', 'description', 'date_posted', 'popup', 'expiry',
-                    })
-                    self.assertEqual(item['description'], 'Bring your projects')
-                    self.assertIsNotNone(item['expiry'])
-                    self.assertIsNotNone(item['date_posted'])
+        data = ClubSerializer(club).data
+        announcements = {item['title']: item for item in data['announcement']}
+        self.assertEqual(set(announcements), {'Build day', 'Previous meeting'})
+        self.assertTrue(announcements['Build day']['popup'])
+        self.assertFalse(announcements['Previous meeting']['popup'])
+        for item in announcements.values():
+            self.assertEqual(set(item), {
+                'title', 'description', 'date_posted', 'popup', 'expiry',
+            })
+            self.assertEqual(item['description'], 'Bring your projects')
+            self.assertIsNotNone(item['expiry'])
+            self.assertIsNotNone(item['date_posted'])
+        self.assertNotIn('announcement', PublicClubSerializer(club).data)
