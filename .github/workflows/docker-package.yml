@@ -26,6 +26,8 @@ jobs:
         env:
             SECRET_KEY: build-fallback-secret-key
             SIGNING_KEY: build-fallback-signing-key
+            ALLOWED_HOSTS: build.invalid
+            CSRF_TRUSTED_ORIGINS: https://build.invalid
         strategy:
             fail-fast: false
             matrix:
@@ -87,6 +89,8 @@ jobs:
                   build-args: |
                       SECRET_KEY=${{ env.SECRET_KEY }}
                       SIGNING_KEY=${{ env.SIGNING_KEY }}
+                      ALLOWED_HOSTS=${{ env.ALLOWED_HOSTS }}
+                      CSRF_TRUSTED_ORIGINS=${{ env.CSRF_TRUSTED_ORIGINS }}
                   provenance: false
                   platforms: ${{ matrix.platform }}
                   outputs: type=image,name=${{ steps.image.outputs.name }},push-by-digest=true,name-canonical=true,push=true
