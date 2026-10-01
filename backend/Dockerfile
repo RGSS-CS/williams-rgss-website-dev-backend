@@ -1,5 +1,8 @@
 FROM python:3.13-slim
 
+ARG ALLOWED_HOSTS
+ARG CSRF_TRUSTED_ORIGINS
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HOME=/app
@@ -20,10 +23,6 @@ COPY --chown=app:app backend/ .
 COPY --chown=root:root backend/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN cp backend/settings_prod.py backend/settings_local.py
-ARG SECRET_KEY
-ARG SIGNING_KEY
-ARG ALLOWED_HOSTS
-ARG CSRF_TRUSTED_ORIGINS
 RUN python manage.py collectstatic --noinput
 RUN chown -R app:app /app/staticfiles
 USER app

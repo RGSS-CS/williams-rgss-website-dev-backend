@@ -24,8 +24,6 @@ jobs:
         name: Build ${{ matrix.platform }} image
         runs-on: ${{ matrix.runner }}
         env:
-            SECRET_KEY: build-fallback-secret-key
-            SIGNING_KEY: build-fallback-signing-key
             ALLOWED_HOSTS: build.invalid
             CSRF_TRUSTED_ORIGINS: https://build.invalid
         strategy:
@@ -75,9 +73,6 @@ jobs:
                   password: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Generate settings_local.py
-              env:
-                  SECRET_KEY: ${{ env.SECRET_KEY }}
-                  SIGNING_KEY: ${{ env.SIGNING_KEY }}
               run: cp backend/backend/settings_prod.py backend/backend/settings_local.py
 
             - name: Build and push platform image
@@ -87,8 +82,6 @@ jobs:
                   context: .
                   file: ./backend/Dockerfile
                   build-args: |
-                      SECRET_KEY=${{ env.SECRET_KEY }}
-                      SIGNING_KEY=${{ env.SIGNING_KEY }}
                       ALLOWED_HOSTS=${{ env.ALLOWED_HOSTS }}
                       CSRF_TRUSTED_ORIGINS=${{ env.CSRF_TRUSTED_ORIGINS }}
                   provenance: false
