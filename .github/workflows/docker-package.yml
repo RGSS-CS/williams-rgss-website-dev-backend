@@ -23,9 +23,6 @@ jobs:
     build-platform-image:
         name: Build ${{ matrix.platform }} image
         runs-on: ${{ matrix.runner }}
-        env:
-            ALLOWED_HOSTS: build.invalid
-            CSRF_TRUSTED_ORIGINS: https://build.invalid
         strategy:
             fail-fast: false
             matrix:
@@ -81,9 +78,6 @@ jobs:
               with:
                   context: .
                   file: ./backend/Dockerfile
-                  build-args: |
-                      ALLOWED_HOSTS=${{ env.ALLOWED_HOSTS }}
-                      CSRF_TRUSTED_ORIGINS=${{ env.CSRF_TRUSTED_ORIGINS }}
                   provenance: false
                   platforms: ${{ matrix.platform }}
                   outputs: type=image,name=${{ steps.image.outputs.name }},push-by-digest=true,name-canonical=true,push=true

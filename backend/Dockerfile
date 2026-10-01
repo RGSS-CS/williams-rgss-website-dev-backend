@@ -1,8 +1,5 @@
 FROM python:3.13-slim
 
-ARG ALLOWED_HOSTS
-ARG CSRF_TRUSTED_ORIGINS
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HOME=/app
@@ -23,7 +20,13 @@ COPY --chown=app:app backend/ .
 COPY --chown=root:root backend/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN cp backend/settings_prod.py backend/settings_local.py
-RUN python manage.py collectstatic --noinput
+# Build-time-only placeholders so settings_prod.py can be imported by collectstatic.
+# Set inline (not ARG/ENV) so they are not baked into the image; real values come from .env at runtime.
+RUN ALLOWED_HOSTS=build.invalid \
+    CSRF_TRUSTED_ORIGINS=https://build.invalid \
+    SECRET_KEY=build-only-placeholder \
+    SIGNING_KEY=build-only-placeholder \
+    python manage.py collectstatic --noinput
 RUN chown -R app:app /app/staticfiles
 USER app
 
