@@ -41,8 +41,16 @@ class Photos(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
-    shown_in_gallery = models.BooleanField(default=True,help_text='Select this option if you want the photo to be shown in the gallery.')
-    shown_in_main_page = models.BooleanField(default=True,help_text="Select this option if you want the photo to be shown in your club's homepage")
+    shown_in_gallery = models.BooleanField(
+        default=True,
+        verbose_name='Show in gallery',
+        help_text='Display this photo in the site-wide gallery in your category.'
+    )
+    shown_in_main_page = models.BooleanField(
+        default=True,
+        verbose_name="Show on club's homepage",
+        help_text="Display this photo on the selected club's homepage."
+    )
 
     class Meta:
         verbose_name_plural = 'Photos'
