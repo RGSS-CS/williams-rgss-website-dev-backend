@@ -215,6 +215,7 @@ MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5
 ### https://django-jazzmin.readthedocs.io/configuration/
 
 JAZZMIN_SETTINGS = {
+    # Browser tab, login page, and admin-branding settings.
     'site_title': 'Student Council Administration',
     'site_header': 'Student Council Admin',
     'login_logo': 'favicon.svg',
@@ -222,16 +223,24 @@ JAZZMIN_SETTINGS = {
     'site_logo': 'favicon.svg',
     'site_icon': 'favicon.svg',
     'custom_css': 'admin.css',
+
+    # Admin layout and sidebar settings.
     "user_avatar": None,
     'hide_apps': ['taggit'],
     'show_ui_builder': False,
+    "order_with_respect_to": ['clubs', 'galleries', 'school_council', 'management'],
+
+    # Links in the user menu at the top-right of the admin panel.
     'usermenu_links': [
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
         {'name': 'Licensing', 'url': 'https://raw.githubusercontent.com/RGSS-CS/williams-rgss-website-dev-backend/refs/heads/main/LICENSE', 'new_window': True},
     ],
+
+    # Links in the top navigation bar of the admin panel.
     "topmenu_links": [
         {'name': 'Home', 'url': '/api/admin'},
         {'name': 'Clubs', 'url': '/api/admin/clubs'},
+        {'name': 'Media', 'url': '/api/admin/galleries'},
         {'name': 'Site Settings', 'url': '/api/admin/management/'},
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
     ]
