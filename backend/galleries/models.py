@@ -4,7 +4,11 @@ from pathlib import Path
 from uuid import uuid4
 from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
+from datetime import timedelta
+from django.utils import timezone
 
+def deletion_date():
+    return timezone.localdate() + timedelta(days=30)
 
 def photo_upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
@@ -20,6 +24,7 @@ class MassImport(models.Model):
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Photo files only.')
     upload_date = models.DateTimeField(auto_now_add=True)
     upload_status = models.CharField(max_length=5, null=True)
+    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', editable=False, default=deletion_date)
 
     class Meta:
         verbose_name = 'ZIP Upload'
