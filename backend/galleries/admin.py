@@ -15,6 +15,8 @@ class PhotoAdmin(admin.ModelAdmin):
     fields = ('name', 'description', 'image', 'club','shown_in_gallery','shown_in_main_page', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
+    list_display = ('name', 'club')
+    search_fields = ('name', 'club__name')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(PhotoAdmin, self).get_form(request, obj, **kwargs)
@@ -32,6 +34,8 @@ class PhotoAdmin(admin.ModelAdmin):
 class MassImportAdmin(admin.ModelAdmin):
     fields = ('name', 'zip_file', 'club', 'upload_date', 'upload_status')
     readonly_fields = ('name', 'upload_date', 'upload_status')
+    list_display = ('name', 'club', 'upload_date', 'upload_status')
+    search_fields = ('name', 'club__name', 'upload_status')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

@@ -110,4 +110,5 @@ class ClubAnnouncementInline(admin.StackedInline):
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
+    
     inlines = [ClubAnnouncementInline]

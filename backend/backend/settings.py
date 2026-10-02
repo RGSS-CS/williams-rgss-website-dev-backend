@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    "django_tasks",
     "management",
     "osm_field",
     "solo",
@@ -272,5 +273,12 @@ LOGGING = {
     "root": {
         "handlers": ["console"],
         "level": "WARNING",
+    },
+}
+
+TASKS = {
+    "default": {
+        "BACKEND": "django.tasks.backends.immediate.ImmediateBackend",
+        "QUEUES": ["default", "unzip_media"],
     },
 }

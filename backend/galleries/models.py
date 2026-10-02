@@ -63,5 +63,5 @@ class Photos(models.Model):
         name = self.image.name
         if not self.name or not self.name.strip():
             club_name = self.club.name
-            self.name = f'{club_name[:17]} - {name}'
+            self.name = f'{club_name[:17]} - {name[:10]}'
         super().save(*args, **kwargs)
