@@ -10,15 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
-from . import settings_local as config
-from easy_thumbnails.conf import Settings as thumbnail_settings
 import os
+from pathlib import Path
+
+from easy_thumbnails.conf import Settings as thumbnail_settings
+
+from . import settings_local as config
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
+# Core and security settings
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -43,6 +47,8 @@ FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
 REVALIDATE_SECRET = config.REVALIDATE_SECRET
 CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
 CAP_SECRET = config.CAP_SECRET
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,6 +86,8 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
+
+# Request handling
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware', 
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -112,7 +120,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-# Database
+# Database and authentication
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = config.DATABASES
@@ -140,21 +148,7 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage"
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    }
-}
-
-# Jazzmin 3.x can request a Bootswatch path that is not present as a key in
-# the collected staticfiles manifest. Keep that lookup from crashing admin
-# page rendering; valid collected assets still use their hashed manifest URLs.
-WHITENOISE_MANIFEST_STRICT = False
-
-
+# API settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -170,7 +164,7 @@ REST_FRAMEWORK = {
     },
 }
 
-# Internationalization
+# Internationalization and localization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 USE_I18N = True
@@ -180,7 +174,7 @@ TIME_ZONE = 'America/Toronto'
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files, media, and file uploads
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
@@ -189,19 +183,25 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = Path(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-# Calendar stuff
-CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
-# CALENDAR_NAME_VALIDATORS = []
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage"
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Jazzmin 3.x can request a Bootswatch path that is not present as a key in
+# the collected staticfiles manifest. Keep that lookup from crashing admin
+# page rendering; valid collected assets still use their hashed manifest URLs.
+WHITENOISE_MANIFEST_STRICT = False
 
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 THUMBNAIL_BASEDIR = 'cropped'
-
-AUTH_USER_MODEL = "users.CustomUser"
 
 # Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
@@ -212,7 +212,17 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
 
 
-### https://django-jazzmin.readthedocs.io/configuration/
+# Project-specific settings
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = "users.CustomUser"
+
+# Calendar settings
+CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
+# CALENDAR_NAME_VALIDATORS = []
+
+
+# Admin panel settings
+# https://django-jazzmin.readthedocs.io/configuration/
 
 JAZZMIN_SETTINGS = {
     # Browser tab, login page, and admin-branding settings.
