@@ -228,7 +228,7 @@ JAZZMIN_SETTINGS = {
     "user_avatar": None,
     'hide_apps': ['taggit'],
     'show_ui_builder': False,
-    "order_with_respect_to": ['clubs', 'galleries', 'school_council', 'management'],
+    "order_with_respect_to": ['clubs', 'galleries', 'student_council','users', 'management'],
 
     # Links in the user menu at the top-right of the admin panel.
     'usermenu_links': [
