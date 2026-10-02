@@ -15,7 +15,7 @@ class PhotoAdmin(admin.ModelAdmin):
     fields = ('name', 'description', 'image', 'club','shown_in_gallery','shown_in_main_page', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
-    list_display = ('name', 'club')
+    list_display = ('name', 'club','created_date')
     search_fields = ('name', 'club__name')
 
     def get_form(self, request, obj=None, **kwargs):
