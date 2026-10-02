@@ -6,6 +6,10 @@ from .validators import validate_image_upload
 
 class PhotoAdminForm(forms.ModelForm):
     image = forms.ImageField(widget=AdminFileWidget())
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3, 'cols': 80}),
+    )
 
     def clean_image(self):
         return validate_image_upload(self.cleaned_data['image'])
