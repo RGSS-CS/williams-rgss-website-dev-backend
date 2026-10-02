@@ -4,7 +4,11 @@ from pathlib import Path
 from uuid import uuid4
 from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
+from datetime import timedelta
+from django.utils import timezone
 
+def deletion_date():
+    return timezone.localdate() + timedelta(days=30)
 
 def photo_upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
@@ -20,6 +24,7 @@ class MassImport(models.Model):
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Photo files only.')
     upload_date = models.DateTimeField(auto_now_add=True)
     upload_status = models.CharField(max_length=5, null=True)
+    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', editable=False, default=deletion_date)
 
     class Meta:
         verbose_name = 'ZIP Upload'
@@ -41,8 +46,16 @@ class Photos(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
-    shown_in_gallery = models.BooleanField(default=True,help_text='Select this option if you want the photo to be shown in the gallery.')
-    shown_in_main_page = models.BooleanField(default=True,help_text="Select this option if you want the photo to be shown in your club's homepage")
+    shown_in_gallery = models.BooleanField(
+        default=True,
+        verbose_name='Show in gallery',
+        help_text='Display this photo in the site-wide gallery in your category.'
+    )
+    shown_in_main_page = models.BooleanField(
+        default=True,
+        verbose_name="Show on club's homepage",
+        help_text="Display this photo on the selected club's homepage."
+    )
 
     class Meta:
         verbose_name_plural = 'Photos'
@@ -55,5 +68,5 @@ class Photos(models.Model):
         name = self.image.name
         if not self.name or not self.name.strip():
             club_name = self.club.name
-            self.name = f'{club_name[:17]} - {name}'
+            self.name = f'{club_name[:17]} - {name[:10]}'
         super().save(*args, **kwargs)
