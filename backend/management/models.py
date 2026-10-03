@@ -130,6 +130,13 @@ class Legal(SingletonModel):
     privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=PrivacyPolicy)
     last_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = 'Legal Settings'
+        verbose_name_plural = 'Legal Settings'
+
+    def __str__(self):
+        return 'Legal Settings'
+
 class PageSettings(models.Model):
     class PageTypes(models.TextChoices):
         HOME = "HM", "Home"
