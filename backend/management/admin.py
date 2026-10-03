@@ -9,7 +9,7 @@ from django import forms
 from galleries.validators import validate_image_upload
 
 from .forms import LocationAdminForm
-from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia
+from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia, Legal
 
 
 class LocationInline(GenericStackedInline):
@@ -57,10 +57,29 @@ class SocialMediaInline(admin.TabularInline):
     model = SchoolSocialMedia
     extra = 1
 
+
+
+class LegalAdminForm(forms.ModelForm):
+    class Meta: 
+        model = Legal
+        fields = [
+            'terms_service', 'privacy_policy'
+        ]
+        widgets = {
+            'terms_service': forms.Textarea(attrs={'rows': 30, 'cols': 100}),
+            'privacy_policy': forms.Textarea(attrs={'rows': 30, 'cols': 100})
+        }
+        
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
     form = SiteSettingsAdminForm
     inlines = [LocationInline, SocialMediaInline]
+
+@admin.register(Legal)
+class LegalAdmin(SingletonModelAdmin):
+    form = LegalAdminForm
+    readonly_fields = ['last_updated']
 
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):

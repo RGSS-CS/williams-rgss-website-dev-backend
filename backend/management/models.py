@@ -35,10 +35,6 @@ class Location(models.Model):
     object_id = models.PositiveBigIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
-class Legal(models.Model):
-    terms_service = models.CharField(max_length=10000, verbose_name='Terms of Service', default=TermsService)
-    privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=PrivacyPolicy)
-    last_updated = models.DateTimeField(auto_now=True)
 
 class SiteSettings(SingletonModel):
     class CaptchaChoice(models.TextChoices):
@@ -98,6 +94,8 @@ class SiteSettings(SingletonModel):
     captcha = models.JSONField(default=list, blank=True)
 
     school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
+    
+    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
@@ -127,7 +125,10 @@ class SchoolSocialMedia(models.Model):
     def __str__(self):
         return self.social_type
 
-
+class Legal(SingletonModel):
+    terms_service = models.CharField(max_length=10000, verbose_name='Terms of Service', default=TermsService)
+    privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=PrivacyPolicy)
+    last_updated = models.DateTimeField(auto_now=True)
 
 class PageSettings(models.Model):
     class PageTypes(models.TextChoices):
