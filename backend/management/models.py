@@ -10,6 +10,7 @@ from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 from image_cropping import ImageRatioField
+from legalDefaults import termsService
 
 
 def FaviconRename(instance, filename):
@@ -33,6 +34,10 @@ class Location(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveBigIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
+
+class Legal(models.Model):
+    terms_service = models.CharField(max_length=10000, verbose_name='Terms of Service', default=termsService)
+    privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=)
 
 class SiteSettings(SingletonModel):
     class CaptchaChoice(models.TextChoices):
@@ -60,7 +65,7 @@ class SiteSettings(SingletonModel):
     favicon_cropping = ImageRatioField(
         'favicon', '32x32', help_text="The small icon next to the browser tab title. " \
         "Save new uploaded image then re-open this page to view your new uploaded photo."
-    )
+    ) # type: ignore
     site_logo = models.ImageField(
         upload_to=SiteLogoRename,
         help_text="This is the icon that represents your school. This image will be displayed on the navigation bar and the homepage."
@@ -69,7 +74,7 @@ class SiteSettings(SingletonModel):
         'site_logo', '160x160', free_crop = True, 
         help_text="Save new uploaded image then re-open " \
         "this page to view your new uploaded photo."
-    )
+    ) # type: ignore
     school_mascot = models.CharField(
         null=True, max_length=50, 
         help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*."
