@@ -74,7 +74,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "users",
     'galleries',
-    'student_council'
+    'student_council',
+    'markdownx'
 ]
 
 SITE_ID = 1
@@ -248,3 +249,7 @@ LOGGING = {
         }
     }
 }
+
+
+MARKDOWNX_EDITOR_RESIZABLE = False
+MARKDOWNX_UPLOAD_MAX_SIZE = 0
