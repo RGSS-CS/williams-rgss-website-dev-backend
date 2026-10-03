@@ -10,7 +10,7 @@ from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 from image_cropping import ImageRatioField
-from legalDefaults import termsService
+from .legalDefaults import TermsService, PrivacyPolicy
 
 
 def FaviconRename(instance, filename):
@@ -36,8 +36,9 @@ class Location(models.Model):
     content_object = GenericForeignKey("content_type", "object_id")
 
 class Legal(models.Model):
-    terms_service = models.CharField(max_length=10000, verbose_name='Terms of Service', default=termsService)
-    privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=)
+    terms_service = models.CharField(max_length=10000, verbose_name='Terms of Service', default=TermsService)
+    privacy_policy = models.CharField(max_length=10000, verbose_name='Privacy Policy', default=PrivacyPolicy)
+    last_updated = models.DateTimeField(auto_now=True)
 
 class SiteSettings(SingletonModel):
     class CaptchaChoice(models.TextChoices):
