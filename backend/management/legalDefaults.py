@@ -56,7 +56,7 @@ Use of the Site is also governed by the Privacy Policy and applicable school pol
 The Site operator may update these Terms by publishing a revised version on the Site. The revised Terms apply from the date stated with them, subject to applicable law. Questions, complaints, or reports about these Terms, User Content, or conduct on the Site should be directed to the Site operator or the school through the contact information published on the Site.
 """
 
-def privacyPolicy():
+def PrivacyPolicy():
     return """PRIVACY POLICY
 
 1. Scope

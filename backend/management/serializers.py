@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SiteSettings, SchoolSocialMedia, Location, PageSettings
+from .models import SiteSettings, SchoolSocialMedia, Location, PageSettings, Legal
 from image_cropping.utils import get_backend
 from phonenumber_field.serializerfields import PhoneNumberField #type: ignore
 
@@ -80,4 +80,14 @@ class PageSettingsSerializer(serializers.ModelSerializer):
             "title",
             "subtitle",
             "tagline"
+        ]
+
+
+class LegalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Legal
+        fields = [
+            'terms_service',
+            'privacy_policy',
+            'last_updated'
         ]
