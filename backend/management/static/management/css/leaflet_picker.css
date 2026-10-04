@@ -4,6 +4,7 @@
   width: 100% !important;
   box-sizing: border-box;
   margin-top: 8px;
+  min-width: 0;
 }
 
 /* ── Search bar ── */
@@ -16,6 +17,7 @@
 
 .leaflet-picker-search input[type="text"] {
   flex: 1;
+  min-width: 0;
   padding: 6px 10px;
   font-size: 13px;
   border: 1px solid #ccc;
@@ -54,11 +56,22 @@
 
 /* ── Map container: full width, fixed height ── */
 .leaflet-picker-map {
+  /* Keep Leaflet's panes below the admin navigation and dialogs. */
+  isolation: isolate;
   width: 100%;
   height: 420px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+/* Jazzmin uses Bootstrap columns instead of Django's .form-row layout. */
+.inline-group .form-group.field-location > .row > label,
+.inline-group .form-group.field-location > .row > .field-location {
+  flex: 0 0 100%;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
 }
 
 /* ── Hint below map ── */

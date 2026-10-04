@@ -8,7 +8,7 @@ from taggit.models import Tag
 from django.contrib.admin import widgets
 from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
-from .models import Club, ClubWhyJoin, ClubMembership, ClubAnnouncement
+from .models import Club, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 
 
@@ -96,6 +96,7 @@ class ClubAnnouncementAdminForm(forms.ModelForm):
                 attrs={'type': 'datetime-local', 'step': '1'},
                 format='%Y-%m-%dT%H:%M:%S',
             ),
+            'description': forms.Textarea(attrs={'rows': 3, 'cols': 60}),
         }
 
 
@@ -105,34 +106,8 @@ class ClubAnnouncementInline(admin.StackedInline):
     fields = ['title','description','popup','date_posted','expiry']
     readonly_fields = ['date_posted']
     extra = 0
-    max_num = 1
-
-class WhyJoinInline(admin.StackedInline):
-    model = ClubWhyJoin
-    extra = 1
-    max_num = 10
-
-
-class ClubMemberInline(admin.TabularInline):
-    model = ClubMembership
-    extra = 1
-    fields = ("user", "role", "bypass_confirmation_restrictions")
-
-    def has_add_permission(self, request, obj=None):
-        return request.user.is_superuser
-
-    def has_change_permission(self, request, obj=None):
-        return request.user.is_superuser
-
-    def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
-
 
 @admin.register(Club)
 class ClubsAdmin(admin.ModelAdmin):
     form = ClubsAdminForm
-    inlines = [WhyJoinInline, ClubAnnouncementInline]
-
-@admin.register(ClubMembership)
-class ClubMembershipAdmin(admin.ModelAdmin):
-    list_display = ("user", "club", "role", "bypass_confirmation_restrictions", "updated")
+    inlines = [ClubAnnouncementInline]

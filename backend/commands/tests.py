@@ -1,13 +1,15 @@
-from io import StringIO
+from io import BytesIO, StringIO
 from unittest.mock import patch
 
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.test import SimpleTestCase, TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import SimpleTestCase, TestCase, override_settings
+from PIL import Image
 
 from .apps import CommandsConfig
 
-from clubs.models import Club, ClubAnnouncement, ClubWhyJoin
+from clubs.models import Club, ClubAnnouncement
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
 from student_council.models import Announcements, SchoolAnnouncements, STUCO
 
@@ -31,29 +33,47 @@ class GenerateTestDataTests(TestCase):
             club.full_clean()
             self.assertTrue(club.location.startswith('Room '))
             self.assertTrue(club.category.exists())
-            self.assertEqual(list(club.why_join_reasons.values_list('index', flat=True)), [0, 1, 2])
             announcement = club.club_announcement.get()
             announcement.full_clean()
             self.assertGreater(announcement.expiry, announcement.date_posted)
-            for reason in club.why_join_reasons.all():
-                reason.full_clean()
 
+    @override_settings(STORAGES={
+        'default': {'BACKEND': 'django.core.files.storage.InMemoryStorage'},
+    })
     def test_seeds_current_settings_models_without_duplicates(self):
+        def image():
+            stream = BytesIO()
+            Image.new('RGB', (160, 160)).save(stream, format='PNG')
+            return SimpleUploadedFile('existing.png', stream.getvalue(), content_type='image/png')
+
         settings = SiteSettings.get_solo()
         settings.frontend_url = 'https://frontend.example.com'
         settings.captcha = ['LOGIN']
+        settings.favicon = image()
+        settings.site_logo = image()
         settings.save()
+        favicon, site_logo = settings.favicon.name, settings.site_logo.name
+        council = STUCO.get_solo()
+        council.stuco_logo = image()
+        council.group_photo = image()
+        council.save()
+        stuco_logo, group_photo = council.stuco_logo.name, council.group_photo.name
         for _ in range(2):
             self.generate(seed='settings', skip_clubs=True)
         settings.refresh_from_db()
         self.assertEqual(settings.school_domain, 'example.com')
         self.assertEqual(settings.frontend_url, 'https://frontend.example.com')
         self.assertEqual(settings.captcha, ['LOGIN'])
+        self.assertEqual(settings.favicon.name, favicon)
+        self.assertEqual(settings.site_logo.name, site_logo)
+        settings.full_clean()
         self.assertEqual(SiteSettings.objects.count(), 1)
         self.assertEqual(STUCO.objects.count(), 1)
         council = STUCO.get_solo()
         self.assertTrue(council.council_name)
         self.assertTrue(council.photo_caption)
+        self.assertEqual(council.stuco_logo.name, stuco_logo)
+        self.assertEqual(council.group_photo.name, group_photo)
         council.full_clean()
         self.assertEqual(len(Announcements.get_solo().ticker_items.splitlines()), 3)
         self.assertEqual(SchoolAnnouncements.objects.count(), 3)
@@ -77,7 +97,6 @@ class GenerateTestDataTests(TestCase):
             with self.subTest(options=options):
                 self.generate(skip_settings=True, **options)
                 self.assertFalse(Club.objects.exists())
-                self.assertFalse(ClubWhyJoin.objects.exists())
                 self.assertFalse(ClubAnnouncement.objects.exists())
 
     def test_negative_amount_fails_before_writing(self):

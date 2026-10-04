@@ -13,7 +13,7 @@ Please be sure that you run `python manage.py makemigrations` and `python manage
 ## Development test data
 
 From `backend/`, run `python manage.py generate_testdata --club-amount 10 --seed demo`.
-This adds clubs with categories, reasons to join, and announcements, and updates
+This adds clubs with categories and announcements, and updates
 site, council, ticker, page, and social-media settings. Text respects model limits.
 Use `--skip-settings` to keep existing settings or `--skip-clubs` to update settings
 only. Image files and connection/CAPTCHA settings are preserved. A repeated seed

@@ -30,7 +30,7 @@ class StudentCouncilTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0], {
             'council_name': 'SAC', 'group_photo': None,
-            'photo_caption': 'Your student council',
+            'photo_caption': 'Your student council', 'stuco_logo': None,
         })
 
     def test_announcements_preserve_newlines_and_allow_empty_ticker(self):

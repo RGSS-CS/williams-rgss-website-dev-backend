@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from . import settings_local as config
 from easy_thumbnails.conf import Settings as thumbnail_settings
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config.SECRET_KEY
 
 DEBUG = config.DEBUG
+DEBUG_PROPAGATE_EXCEPTIONS = config.DEBUG
 
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
@@ -42,10 +42,10 @@ FRONTEND_REVALIDATE_URL = config.FRONTEND_REVALIDATE_URL
 REVALIDATE_SECRET = config.REVALIDATE_SECRET
 CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
 CAP_SECRET = config.CAP_SECRET
-
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'image_cropping',
     "taggit",
-    "taggit_serializer",
     "colorfield",
     "phonenumber_field",
     "whitenoise",
@@ -148,12 +147,25 @@ STORAGES = {
     }
 }
 
+# Jazzmin 3.x can request a Bootswatch path that is not present as a key in
+# the collected staticfiles manifest. Keep that lookup from crashing admin
+# page rendering; valid collected assets still use their hashed manifest URLs.
+WHITENOISE_MANIFEST_STRICT = False
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "1000/hour",
+        "user": "1000/hour",
+    },
 }
 
 # Internationalization
@@ -189,5 +201,33 @@ THUMBNAIL_BASEDIR = 'cropped'
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+# Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+# Uploads above 2.5 MiB use temporary disk storage.
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
+
+# Maximum accepted file sizes in bytes, enforced by upload validators.
+MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
+
+
+### https://django-jazzmin.readthedocs.io/configuration/
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'Student Council Administration',
+    'site_header': 'Student Council Admin',
+    'login_logo': 'management/favicon.svg',
+    'site_brand': 'Student Council Admin',
+    'site_logo': 'management/favicon.svg',
+    'site_icon': 'management/favicon.svg',
+    'custom_css': 'management/admin.css',
+    "user_avatar": None,
+    'hide_apps': ['taggit'],
+    'show_ui_builder': False,
+    'usermenu_links': [
+        {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
+    ]
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'default_theme_mode': 'auto'
+}

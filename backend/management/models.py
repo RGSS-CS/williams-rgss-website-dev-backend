@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from PIL import Image
 from pathlib import Path
+from uuid import uuid4
 from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
@@ -12,14 +13,14 @@ from image_cropping import ImageRatioField
 
 
 def FaviconRename(instance, filename):
-    ext = Path(filename).suffix
+    ext = Path(filename).suffix.lower()
 
-    return f'upload/management/favicon.{ext}'
+    return f'upload/management/{uuid4().hex}{ext}'
 
 def SiteLogoRename(instance, filename):
-    ext = Path(filename).suffix
+    ext = Path(filename).suffix.lower()
 
-    return f'upload/management/logo.{ext}'
+    return f'upload/management/{uuid4().hex}{ext}'
 
 class Location(models.Model):
     location_lat = LatitudeField(null=True)
@@ -40,7 +41,7 @@ class SiteSettings(SingletonModel):
         ENTERING = "ENTERING", "Entering"
 
 
-    maintainance_mode = models.BooleanField(default=False)
+    maintainance_mode = models.BooleanField(default=True, help_text='Disable when site is ready for publishing. NOTE: It will take up to 30 seconds to update.')
     frontend_url = models.URLField(
         default="http://localhost:3000", max_length=100, 
         help_text="The external url of frontend"
@@ -52,7 +53,7 @@ class SiteSettings(SingletonModel):
     school_email = models.EmailField(null=True, max_length=50)
     school_phone = PhoneNumberField(null=True, help_text="The phone number should include the area code (+1), followed by the digits with no spaces or a non-numerial character.")
     favicon = models.ImageField(
-        blank=True, upload_to=FaviconRename,
+        upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
         "It should be a square image, preferably 32x32 pixels."
     )
@@ -61,7 +62,7 @@ class SiteSettings(SingletonModel):
         "Save new uploaded image then re-open this page to view your new uploaded photo."
     )
     site_logo = models.ImageField(
-        blank=True, upload_to=SiteLogoRename,
+        upload_to=SiteLogoRename,
         help_text="This is the icon that represents your school. This image will be displayed on the navigation bar and the homepage."
     )
     site_logo_cropping = ImageRatioField(
@@ -70,7 +71,7 @@ class SiteSettings(SingletonModel):
         "this page to view your new uploaded photo."
     )
     school_mascot = models.CharField(
-        blank=True, max_length=50, 
+        null=True, max_length=50, 
         help_text="This is the school's mascot. (e.g, Wildcat, Rattler) *Non-plural*."
     )
     school_primary_color = ColorField(
@@ -91,17 +92,9 @@ class SiteSettings(SingletonModel):
     captcha = models.JSONField(default=list, blank=True)
 
     school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
-        # if self.stuco_image and self.stuco_image.name != "management/default.png":
-        #     img = Image.open(self.stuco_image.path)
-        #     if img.height > 300 or img.width > 300:
-        #         output_size = (300, 300)
-        #         img.thumbnail(output_size)
-        #         img.save(self.stuco_image.path)
-
     def __str__(self):
         return "Site Configuration"
 

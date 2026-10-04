@@ -6,6 +6,8 @@ from django.forms import TextInput, Textarea
 from django.db import models
 from django import forms
 
+from galleries.validators import validate_image_upload
+
 from .forms import LocationAdminForm
 from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia
 
@@ -34,6 +36,12 @@ class SiteSettingsAdminForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
+
+    def clean_favicon(self):
+        return validate_image_upload(self.cleaned_data['favicon'], min_dim=(32, 32))
+
+    def clean_site_logo(self):
+        return validate_image_upload(self.cleaned_data['site_logo'])
 
     class Meta:
         model = SiteSettings

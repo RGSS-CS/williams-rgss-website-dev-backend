@@ -1,11 +1,16 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth.models import AbstractUser, Group as AuthGroup
 
 def get_random_code():
     return get_random_string(length=32)
+
+class Group(AuthGroup):
+    class Meta:
+        proxy = True
+        verbose_name = 'Groups'
+        verbose_name_plural = 'Groups'
 
 class CustomUser(AbstractUser):
     def __str__(self):
@@ -16,11 +21,11 @@ class UserJoinCode(models.Model):
         default=get_random_code, unique=True, verbose_name="Security Code", help_text="Unencrypted registration code -- DO NOT SHARE"
     )
     label = models.CharField(
-        max_length=50, blank=True, verbose_name="Title", 
+        max_length=50, null=True, verbose_name="Title", 
         help_text="A easily identifiable name for this qr code, e.g. 'Cafeteria'"
     )
     description = models.TextField(
-        blank=True, max_length=300, 
+        blank=True, null=True, max_length=300, 
         help_text="A description of this qr code, e.g. 'For use in the cafeteria only.' (*NOT REQUIRED)"
     )
     expiry = models.DateTimeField(null=True, blank=True)
