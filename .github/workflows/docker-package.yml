@@ -169,3 +169,4 @@ jobs:
                             printf -- '- `%s`\n' "$tag"
                         done
                     } >> "$GITHUB_STEP_SUMMARY"
+
