@@ -12,5 +12,5 @@ from management.signals import revalidate_frontend_tag
 @receiver(post_delete, sender=STUCO)
 @receiver(post_save, sender=Announcements)
 @receiver(post_delete, sender=Announcements)
-def on_club_change(sender, instance, **kwargs):
+def on_club_change(sender, instance=None, **kwargs):
     revalidate_frontend_tag("stuco-settings")

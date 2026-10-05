@@ -7,3 +7,4 @@ class StudentCouncilConfig(AppConfig):
 
     def ready(self):
         from . import signals
+        signals.on_club_change(sender=self)
