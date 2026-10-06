@@ -26,15 +26,15 @@ class Club(models.Model):
     visible = models.BooleanField(default=True, help_text='Is it visible to the public?')
 
     name = models.CharField(
-        max_length=100, unique=True, help_text="Insert the Name of your club"
+        max_length=100, unique=True, help_text="Insert the Name of your club. (Max Char: 100)"
     )
     preview_description = models.TextField(
         null=True, max_length=200, 
-        help_text="Insert a small description for your club. The long description is filled below."
+        help_text="Insert a small description for your club. The long description is filled below. (Max char: 200)"
     )
     description = models.TextField(
         null=True, max_length=500, 
-        help_text="Insert a long description for your club. This is where you can describe your club in detail."
+        help_text="Insert a long description for your club. This is where you can describe your club in detail. (Max char: 500)"
     )
     category = TaggableManager(blank=True)
     repetition = models.CharField(
@@ -45,34 +45,35 @@ class Club(models.Model):
     classroom_code = models.CharField(
         max_length=10, null=True, blank=True,
         help_text="This does not need an input if there is no google classroom code. "
-        "*It will not be visible when selected 'Not Accepting' in the field below."
+        "*It will not be visible when selected 'Not Accepting' in the field below. (Max char: 10)"
     )
     accepting_applicants = models.CharField(
         null=True, max_length=16, choices=AcceptingApplications.choices, 
-        help_text="Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code"
+        help_text="Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code (Max char: 16)"
     )
     application_form_link = models.URLField(
         blank=True, null=True, max_length=250, 
         help_text="This can be either a google classroom invite link or a application" \
-        " form link *It will not be visible when selected 'Not Accepting' in the field below."
+        " form link *It will not be visible when selected 'Not Accepting' in the field below. (Max char: 250)"
     )
     day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
     time = models.TimeField(null=True)
     location = models.CharField(null=True, blank=True, help_text='A room number or general name of the location.')
     teacher_advisor = models.CharField(
-        max_length=20, help_text="Please insert the name of the teacher. " \
-        "Please insert Mr./Mrs./Ms. , followed by the last name"
+        max_length=40, help_text="Please insert the name of the teacher. " \
+        "Please insert Mr./Mrs./Ms. , followed by the last name" \
+        "Multiple teachers are allowed. (Max char: 40)" 
     )
     tagline = models.CharField(
-        blank=True, null=True, max_length=30, 
+        null=True, max_length=30, 
         help_text="The tagline is the title about your club. Make it intruiging such as" \
-        " 'A community of curious minds'"
+        " 'A community of curious minds' (Max char: 30)"
     )
     join_instructions = models.TextField(
         default="Use the google classroom code or application form link to join.", max_length=500, 
         help_text="This is where you tell the students how to join, such as " \
         "using a google classroom code or a link to a form. *It will not be " \
-        "visible when selected 'Not Accepting' in the field below."
+        "visible when selected 'Not Accepting' in the field below. (Max char: 500)"
     )
 
     def __str__(self):
