@@ -10,21 +10,25 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
-from . import settings_local as config
-from easy_thumbnails.conf import Settings as thumbnail_settings
 import os
+from pathlib import Path
+
+from easy_thumbnails.conf import Settings as thumbnail_settings
+
+from . import settings_local as config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
+# Core and security settings
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.SECRET_KEY
 
 DEBUG = config.DEBUG
+DEBUG_PROPAGATE_EXCEPTIONS = config.DEBUG
 
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
@@ -43,6 +47,7 @@ REVALIDATE_SECRET = config.REVALIDATE_SECRET
 CAPTCHA_VERIFY_URL = config.CAPTCHA_VERIFY_URL
 CAP_SECRET = config.CAP_SECRET
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    "django_tasks",
     "management",
     "osm_field",
     "solo",
@@ -75,11 +81,14 @@ INSTALLED_APPS = [
     "users",
     'galleries',
     'student_council',
-    'markdownx'
+    'markdownx',
+    'admin_panel',
 ]
 
 SITE_ID = 1
 
+
+# Request handling
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware', 
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -112,7 +121,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
-# Database
+# Database and authentication
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = config.DATABASES
@@ -140,16 +149,7 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage"
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    }
-}
-
-
+# API settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -165,7 +165,7 @@ REST_FRAMEWORK = {
     },
 }
 
-# Internationalization
+# Internationalization and localization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 USE_I18N = True
@@ -175,7 +175,7 @@ TIME_ZONE = 'America/Toronto'
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files, media, and file uploads
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
@@ -184,19 +184,25 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = Path(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-# Calendar stuff
-CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
-# CALENDAR_NAME_VALIDATORS = []
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage"
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Jazzmin 3.x can request a Bootswatch path that is not present as a key in
+# the collected staticfiles manifest. Keep that lookup from crashing admin
+# page rendering; valid collected assets still use their hashed manifest URLs.
+WHITENOISE_MANIFEST_STRICT = False
 
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 THUMBNAIL_BASEDIR = 'cropped'
-
-AUTH_USER_MODEL = "users.CustomUser"
 
 # Request-memory limits below are separate from per-file validation limits.
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
@@ -207,20 +213,46 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
 
 
-### https://django-jazzmin.readthedocs.io/configuration/
+# Project-specific settings
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = "users.CustomUser"
+
+# Calendar settings
+CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
+# CALENDAR_NAME_VALIDATORS = []
+
+
+# Admin panel settings
+# https://django-jazzmin.readthedocs.io/configuration/
 
 JAZZMIN_SETTINGS = {
+    # Browser tab, login page, and admin-branding settings.
     'site_title': 'Student Council Administration',
     'site_header': 'Student Council Admin',
-    'login_logo': 'management/favicon.svg',
+    'login_logo': 'favicon.svg',
     'site_brand': 'Student Council Admin',
-    'site_logo': 'management/favicon.svg',
-    'site_icon': 'management/favicon.svg',
-    'custom_css': 'management/admin.css',
+    'site_logo': 'favicon.svg',
+    'site_icon': 'favicon.svg',
+    'custom_css': 'admin.css',
+
+    # Admin layout and sidebar settings.
     "user_avatar": None,
     'hide_apps': ['taggit'],
     'show_ui_builder': False,
+    "order_with_respect_to": ['clubs', 'galleries', 'student_council','users', 'management'],
+
+    # Links in the user menu at the top-right of the admin panel.
     'usermenu_links': [
+        {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
+        {'name': 'Licensing', 'url': 'https://raw.githubusercontent.com/RGSS-CS/williams-rgss-website-dev-backend/refs/heads/main/LICENSE', 'new_window': True},
+    ],
+
+    # Links in the top navigation bar of the admin panel.
+    "topmenu_links": [
+        {'name': 'Home', 'url': '/api/admin'},
+        {'name': 'Clubs', 'url': '/api/admin/clubs'},
+        {'name': 'Media', 'url': '/api/admin/galleries'},
+        {'name': 'Site Settings', 'url': '/api/admin/management/'},
         {'name': 'Report an Issue', 'url': 'https://github.com/GWW-RGSS/issues/issues/new/choose', 'new_window': True},
     ]
 }
@@ -278,3 +310,10 @@ LOGGING = {
 
 MARKDOWNX_EDITOR_RESIZABLE = False
 MARKDOWNX_UPLOAD_MAX_SIZE = 0
+
+TASKS = {
+    "default": {
+        "BACKEND": "django.tasks.backends.immediate.ImmediateBackend",
+        "QUEUES": ["default", "unzip_media"],
+    },
+}

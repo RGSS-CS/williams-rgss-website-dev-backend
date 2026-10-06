@@ -35,6 +35,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             subtitle="STUCO",
             tagline="Where students come together"
         )
+
         
 def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as method called from clubs
     """

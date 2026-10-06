@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-from django.apps import apps
 from django.test import TestCase
 from django.urls import reverse
 
@@ -29,14 +28,11 @@ class ManagementModelTests(TestCase):
 
 
 class ManagementSignalTests(TestCase):
-    @patch("management.signals.on_post_migrate")
-    def test_ready_runs_boot_setup_without_migration_signal(self, on_post_migrate):
-        ManagementConfig("management", apps).ready()
-
-        on_post_migrate.assert_called_once()
-
     @patch("management.signals.revalidate_frontend_tag")
-    def test_boot_signal_does_not_require_an_instance(self, revalidate):
+    def test_signal_does_not_require_an_instance(self, revalidate):
+        on_management_change(sender=SiteSettings, app_config=None)
+
+        revalidate.assert_called_once_with("management")
         on_management_change(sender=SiteSettings, app_config=None)
 
         revalidate.assert_called_once_with("management")

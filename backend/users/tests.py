@@ -13,7 +13,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .models import UserJoinCode
-from .qr_codes import build_registration_url
+from .services.qr_codes import build_registration_url
 from .serializers import RegisterSerializer
 
 

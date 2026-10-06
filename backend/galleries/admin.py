@@ -6,6 +6,10 @@ from .validators import validate_image_upload
 
 class PhotoAdminForm(forms.ModelForm):
     image = forms.ImageField(widget=AdminFileWidget())
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3, 'cols': 80}),
+    )
 
     def clean_image(self):
         return validate_image_upload(self.cleaned_data['image'])
@@ -15,6 +19,8 @@ class PhotoAdmin(admin.ModelAdmin):
     fields = ('name', 'description', 'image', 'club','shown_in_gallery','shown_in_main_page', 'created_date', 'modified_date')
     readonly_fields = ('created_date','modified_date')
     form = PhotoAdminForm
+    list_display = ('name', 'club','created_date')
+    search_fields = ('name', 'club__name')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(PhotoAdmin, self).get_form(request, obj, **kwargs)
@@ -27,15 +33,16 @@ class PhotoAdmin(admin.ModelAdmin):
 
         return form
 
-############################## ZIP Files ##############################
 
 @admin.register(MassImport)
 class MassImportAdmin(admin.ModelAdmin):
-    fields = ('name','zip_file', 'file_type', 'club','upload_date','upload_status')
-    readonly_fields = ('upload_status','name','upload_date')
+    fields = ('name', 'zip_file', 'club', 'upload_date', 'upload_status')
+    readonly_fields = ('name', 'upload_date', 'upload_status')
+    list_display = ('name', 'club', 'upload_date', 'upload_status')
+    search_fields = ('name', 'club__name', 'upload_status')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(MassImportAdmin, self).get_form(request, obj, **kwargs)
+        form = super().get_form(request, obj, **kwargs)
 
         field = form.base_fields['club']
         field.widget.can_add_related = False
