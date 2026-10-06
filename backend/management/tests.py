@@ -33,6 +33,8 @@ class ManagementSignalTests(TestCase):
         on_management_change(sender=SiteSettings, app_config=None)
 
         revalidate.assert_called_once_with("management")
+
+
         on_management_change(sender=SiteSettings, app_config=None)
 
         revalidate.assert_called_once_with("management")
