@@ -229,12 +229,30 @@ JAZZMIN_UI_TWEAKS = {
     'default_theme_mode': 'auto'
 }
 
+PROJECT_LOGGERS = (
+    "backend",
+    "calendars",
+    "clubs",
+    "commands",
+    "galleries",
+    "management",
+    "student_council",
+    "users",
+)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "{asctime} {levelname} {name}: {message}",
+            "style": "{",
+        }
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
+            "formatter": "standard",
         }
     },
     "root": {
@@ -246,7 +264,14 @@ LOGGING = {
             "handlers": ["console"],
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False
-        }
+        },
+        **{
+            logger_name: {
+                "level": os.getenv("PROJECT_LOG_LEVEL", "INFO"),
+                "propagate": True,
+            }
+            for logger_name in PROJECT_LOGGERS
+        },
     }
 }
 

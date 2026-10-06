@@ -56,9 +56,9 @@ def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as metho
  
     if not url or not secret:
         logger.warning(
-            "Skipping frontend revalidation for tag=%r: ",
+            "Skipping frontend revalidation for tag=%r: "
             "FRONTEND_REVALIDATE_URL / REVALIDATE_SECRET not configured",
-            tag
+            tag,
         )
         return
  
