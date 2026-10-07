@@ -17,7 +17,6 @@ from easy_thumbnails.conf import Settings as thumbnail_settings
 
 from . import settings_local as config
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,7 +81,8 @@ INSTALLED_APPS = [
     "users",
     'galleries',
     'student_council',
-    'admin_panel'
+    'markdownx',
+    'admin_panel',
 ]
 
 SITE_ID = 1
@@ -261,20 +261,55 @@ JAZZMIN_UI_TWEAKS = {
     'default_theme_mode': 'auto'
 }
 
+PROJECT_LOGGERS = (
+    "backend",
+    "calendars",
+    "clubs",
+    "commands",
+    "galleries",
+    "management",
+    "student_council",
+    "users",
+)
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "{asctime} {levelname} {name}: {message}",
+            "style": "{",
+        }
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-        },
+            "formatter": "standard",
+        }
     },
     "root": {
         "handlers": ["console"],
-        "level": "WARNING",
+        "level": "WARNING"
     },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False
+        },
+        **{
+            logger_name: {
+                "level": os.getenv("PROJECT_LOG_LEVEL", "INFO"),
+                "propagate": True,
+            }
+            for logger_name in PROJECT_LOGGERS
+        },
+    }
 }
+
+
+MARKDOWNX_EDITOR_RESIZABLE = False
+MARKDOWNX_UPLOAD_MAX_SIZE = 0
 
 TASKS = {
     "default": {

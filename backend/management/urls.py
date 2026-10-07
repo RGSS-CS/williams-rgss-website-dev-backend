@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register("site-settings", views.SiteSettingsViewSet, basename="site-settings")
 router.register("page-settings", views.PageSettingsViewSet, basename="page-settings")
+router.register('legal', views.LegalViewset, basename='legal')
 
 urlpatterns = [
     path("", include(router.urls))

@@ -3,6 +3,7 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.urls import reverse
 
+from .apps import ManagementConfig
 from .models import PageSettings, SchoolSocialMedia, SiteSettings
 from .signals import on_management_change
 
@@ -28,7 +29,7 @@ class ManagementModelTests(TestCase):
 
 class ManagementSignalTests(TestCase):
     @patch("management.signals.revalidate_frontend_tag")
-    def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
+    def test_signal_does_not_require_an_instance(self, revalidate):
         on_management_change(sender=SiteSettings, app_config=None)
 
         revalidate.assert_called_once_with("management")

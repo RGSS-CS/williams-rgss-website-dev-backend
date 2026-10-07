@@ -6,7 +6,4 @@ class ManagementConfig(AppConfig):
     verbose_name = 'Site Management'
 
     def ready(self):
-        from django.db.models.signals import post_migrate
-        from . import signals
-        from .signals import on_post_migrate
-        post_migrate.connect(on_post_migrate, sender=self)
+        from management import signals

@@ -5,11 +5,14 @@ from image_cropping import ImageCroppingMixin
 from django.forms import TextInput, Textarea
 from django.db import models
 from django import forms
+from markdownx.fields import MarkdownxFormField
+from markdownx.admin import MarkdownxModelAdmin
+from markdownx.widgets import AdminMarkdownxWidget
 
 from galleries.validators import validate_image_upload
 
 from .forms import LocationAdminForm
-from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia
+from .models import Location, SiteSettings, PageSettings, SchoolSocialMedia, Legal
 
 
 class LocationInline(GenericStackedInline):
@@ -56,11 +59,20 @@ class SiteSettingsAdminForm(forms.ModelForm):
 class SocialMediaInline(admin.TabularInline):
     model = SchoolSocialMedia
     extra = 1
+        
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(ImageCroppingMixin, SingletonModelAdmin):
     form = SiteSettingsAdminForm
     inlines = [LocationInline, SocialMediaInline]
+
+@admin.register(Legal)
+class LegalAdmin(SingletonModelAdmin, MarkdownxModelAdmin):
+    readonly_fields = ['last_updated']
+
+    class Media:
+        css = {'all': ('management/legal_admin.css',)}
+
 
 @admin.register(PageSettings)
 class PageSettingsAdmin(admin.ModelAdmin):

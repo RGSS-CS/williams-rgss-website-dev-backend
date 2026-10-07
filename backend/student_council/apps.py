@@ -6,4 +6,4 @@ class StudentCouncilConfig(AppConfig):
     verbose_name = 'Student Council'
 
     def ready(self):
-        from . import signals
+        from student_council import signals
