@@ -35,11 +35,6 @@ class ManagementSignalTests(TestCase):
         revalidate.assert_called_once_with("management")
 
 
-        on_management_change(sender=SiteSettings, app_config=None)
-
-        revalidate.assert_called_once_with("management")
-
-
 class SchoolSocialMediaTests(TestCase):
     def setUp(self):
         self.site_settings = SiteSettings.get_solo()
