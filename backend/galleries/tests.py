@@ -10,7 +10,7 @@ from clubs.models import Club
 from management.admin import SiteSettingsAdminForm
 from management.models import SiteSettings
 from student_council.admin import STUCOAdminForm
-from student_council.models import STUCO
+from student_council.models import Stuco
 from .serializers import PhotoSeralizer
 
 PhotoForm = modelform_factory(Photos, form=PhotoAdminForm, fields=['image'])
@@ -75,8 +75,8 @@ class GalleryUploadTests(SimpleTestCase):
 class OtherImageUploadTests(SimpleTestCase):
     def test_admin_image_fields(self):
         for model, base_form, field, minimum in [
-            (STUCO, STUCOAdminForm, 'stuco_logo', 100),
-            (STUCO, STUCOAdminForm, 'group_photo', 100),
+            (Stuco, STUCOAdminForm, 'stuco_logo', 100),
+            (Stuco, STUCOAdminForm, 'group_photo', 100),
             (SiteSettings, SiteSettingsAdminForm, 'site_logo', 100),
             (SiteSettings, SiteSettingsAdminForm, 'favicon', 32),
         ]:
@@ -182,8 +182,8 @@ class ImageUploadFilenameTests(SimpleTestCase):
             (Photos, 'image', 'clubs/None/photos'),
             (SiteSettings, 'favicon', 'upload/management'),
             (SiteSettings, 'site_logo', 'upload/management'),
-            (STUCO, 'group_photo', 'upload/stuco'),
-            (STUCO, 'stuco_logo', 'upload/stuco'),
+            (Stuco, 'group_photo', 'upload/stuco'),
+            (Stuco, 'stuco_logo', 'upload/stuco'),
         ]:
             with self.subTest(model=model.__name__, field=field_name):
                 field = model._meta.get_field(field_name)
