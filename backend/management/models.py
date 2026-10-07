@@ -128,7 +128,7 @@ class SchoolSocialMedia(models.Model):
     )    
     social_type = models.CharField(choices=Sites, null=True, max_length=2)
     title = models.CharField(
-        ax_length=20, null=True, blank=True, 
+        max_length=20, null=True, blank=True, 
         help_text="This is needed only to override the default site title"
     )
     link = models.URLField(max_length=500, null=True)

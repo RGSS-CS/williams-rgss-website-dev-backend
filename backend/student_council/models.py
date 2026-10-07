@@ -42,5 +42,3 @@ class Stuco(SingletonModel):
     def __str__(self):
         return('')
 
-
-STUCO = Stuco
