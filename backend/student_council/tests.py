@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Announcements, SchoolAnnouncements, STUCO
+from .models import Announcements, SchoolAnnouncements, Stuco
 from .signals import on_club_change
 
 
@@ -16,14 +16,14 @@ class StudentCouncilTests(TestCase):
         self.addCleanup(request.stop)
 
     def test_council_defaults_and_singleton(self):
-        council = STUCO.get_solo()
+        council = Stuco.get_solo()
         self.assertEqual(council.council_name, 'STUCO')
         self.assertFalse(council.group_photo)
         self.assertIsNone(council.photo_caption)
-        self.assertEqual(STUCO.get_solo().pk, council.pk)
+        self.assertEqual(Stuco.get_solo().pk, council.pk)
 
     def test_council_endpoint_includes_photo_caption(self):
-        council = STUCO.get_solo()
+        council = Stuco.get_solo()
         council.council_name = 'SAC'
         council.photo_caption = 'Your student council'
         council.save()
@@ -50,7 +50,7 @@ class StudentCouncilTests(TestCase):
 class StudentCouncilSignalTests(TestCase):
     @patch("student_council.signals.revalidate_frontend_tag")
     def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
-        on_club_change(sender=STUCO, app_config=None)
+        on_club_change(sender=Stuco, app_config=None)
 
         revalidate.assert_called_once_with("stuco-settings")
 

@@ -11,7 +11,7 @@ from .apps import CommandsConfig
 
 from clubs.models import Club, ClubAnnouncement
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
-from student_council.models import Announcements, SchoolAnnouncements, STUCO
+from student_council.models import Announcements, SchoolAnnouncements, Stuco
 
 
 class GenerateTestDataTests(TestCase):
@@ -53,7 +53,7 @@ class GenerateTestDataTests(TestCase):
         settings.site_logo = image()
         settings.save()
         favicon, site_logo = settings.favicon.name, settings.site_logo.name
-        council = STUCO.get_solo()
+        council = Stuco.get_solo()
         council.stuco_logo = image()
         council.group_photo = image()
         council.save()
@@ -68,8 +68,8 @@ class GenerateTestDataTests(TestCase):
         self.assertEqual(settings.site_logo.name, site_logo)
         settings.full_clean()
         self.assertEqual(SiteSettings.objects.count(), 1)
-        self.assertEqual(STUCO.objects.count(), 1)
-        council = STUCO.get_solo()
+        self.assertEqual(Stuco.objects.count(), 1)
+        council = Stuco.get_solo()
         self.assertTrue(council.council_name)
         self.assertTrue(council.photo_caption)
         self.assertEqual(council.stuco_logo.name, stuco_logo)
@@ -87,7 +87,7 @@ class GenerateTestDataTests(TestCase):
         self.generate(seed='clubs-only', club_amount=1, skip_settings=True)
         self.assertEqual(Club.objects.count(), 1)
         self.assertFalse(SiteSettings.objects.exists())
-        self.assertFalse(STUCO.objects.exists())
+        self.assertFalse(Stuco.objects.exists())
         self.assertFalse(Announcements.objects.exists())
         self.assertFalse(SchoolAnnouncements.objects.exists())
         self.assertFalse(SchoolSocialMedia.objects.exists())
@@ -132,7 +132,7 @@ class GenerateTestDataTests(TestCase):
                 self.generate(club_amount=1)
         self.assertFalse(Club.objects.exists())
         self.assertFalse(SchoolAnnouncements.objects.exists())
-        self.assertFalse(STUCO.objects.exists())
+        self.assertFalse(Stuco.objects.exists())
         self.assertFalse(SiteSettings.objects.exists())
 
 

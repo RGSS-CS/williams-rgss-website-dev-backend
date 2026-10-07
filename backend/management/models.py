@@ -10,7 +10,7 @@ from osm_field.fields import OSMField, LatitudeField, LongitudeField
 from colorfield.fields import ColorField # type: ignore
 from phonenumber_field.modelfields import PhoneNumberField #type: ignore
 from image_cropping import ImageRatioField
-from .legalDefaults import TermsService, PrivacyPolicy
+from .legalDefaults import termsService, privacyPolicy
 from markdownx.models import MarkdownxField
 
 def FaviconRename(instance, filename):
@@ -141,8 +141,8 @@ class SchoolSocialMedia(models.Model):
         return self.social_type
 
 class Legal(SingletonModel):
-    terms_service = MarkdownxField(max_length=10000, verbose_name='Terms of Service', default=TermsService)
-    privacy_policy = MarkdownxField(max_length=10000, verbose_name='Privacy Policy', default=PrivacyPolicy)
+    terms_service = MarkdownxField(max_length=10000, verbose_name='Terms of Service', default=termsService)
+    privacy_policy = MarkdownxField(max_length=10000, verbose_name='Privacy Policy', default=privacyPolicy)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
