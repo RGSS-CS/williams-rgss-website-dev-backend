@@ -20,7 +20,7 @@ class Club(models.Model):
 
     class AcceptingApplications(models.TextChoices):
         ACCEPTING = "AC", "Accepting"
-        NOT_ACCEPTING = "WA", "Not Accepting"
+        NOT_ACCEPTING = "NA", "Not Accepting"
         OPEN_TO_EVERYONE = "OE", "Open To Everyone"
 
     visible = models.BooleanField(default=True, help_text='Is it visible to the public?')
