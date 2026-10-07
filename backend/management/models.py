@@ -43,7 +43,10 @@ class SiteSettings(SingletonModel):
         ENTERING = "ENTERING", "Entering"
 
 
-    maintainance_mode = models.BooleanField(default=True, help_text='Disable when site is ready for publishing. NOTE: It will take up to 30 seconds to update.')
+    maintainance_mode = models.BooleanField(
+        default=True, 
+        help_text='Disable when site is ready for publishing. NOTE: It will take up to 30 seconds to update.'
+    )
     frontend_url = models.URLField(
         default="http://localhost:3000", max_length=100, 
         help_text="The external url of frontend"
@@ -53,7 +56,11 @@ class SiteSettings(SingletonModel):
         help_text="The name of the school *Use short form S.S (e.g, Richmond Green S.S)"
     )
     school_email = models.EmailField(null=True, max_length=50)
-    school_phone = PhoneNumberField(null=True, help_text="The phone number should include the area code (+1), followed by the digits with no spaces or a non-numerial character.")
+    school_phone = PhoneNumberField(
+        null=True, 
+        help_text="The phone number should include the area code (+1), " \
+        "followed by the digits with no spaces or a non-numerial character."
+    )
     favicon = models.ImageField(
         upload_to=FaviconRename,
         help_text="This is the icon that appears in the browser tab. " \
@@ -65,7 +72,8 @@ class SiteSettings(SingletonModel):
     ) # type: ignore
     site_logo = models.ImageField(
         upload_to=SiteLogoRename,
-        help_text="This is the icon that represents your school. This image will be displayed on the navigation bar and the homepage."
+        help_text="This is the icon that represents your school. " \
+        "This image will be displayed on the navigation bar and the homepage."
     )
     site_logo_cropping = ImageRatioField(
         'site_logo', '160x160', free_crop = True, 
@@ -93,7 +101,11 @@ class SiteSettings(SingletonModel):
 
     captcha = models.JSONField(default=list, blank=True)
 
-    school_domain = models.CharField(null=True, max_length=50, help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. This is used for email verification")
+    school_domain = models.CharField(
+        null=True, max_length=50, 
+        help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. " \
+        "This is used for email verification"
+    )
     
     
     def save(self, *args, **kwargs):
@@ -115,7 +127,10 @@ class SchoolSocialMedia(models.Model):
     site_settings = models.ForeignKey(SiteSettings, on_delete=models.PROTECT, related_name="social_media",
     )    
     social_type = models.CharField(choices=Sites, null=True, max_length=2)
-    title = models.CharField(max_length=20, null=True, blank=True, help_text="This is needed only to override the default site title")
+    title = models.CharField(
+        ax_length=20, null=True, blank=True, 
+        help_text="This is needed only to override the default site title"
+    )
     link = models.URLField(max_length=500, null=True)
 
     class Meta:
