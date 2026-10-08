@@ -113,4 +113,3 @@ class ClubsAdmin(MarkdownxModelAdmin):
 
     class Media:
         css = {'all': ('clubs/club_admin.css',)}
-        js = ('clubs/club_admin.js',)
