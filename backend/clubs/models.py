@@ -85,7 +85,7 @@ class Club(models.Model):
 
 class ClubAnnouncement(models.Model):
     title = models.CharField(max_length=200, null=True)
-    description = models.TextField(max_length=500, null=True)
+    description = MarkdownxField(max_length=500, null=True)
     date_posted = models.DateTimeField(default=timezone.now, help_text="This does not reflect the post status of the announcement, it only reads the current date/time.")
     popup = models.BooleanField(default=False, help_text="Determines whether popup is enabled for this announcement. Regardless, it will be shown in the announcements section.")
     expiry = models.DateTimeField(null=True, help_text="When does this post expire? When expired, it will be marked as resolved in the announcment section.")
