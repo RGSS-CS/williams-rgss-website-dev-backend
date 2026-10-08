@@ -3,6 +3,7 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
+from markdownx.models import MarkdownxField
 
 class Club(models.Model):
     class WeekDay(models.TextChoices):
@@ -32,7 +33,7 @@ class Club(models.Model):
         null=True, max_length=200, 
         help_text="Insert a small description for your club. The long description is filled below. (Max char: 200)"
     )
-    description = models.TextField(
+    description = MarkdownxField(
         null=True, max_length=500, 
         help_text="Insert a long description for your club. This is where you can describe your club in detail. (Max char: 500)"
     )

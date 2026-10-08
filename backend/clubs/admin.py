@@ -10,6 +10,7 @@ from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
 from .models import Club, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from markdownx.admin import MarkdownxModelAdmin
 
 
 try:
@@ -38,7 +39,6 @@ class ClubsAdminForm(forms.ModelForm):
         widgets = {
             "time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
             "preview_description": forms.Textarea(attrs={"rows": 3, "cols": 60}),
-            "description": forms.Textarea(attrs={"rows": 6, "cols": 80}),
             "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
@@ -108,7 +108,9 @@ class ClubAnnouncementInline(admin.StackedInline):
     extra = 0
 
 @admin.register(Club)
-class ClubsAdmin(admin.ModelAdmin):
+class ClubsAdmin(MarkdownxModelAdmin):
     form = ClubsAdminForm
-    
     inlines = [ClubAnnouncementInline]
+
+    class Media:
+        css = {'all': ('clubs/club_admin.css',)}
