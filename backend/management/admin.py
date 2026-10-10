@@ -5,9 +5,7 @@ from image_cropping import ImageCroppingMixin
 from django.forms import TextInput, Textarea
 from django.db import models
 from django import forms
-from markdownx.fields import MarkdownxFormField
 from markdownx.admin import MarkdownxModelAdmin
-from markdownx.widgets import AdminMarkdownxWidget
 
 from galleries.validators import validate_image_upload
 

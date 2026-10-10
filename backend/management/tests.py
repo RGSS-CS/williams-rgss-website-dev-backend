@@ -3,7 +3,6 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.urls import reverse
 
-from .apps import ManagementConfig
 from .models import PageSettings, SchoolSocialMedia, SiteSettings
 from .signals import on_management_change
 
