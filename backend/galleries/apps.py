@@ -7,4 +7,4 @@ class GalleriesConfig(AppConfig):
     verbose_name = 'Media'
 
     def ready(self):
-        from galleries import signals
+        from . import signals
