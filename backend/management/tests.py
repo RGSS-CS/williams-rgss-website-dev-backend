@@ -1,10 +1,12 @@
+from pathlib import Path
 from unittest.mock import patch
 
 from django.test import TestCase
 from django.urls import reverse
 
 from .apps import ManagementConfig
-from .models import PageSettings, SchoolSocialMedia, SiteSettings
+from .legalDefaults import privacyPolicy, termsService
+from .models import Legal, PageSettings, SchoolSocialMedia, SiteSettings
 from .signals import on_management_change
 
 
@@ -25,6 +27,26 @@ class ManagementModelTests(TestCase):
         )
 
         self.assertEqual(str(page_settings), "Home")
+
+
+class LegalDefaultsTests(TestCase):
+    def test_legal_defaults_are_loaded_from_static_markdown_files(self):
+        self.assertEqual(
+            termsService(),
+            (Path(__file__).parent / "legal_defaults" / "terms_service.md")
+            .read_text(encoding="utf-8"),
+        )
+        self.assertEqual(
+            privacyPolicy(),
+            (Path(__file__).parent / "legal_defaults" / "privacy_policy.md")
+            .read_text(encoding="utf-8"),
+        )
+
+    def test_legal_model_uses_markdown_defaults(self):
+        legal = Legal()
+
+        self.assertEqual(legal.terms_service, termsService())
+        self.assertEqual(legal.privacy_policy, privacyPolicy())
 
 
 class ManagementSignalTests(TestCase):
