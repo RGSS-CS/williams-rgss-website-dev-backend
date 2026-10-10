@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from clubs.models import Club, ClubAnnouncement
 from management.models import PageSettings, SchoolSocialMedia, SiteSettings
-from student_council.models import Announcements, SchoolAnnouncements, STUCO
+from student_council.models import Announcements, SchoolAnnouncements, Stuco
 
 
 def random_string(length: int) -> str:
@@ -87,7 +87,7 @@ class Command(BaseCommand):
         settings_obj.school_secondary_color = "#47a5bd"
         settings_obj.school_tertiary_color = "#db9820"
         settings_obj.save()
-        council = STUCO.get_solo()
+        council = Stuco.get_solo()
         council.council_name = random_string(8)
         council.photo_caption = random_sentence()
         council.save()

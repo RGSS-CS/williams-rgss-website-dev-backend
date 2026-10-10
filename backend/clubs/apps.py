@@ -5,4 +5,4 @@ class ClubsConfig(AppConfig):
     verbose_name = 'School Activities'
 
     def ready(self):
-        from . import signals  # noqa: F401 — registers post_save/post_delete receivers
+        from . import signals

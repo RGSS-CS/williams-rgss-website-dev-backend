@@ -4,6 +4,9 @@ set -e
 echo "==> Running migrations..."
 python manage.py migrate --no-input
 
+echo "==> Revalidating frontend cache..."
+python manage.py revalidate_frontend
+
 echo "==> Creating/updating superuser..."
 python manage.py shell << 'EOF'
 import os

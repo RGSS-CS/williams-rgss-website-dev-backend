@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
  
-from .models import PageSettings, SiteSettings
+from .models import PageSettings, SiteSettings, Legal
  
 def on_post_migrate(sender, app_config, *args, **kwargs):
     if not PageSettings.objects.filter(internal_site_name="AB").exists():
@@ -35,6 +35,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
             subtitle="STUCO",
             tagline="Where students come together"
         )
+
         
 def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as method called from clubs
     """
@@ -56,7 +57,7 @@ def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as metho
  
     if not url or not secret:
         logger.warning(
-            "Skipping frontend revalidation for tag=%r: ",
+            "Skipping frontend revalidation for tag=%r: " \
             "FRONTEND_REVALIDATE_URL / REVALIDATE_SECRET not configured",
             tag
         )
@@ -79,5 +80,10 @@ def revalidate_frontend_tag(tag: str) -> None: # TODO: move to dif file as metho
 @receiver(post_delete, sender=SiteSettings)
 @receiver(post_save, sender=PageSettings)
 @receiver(post_delete, sender=PageSettings)
-def on_management_change(sender, instance, **kwargs):
+def on_management_change(sender, instance=None, **kwargs):
     revalidate_frontend_tag("management")
+
+@receiver(post_save, sender=Legal)
+@receiver(post_delete, sender=Legal)
+def on_legal_change(sender, instance, **kwargs):
+    revalidate_frontend_tag('legal')

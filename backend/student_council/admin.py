@@ -1,5 +1,5 @@
 from django.contrib.admin.widgets import AdminFileWidget
-from .models import STUCO, Announcements
+from .models import Stuco, Announcements
 from solo.admin import SingletonModelAdmin
 from django import forms
 from django.contrib import admin
@@ -16,13 +16,13 @@ class STUCOAdminForm(forms.ModelForm):
         return validate_image_upload(self.cleaned_data['group_photo'])
 
     class Meta:
-        model = STUCO
+        model = Stuco
         fields = [
             'council_name', 'group_photo', 'photo_caption','stuco_logo'
         ]
     
 
-@admin.register(STUCO)
+@admin.register(Stuco)
 class STUCOAdmin(SingletonModelAdmin):
     form = STUCOAdminForm
 

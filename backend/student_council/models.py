@@ -28,8 +28,8 @@ class Announcements(SingletonModel):
     def __str__(self):
         return('')
 
-    
-class STUCO(SingletonModel):
+
+class Stuco(SingletonModel):
     council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
     group_photo = models.ImageField(blank=True, null=True, upload_to=image_upload_path)
     photo_caption = models.TextField(blank=True, null=True, help_text='A legend for the people present in the photo.')
@@ -41,3 +41,4 @@ class STUCO(SingletonModel):
 
     def __str__(self):
         return('')
+

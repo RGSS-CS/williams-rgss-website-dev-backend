@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from .serializers import STUCOSeralizer, AnnouncementSeralizer
-from .models import STUCO, Announcements 
+from .models import Stuco, Announcements 
 
 class STUCOViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = STUCO.objects.all()
+    queryset = Stuco.objects.all()
     serializer_class = STUCOSeralizer
 
 class AnnouncementViewSet(viewsets.ReadOnlyModelViewSet):
