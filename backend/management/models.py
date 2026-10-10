@@ -59,7 +59,7 @@ class SiteSettings(SingletonModel):
     school_phone = PhoneNumberField(
         null=True, 
         help_text="The phone number should include the area code (+1), " \
-        "followed by the digits with no spaces or a non-numerial character."
+        "followed by the digits with no spaces or non-numerial characters."
     )
     favicon = models.ImageField(
         upload_to=FaviconRename,
