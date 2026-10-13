@@ -66,7 +66,7 @@ class Club(models.Model):
         "Multiple teachers are allowed. (Max char: 40)" 
     )
     tagline = models.CharField(
-        null=True, max_length=30, 
+        null=True, max_length=30, verbose_name="Title",
         help_text="The tagline is the title about your club. Make it intruiging such as" \
         " 'A community of curious minds' (Max char: 30)"
     )
