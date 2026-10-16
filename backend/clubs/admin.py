@@ -26,6 +26,12 @@ class ClubsAdminForm(forms.ModelForm):
         help_text="Select up to 3 categories that this club will appear in (e.g 'Engineering' for Robotics Club).",
         widget=widgets.FilteredSelectMultiple("categories", is_stacked=False)
     )
+    day_of_meeting = forms.MultipleChoiceField(
+        choices=Club.WeekDay.choices,
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Meeting days",
+    )
 
     class Meta:
         model = Club
@@ -64,6 +70,7 @@ class ClubsAdminForm(forms.ModelForm):
 
         if self.instance and self.instance.pk:
             self.fields['category'].initial = [t.pk for t in self.instance.category.all()]
+            self.fields['day_of_meeting'].initial = self.instance.day_of_meeting or []
 
 
         tag_rel = Club.category.through._meta.get_field('tag').remote_field

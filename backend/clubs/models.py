@@ -57,7 +57,7 @@ class Club(models.Model):
         help_text="This can be either a google classroom invite link or a application" \
         " form link *It will not be visible when selected 'Not Accepting' in the field below. (Max char: 250)"
     )
-    day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
+    day_of_meeting = models.JSONField(default=list, blank=True)
     time = models.TimeField(null=True)
     location = models.CharField(null=True, blank=True, help_text='A room number or general name of the location.')
     teacher_advisor = models.CharField(

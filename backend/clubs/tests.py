@@ -23,7 +23,7 @@ class ClubSerializerTests(TestCase):
             description="A place to explore software",
             tagline="Build together",
             repetition=Club.Repetition.WEEKLY,
-            day_of_meeting=Club.WeekDay.MONDAY,
+            day_of_meeting=[Club.WeekDay.MONDAY, Club.WeekDay.WEDNESDAY],
         )
 
         serializer = ClubSerializer(club)
@@ -31,7 +31,7 @@ class ClubSerializerTests(TestCase):
 
         self.assertEqual(data["name"], "Coding Club")
         self.assertEqual(data["tagline"], "Build together")
-        self.assertEqual(data["day_of_meeting"], Club.WeekDay.MONDAY)
+        self.assertEqual(data["day_of_meeting"], [Club.WeekDay.MONDAY, Club.WeekDay.WEDNESDAY])
         self.assertIn("category", data)
 
 

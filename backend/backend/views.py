@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from management.models import SiteSettings
 
-def redirect_frontend(request):
+def redirect_frontend(request, exception=None):
     settings = SiteSettings.get_solo()
 
     if not settings.frontend_url:
