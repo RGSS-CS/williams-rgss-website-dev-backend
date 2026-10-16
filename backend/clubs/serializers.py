@@ -17,7 +17,7 @@ class ClubSerializer(TaggitSerializer, serializers.ModelSerializer):
             "id", 'visible', "name", "preview_description", "description",
             "tagline", "category", "day_of_meeting", "time",
             "repetition", "location", "classroom_code",
-            "accepting_applicants", "join_instructions", "application_form_link",
+            "accepting_applicants", "join_instructions", "application_link",
             "teacher_advisor", "announcement"
             ]
 

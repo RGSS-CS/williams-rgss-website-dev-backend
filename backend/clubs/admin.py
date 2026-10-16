@@ -10,6 +10,7 @@ from django.contrib.admin.sites import NotRegistered
 from django.contrib.sites.models import Site
 from .models import Club, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from django.utils.html import format_html
 from markdownx.admin import MarkdownxModelAdmin
 
 
@@ -23,7 +24,10 @@ class ClubsAdminForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         required=True,
-        help_text="Select up to 3 categories that this club will appear in (e.g 'Engineering' for Robotics Club).",
+        help_text=format_html(
+            "Required.<br>{}",
+            "Select up to 3 categories that this club will appear in (e.g 'Engineering' for Robotics Club).",
+        ),
         widget=widgets.FilteredSelectMultiple("categories", is_stacked=False)
     )
     day_of_meeting = forms.MultipleChoiceField(
@@ -39,17 +43,16 @@ class ClubsAdminForm(forms.ModelForm):
             'visible', "name", "preview_description", "description", "tagline",  
             "category", "day_of_meeting", "time",
             "repetition", "location", "classroom_code",
-            "application_form_link", "join_instructions", "accepting_applicants",
+            "application_link", "accepting_applicants", "join_instructions",
             "teacher_advisor"
         ]
         widgets = {
-            "time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
             "preview_description": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
             "location": forms.TextInput(attrs={"size": 10}),
-            "application_form_link": forms.URLInput(attrs={"size": 60}),
+            "application_link": forms.URLInput(attrs={"size": 60}),
             "join_instructions": forms.Textarea(attrs={"rows": 3, "cols": 60})
         }
 
