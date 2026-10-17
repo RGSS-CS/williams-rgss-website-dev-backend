@@ -82,6 +82,16 @@ class CurrentClubFieldsTests(TestCase):
         self.assertNotIn('announcement', detail.json())
         self.assertNotIn('announcement', listing.json()[0])
 
+    def test_public_club_endpoints_hide_invisible_clubs(self, request):
+        visible_club = Club.objects.create(name='Chess')
+        hidden_club = Club.objects.create(name='Private Club', visible=False)
+
+        listing = self.client.get(reverse('club-list'))
+        detail = self.client.get(reverse('club-detail', args=[hidden_club.pk]))
+
+        self.assertEqual([club['id'] for club in listing.json()], [visible_club.pk])
+        self.assertEqual(detail.status_code, 404)
+
     def test_club_serializer_includes_multiple_related_announcements(self, request):
         club = Club.objects.create(name='Robotics')
         other = Club.objects.create(name='Chess')
