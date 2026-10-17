@@ -1,8 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db import transaction
-from django_tasks import signals
-
 from management.signals import revalidate_frontend_tag
 
 from .models import Photos, MassImport

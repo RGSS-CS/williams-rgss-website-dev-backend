@@ -5,4 +5,4 @@ class ClubsConfig(AppConfig):
     verbose_name = 'School Activities'
 
     def ready(self):
-        from clubs import signals
+        from . import signals
