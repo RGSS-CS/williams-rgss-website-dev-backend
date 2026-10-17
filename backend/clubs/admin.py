@@ -49,6 +49,10 @@ class ClubsAdminForm(forms.ModelForm):
         widgets = {
             "preview_description": forms.Textarea(attrs={"rows": 3, "cols": 60}),
             "announcement": forms.Textarea(attrs={"rows": 3, "cols": 60}),
+            "time": forms.TimeInput(
+                attrs={"type": "time", "step": 60},
+                format="%H:%M",
+            ),
             "tagline": forms.TextInput(attrs={"size": 60}),
             "classroom_code": forms.TextInput(attrs={"size": 20}),
             "location": forms.TextInput(attrs={"size": 10}),
