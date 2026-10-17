@@ -232,10 +232,10 @@ CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 
 JAZZMIN_SETTINGS = {
     # Browser tab, login page, and admin-branding settings.
-    'site_title': 'Student Council Administration',
-    'site_header': 'Student Council Admin',
+    'site_title': 'Management Console',
+    'site_header': 'Management Console',
     'login_logo': 'favicon.svg',
-    'site_brand': 'Student Council Admin',
+    'site_brand': 'Management Console',
     'site_logo': 'favicon.svg',
     'site_icon': 'favicon.svg',
     'custom_css': 'admin.css',
