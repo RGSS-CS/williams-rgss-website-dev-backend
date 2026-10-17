@@ -30,14 +30,14 @@ class Announcements(SingletonModel):
 
 
 class Stuco(SingletonModel):
-    council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)")
+    council_name = models.CharField(default="STUCO", max_length=10, help_text="The name of the council (e.g, SAC)", verbose_name='Organization Name')
     group_photo = models.ImageField(blank=True, null=True, upload_to=image_upload_path)
     photo_caption = models.TextField(blank=True, null=True, help_text='A legend for the people present in the photo.')
     stuco_logo = models.ImageField(null=True, upload_to=image_upload_path, help_text='The logo that will appear on the homepage logo section.')
     
     class Meta: 
-        verbose_name = 'Student Council Settings'
-        verbose_name_plural = 'Student Council Settings'
+        verbose_name = 'Organization Settings'
+        verbose_name_plural = 'Organization Settings'
 
     def __str__(self):
         return('')

@@ -20,6 +20,10 @@ class STUCOAdminForm(forms.ModelForm):
         fields = [
             'council_name', 'group_photo', 'photo_caption','stuco_logo'
         ]
+
+        widgets = {
+            'photo_caption': forms.Textarea(attrs={'rows': 5, 'cols': 50})
+        }
     
 
 @admin.register(Stuco)
