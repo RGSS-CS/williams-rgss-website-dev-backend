@@ -36,7 +36,7 @@ class PhotoAdmin(admin.ModelAdmin):
 
 @admin.register(MassImport)
 class MassImportAdmin(admin.ModelAdmin):
-    fields = ('name', 'zip_file', 'club', 'upload_date', 'upload_status')
+    fields = ('name', 'zip_file', 'club', 'upload_date', 'deletion_date', 'upload_status')
     readonly_fields = ('name', 'upload_date', 'upload_status')
     list_display = ('name', 'club', 'upload_date', 'upload_status')
     search_fields = ('name', 'club__name', 'upload_status')
