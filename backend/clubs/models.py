@@ -3,6 +3,7 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 from PIL import Image
 from django.contrib.contenttypes.fields import GenericRelation
+from markdownx.models import MarkdownxField
 
 class Club(models.Model):
     class WeekDay(models.TextChoices):
@@ -26,20 +27,20 @@ class Club(models.Model):
     visible = models.BooleanField(default=True, help_text='Is it visible to the public?')
 
     name = models.CharField(
-        max_length=100, unique=True, help_text="Insert the Name of your club. (Max Char: 100)"
+        max_length=100, unique=True, help_text="Required.<br>Insert the Name of your club. (Max Char: 100)"
     )
     preview_description = models.TextField(
         null=True, max_length=200, 
-        help_text="Insert a small description for your club. The long description is filled below. (Max char: 200)"
+        help_text="Required.<br>Insert a small description for your club. The long description is filled below. (Max char: 200)"
     )
-    description = models.TextField(
+    description = MarkdownxField(
         null=True, max_length=500, 
-        help_text="Insert a long description for your club. This is where you can describe your club in detail. (Max char: 500)"
+        help_text="Required.<br>Insert a long description for your club. This is where you can describe your club in detail. (Max char: 500)"
     )
     category = TaggableManager(blank=True)
     repetition = models.CharField(
-        null=True, max_length=10, choices=Repetition.choices, 
-        help_text="How often does your club meet? If your club meets on a different schedule," \
+        null=True, max_length=10, choices=Repetition.choices,
+        help_text="Required.<br>How often does your club meet? If your club meets on a different schedule," \
         " please select 'Notified'."
     )
     classroom_code = models.CharField(
@@ -49,29 +50,29 @@ class Club(models.Model):
     )
     accepting_applicants = models.CharField(
         null=True, max_length=16, choices=AcceptingApplications.choices, 
-        help_text="Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code (Max char: 16)"
+        help_text="Required.<br>Select 'Accepting' if applications are required. Select 'Open To Everyone' for google classroom code (Max char: 16)"
     )
-    application_form_link = models.URLField(
+    application_link = models.URLField(
         blank=True, null=True, max_length=250, 
         help_text="This can be either a google classroom invite link or a application" \
         " form link *It will not be visible when selected 'Not Accepting' in the field below. (Max char: 250)"
     )
-    day_of_meeting = models.CharField(max_length=10, choices=WeekDay.choices, null=True)
-    time = models.TimeField(null=True)
+    day_of_meeting = models.JSONField(default=list, blank=True)
+    time = models.TimeField(null=True, help_text="Required.")
     location = models.CharField(null=True, blank=True, help_text='A room number or general name of the location.')
     teacher_advisor = models.CharField(
-        max_length=40, help_text="Please insert the name of the teacher. " \
+        max_length=40, help_text="Required.<br>Please insert the name of the teacher. " \
         "Please insert Mr./Mrs./Ms. , followed by the last name" \
-        "Multiple teachers are allowed. (Max char: 40)" 
+        "Multiple teachers are allowed. (Max char: 40)"
     )
     tagline = models.CharField(
-        null=True, max_length=30, 
-        help_text="The tagline is the title about your club. Make it intruiging such as" \
+        null=True, max_length=30, verbose_name="Title",
+        help_text="Required.<br>The tagline is the title about your club. Make it intruiging such as" \
         " 'A community of curious minds' (Max char: 30)"
     )
     join_instructions = models.TextField(
         default="Use the google classroom code or application form link to join.", max_length=500, 
-        help_text="This is where you tell the students how to join, such as " \
+        help_text="Required.<br>This is where you tell the students how to join, such as " \
         "using a google classroom code or a link to a form. *It will not be " \
         "visible when selected 'Not Accepting' in the field below. (Max char: 500)"
     )
@@ -83,12 +84,12 @@ class Club(models.Model):
         super().save(*args, **kwargs)
 
 class ClubAnnouncement(models.Model):
-    title = models.CharField(max_length=200, null=True)
-    description = models.TextField(max_length=500, null=True)
+    title = models.CharField(max_length=200, null=True, help_text="Required.")
+    description = MarkdownxField(max_length=500, null=True, help_text="Required.")
     date_posted = models.DateTimeField(default=timezone.now, help_text="This does not reflect the post status of the announcement, it only reads the current date/time.")
     popup = models.BooleanField(default=False, help_text="Determines whether popup is enabled for this announcement. Regardless, it will be shown in the announcements section.")
     expiry = models.DateTimeField(null=True, help_text="When does this post expire? When expired, it will be marked as resolved in the announcment section.")
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement")
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_announcement", help_text="Required.")
 
     class Meta:
         verbose_name =  "Club Announcement"

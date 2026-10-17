@@ -22,9 +22,9 @@ class MassImport(models.Model):
     name = models.CharField(null=True, blank=True, help_text='The name will automatically be generated based on the ZIP file name.')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True)
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Photo files only.')
-    upload_date = models.DateTimeField(auto_now_add=True)
+    upload_date = models.DateTimeField(default=timezone.now, editable=False)
     upload_status = models.CharField(max_length=5, null=True)
-    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', editable=False, default=deletion_date)
+    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', blank=True, null=True)
 
     class Meta:
         verbose_name = 'ZIP Upload'
@@ -34,10 +34,12 @@ class MassImport(models.Model):
          return self.name
 
     def save(self, *args, **kwargs):
-         club_name = self.club.name
-         file = self.zip_file.name
-         self.name = f'{file} - {club_name[:17]}'
-         super().save(*args, **kwargs)
+        if self._state.adding and self.deletion_date is None:
+            self.deletion_date = timezone.localdate(self.upload_date) + timedelta(days=30)
+        club_name = self.club.name
+        file = self.zip_file.name
+        self.name = f'{file} - {club_name[:17]}'
+        super().save(*args, **kwargs)
 
 class Photos(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True, help_text='If left blank, it will automatically generate a name for you.')

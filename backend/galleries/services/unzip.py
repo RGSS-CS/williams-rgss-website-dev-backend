@@ -1,16 +1,13 @@
 from pathlib import PurePosixPath
 from zipfile import BadZipFile, ZipFile
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 
 from galleries.models import Photos
 from galleries.validators import validate_image_upload
-
-MAX_FILES = 100
-MAX_UNCOMPRESSED_BYTES = 100 * 1024 * 1024 # 100MiB
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 def import_zip_photos(mass_import):
@@ -26,10 +23,15 @@ def import_zip_photos(mass_import):
             if not entries:
                 raise ValidationError("The ZIP file does not contain any files.")
 
-            if len(entries) > MAX_FILES:
-                raise ValidationError(f"A ZIP can contain at most {MAX_FILES} photos.")
+            if len(entries) > settings.GALLERY_ZIP_MAX_FILES:
+                raise ValidationError(
+                    f"A ZIP can contain at most {settings.GALLERY_ZIP_MAX_FILES} photos."
+                )
 
-            if sum(entry.file_size for entry in entries) > MAX_UNCOMPRESSED_BYTES:
+            if (
+                sum(entry.file_size for entry in entries)
+                > settings.GALLERY_ZIP_MAX_UNCOMPRESSED_BYTES
+            ):
                 raise ValidationError("The ZIP contents are too large.")
 
             uploads = []
@@ -42,7 +44,7 @@ def import_zip_photos(mass_import):
                 if entry.flag_bits & 0x1:
                     raise ValidationError("Password-protected ZIP files are not supported.")
 
-                if path.suffix.lower() not in ALLOWED_EXTENSIONS:
+                if path.suffix.lower() not in settings.GALLERY_ZIP_ALLOWED_EXTENSIONS:
                     raise ValidationError(f"{path.name} is not a supported image type.")
 
                 content = archive.read(entry)

@@ -209,8 +209,13 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
 # Uploads above 2.5 MiB use temporary disk storage.
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
 
-# Maximum accepted file sizes in bytes, enforced by upload validators.
+# Maximum accepted image size in bytes, enforced by upload validators.
 MAX_IMAGE_UPLOAD_SIZE = getattr(config, "MAX_IMAGE_UPLOAD_SIZE", 2621440)  # 2.5 MiB
+
+# Gallery ZIP import limits.
+GALLERY_ZIP_MAX_FILES = 100
+GALLERY_ZIP_MAX_UNCOMPRESSED_BYTES = 100 * 1024 * 1024
+GALLERY_ZIP_ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 # Project-specific settings
@@ -227,10 +232,10 @@ CALENDAR_PRODUCT_ID = "-//example.com//Example//EN"
 
 JAZZMIN_SETTINGS = {
     # Browser tab, login page, and admin-branding settings.
-    'site_title': 'Student Council Administration',
-    'site_header': 'Student Council Admin',
+    'site_title': 'Management Console',
+    'site_header': 'Management Console',
     'login_logo': 'favicon.svg',
-    'site_brand': 'Student Council Admin',
+    'site_brand': 'Management Console',
     'site_logo': 'favicon.svg',
     'site_icon': 'favicon.svg',
     'custom_css': 'admin.css',

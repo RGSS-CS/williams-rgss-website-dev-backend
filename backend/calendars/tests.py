@@ -84,7 +84,9 @@ class CalendarFeedTests(TestCase):
         self.assertEqual(ICalendar.from_ical(response.content).walk('VEVENT'), [])
 
     def test_missing_calendar_returns_404(self):
-        response = self.client.get(reverse('calendars_calendarfeed', args=[self.calendar.pk + 1]))
+        response = self.client.get(
+            reverse('calendars_calendarfeed', args=[self.calendar.pk + 1000000])
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_event_absolute_url_returns_event_details(self):

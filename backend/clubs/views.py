@@ -6,6 +6,12 @@ class ClubViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            return queryset.filter(visible=True)
+        return queryset
+
     def get_serializer_class(self):
         if self.request.user.is_authenticated:
             return ClubSerializer
