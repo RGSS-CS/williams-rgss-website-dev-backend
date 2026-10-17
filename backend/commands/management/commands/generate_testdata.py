@@ -126,8 +126,10 @@ class Command(BaseCommand):
                 repetition=random.choice(repetitions),
                 classroom_code=random_string(7),
                 accepting_applicants=random.choice(accepting_choices),
-                application_form_link=random_url(),
-                day_of_meeting=random.choice(weekdays),
+                application_link=random_url(),
+                day_of_meeting=random.sample(
+                    weekdays, k=random.randint(1, len(weekdays))
+                ),
                 time=random_time(),
                 location=f"Room {random.randint(100, 499)}",
                 teacher_advisor="Ms. " + random_string(8),

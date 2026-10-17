@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import Http404, HttpResponseNotFound, JsonResponse
 from datetime import datetime
 from django_ical.utils import build_rrule_from_recurrences_rrule
 from django_ical.views import ICalFeed
@@ -8,6 +8,12 @@ from rest_framework import viewsets
 from .serializers import CalendarSerializer, CalendarEventSerializer
 
 class CalendarFeed(ICalFeed):
+
+    def __call__(self, request, *args, **kwargs):
+        try:
+            return super().__call__(request, *args, **kwargs)
+        except Http404:
+            return HttpResponseNotFound()
 
     def get_object(self, request, *args, **kwargs):
         return get_object_or_404(Calendar, pk=kwargs.get("pk"))
