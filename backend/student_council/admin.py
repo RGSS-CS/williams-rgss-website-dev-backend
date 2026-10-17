@@ -36,6 +36,9 @@ class AnnouncementsAdminForm(forms.ModelForm):
         fields = [
             'ticker_items'
         ]
+        widgets = {
+            'ticker_items': forms.Textarea(attrs={'rows': 10, 'cols': 100})
+        }
 
 
 @admin.register(Announcements)
