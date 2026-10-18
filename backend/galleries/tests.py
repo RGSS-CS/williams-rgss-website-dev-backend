@@ -1,11 +1,13 @@
 from io import BytesIO
+from datetime import timedelta
 from unittest.mock import patch
 from django.forms import modelform_factory
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import SimpleTestCase, TestCase
+from django.utils import timezone
 from PIL import Image
 from .admin import PhotoAdminForm
-from .models import Photos
+from .models import MassImport, Photos
 from clubs.models import Club
 from management.admin import SiteSettingsAdminForm
 from management.models import SiteSettings
@@ -136,6 +138,20 @@ class OtherImageUploadTests(SimpleTestCase):
 
 @patch('requests.post')
 class GalleryModelTests(TestCase):
+    def test_mass_import_deletion_date_defaults_from_upload_date_and_can_be_overridden(self, request):
+        club = Club.objects.create(name='Photography')
+        upload = MassImport.objects.create(club=club, zip_file='upload.zip')
+        self.assertEqual(
+            upload.deletion_date,
+            timezone.localdate(upload.upload_date) + timedelta(days=30),
+        )
+
+        custom_date = upload.deletion_date + timedelta(days=10)
+        upload.deletion_date = custom_date
+        upload.save(update_fields=['deletion_date'])
+        upload.refresh_from_db()
+        self.assertEqual(upload.deletion_date, custom_date)
+
     def test_named_media_and_visibility_updates_are_saved(self, request):
         club = Club.objects.create(name='Photography')
         for model, serializer, fields in (

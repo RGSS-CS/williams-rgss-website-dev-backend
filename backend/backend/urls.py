@@ -24,6 +24,8 @@ from .views import redirect_frontend
 from django.conf import settings
 from django.conf.urls.static import static
 
+handler404 = "backend.views.redirect_frontend"
+
 
 urlpatterns = [
     path("", redirect_frontend, name="frontend_redirect"),
