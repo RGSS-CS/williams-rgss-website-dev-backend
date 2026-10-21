@@ -12,6 +12,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from management.models import SiteSettings
 from .models import UserJoinCode
 from .services.qr_codes import build_registration_url
 from .serializers import RegisterSerializer
@@ -21,7 +22,7 @@ User = get_user_model()
 
 
 class RegistrationQRCodeTests(TestCase):
-    def test_registration_url_contains_an_aes_gcm_encrypted_join_code(self):
+    def test_url_encrypts_join_code(self):
         join_code = "registration-code"
         url = build_registration_url("https://frontend.example/", join_code)
 
@@ -37,7 +38,7 @@ class RegistrationQRCodeTests(TestCase):
 
 
 class CustomUserModelTests(TestCase):
-    def test_user_is_active_by_default_and_uses_username_as_string(self):
+    def test_user_defaults(self):
         user = User.objects.create_user(
             username="council-user",
             email="council@example.com",
@@ -49,13 +50,18 @@ class CustomUserModelTests(TestCase):
 
 
 class RegisterSerializerTests(TestCase):
-    def test_disabled_join_code_is_rejected(self):
+    def setUp(self):
+        site_settings = SiteSettings.get_solo()
+        site_settings.school_domain = "school.example"
+        site_settings.save()
+
+    def test_disabled_code_is_rejected(self):
         UserJoinCode.objects.create(code="disabled-code", enabled=False)
 
         serializer = RegisterSerializer(
             data={
                 "username": "testuser",
-                "email": "test@example.com",
+                "email": "test@school.example",
                 "password": "StrongPass123!",
                 "password2": "StrongPass123!",
                 "first_name": "Test",
@@ -67,13 +73,13 @@ class RegisterSerializerTests(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn("code", serializer.errors)
 
-    def test_valid_join_code_allows_registration_and_increments_uses(self):
+    def test_registration_increments_code_use(self):
         join_code = UserJoinCode.objects.create(code="valid-code", enabled=True)
 
         serializer = RegisterSerializer(
             data={
                 "username": "newuser",
-                "email": "new@example.com",
+                "email": "new@school.example",
                 "password": "StrongPass123!",
                 "password2": "StrongPass123!",
                 "first_name": "New",
@@ -89,19 +95,28 @@ class RegisterSerializerTests(TestCase):
         join_code.refresh_from_db()
         self.assertEqual(join_code.uses, 1)
 
+    def test_email_domain_must_match_school(self):
+        serializer = RegisterSerializer(data={"email": "student@school.example.attacker.test"})
+
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("email", serializer.errors)
+
 
 class RegistrationAPITests(APITestCase):
     def setUp(self):
+        site_settings = SiteSettings.get_solo()
+        site_settings.school_domain = "school.example"
+        site_settings.save()
         self.join_code = UserJoinCode.objects.create(
             code="api-registration-code", label="Cafeteria", enabled=True
         )
 
-    def test_register_endpoint_creates_user_and_increments_code_usage(self):
+    def test_register_creates_user_and_uses_code(self):
         response = self.client.post(
             reverse("register"),
             {
                 "username": "apiuser",
-                "email": "apiuser@example.com",
+                "email": "apiuser@school.example",
                 "password": "StrongPass123!",
                 "password2": "StrongPass123!",
                 "first_name": "API",
@@ -118,10 +133,7 @@ class RegistrationAPITests(APITestCase):
         self.join_code.refresh_from_db()
         self.assertEqual(self.join_code.uses, 1)
 
-    def test_register_endpoint_rejects_disabled_code(self):
-        self.join_code.enabled = False
-        self.join_code.save()
-
+    def test_register_rejects_external_email(self):
         response = self.client.post(
             reverse("register"),
             {
@@ -137,11 +149,32 @@ class RegistrationAPITests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("email", response.data)
+
+    def test_register_rejects_disabled_code(self):
+        self.join_code.enabled = False
+        self.join_code.save()
+
+        response = self.client.post(
+            reverse("register"),
+            {
+                "username": "apiuser",
+                "email": "apiuser@school.example",
+                "password": "StrongPass123!",
+                "password2": "StrongPass123!",
+                "first_name": "API",
+                "last_name": "User",
+                "code": self.join_code.code,
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("code", response.data)
 
 
 class JoinCodeVerificationAPITests(APITestCase):
-    def test_verify_endpoint_returns_valid_code_label(self):
+    def test_verify_returns_code_label(self):
         join_code = UserJoinCode.objects.create(
             code="api-verify-code", label="Student Council", enabled=True
         )
@@ -164,7 +197,7 @@ class TokenAPITests(APITestCase):
             password="StrongPass123!",
         )
 
-    def test_token_endpoint_authenticates_active_user_by_email(self):
+    def test_token_authenticates_active_user(self):
         response = self.client.post(
             reverse("token_obtain_pair"),
             {"email": self.user.email, "password": "StrongPass123!"},
@@ -175,7 +208,7 @@ class TokenAPITests(APITestCase):
         self.assertIn("access", response.data)
         self.assertIn("refresh", response.data)
 
-    def test_token_endpoint_rejects_inactive_user(self):
+    def test_token_rejects_inactive_user(self):
         self.user.is_active = False
         self.user.save(update_fields=["is_active"])
 
@@ -189,7 +222,7 @@ class TokenAPITests(APITestCase):
 
 
 class JoinCodeBoundaryTests(APITestCase):
-    def test_verification_rejects_unusable_codes_without_consuming_uses(self):
+    def test_verification_rejects_unusable_codes(self):
         for options in (
             {'enabled': False},
             {'expiry': timezone.now() - timedelta(seconds=1)},
@@ -207,7 +240,7 @@ class JoinCodeBoundaryTests(APITestCase):
                 code.refresh_from_db()
                 self.assertEqual(code.uses, uses)
 
-    def test_verification_does_not_consume_last_available_use(self):
+    def test_verification_does_not_use_code(self):
         code = UserJoinCode.objects.create(max_uses=3, uses=2, label='Library')
         response = self.client.post(
             reverse('verify-register-code'), {'code': code.code}, format='json'
@@ -217,7 +250,7 @@ class JoinCodeBoundaryTests(APITestCase):
         code.refresh_from_db()
         self.assertEqual(code.uses, 2)
 
-    def test_unknown_and_missing_codes_are_rejected(self):
+    def test_unknown_codes_are_rejected(self):
         for data in ({'code': 'unknown'}, {}):
             with self.subTest(data=data):
                 response = self.client.post(reverse('verify-register-code'), data, format='json')
@@ -234,7 +267,7 @@ class EmailLoginTests(APITestCase):
             username='student', email='student@example.com', password='StrongPass123!'
         )
 
-    def test_login_is_case_insensitive_and_tokens_include_groups(self):
+    def test_login_is_case_insensitive_and_returns_groups(self):
         from django.contrib.auth.models import Group
         from rest_framework_simplejwt.tokens import AccessToken
 
@@ -251,7 +284,7 @@ class EmailLoginTests(APITestCase):
         self.user.refresh_from_db()
         self.assertIsNotNone(self.user.last_login)
 
-    def test_wrong_password_and_unknown_email_return_same_error(self):
+    def test_login_errors_match(self):
         errors = []
         for email in (self.user.email, 'unknown@example.com'):
             response = self.client.post(reverse('token_obtain_pair'), {
