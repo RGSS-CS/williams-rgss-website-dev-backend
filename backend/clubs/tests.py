@@ -23,7 +23,7 @@ class ClubSerializerTests(TestCase):
             description="A place to explore software",
             tagline="Build together",
             repetition=Club.Repetition.WEEKLY,
-            day_of_meeting=Club.WeekDay.MONDAY,
+            day_of_meeting=[Club.WeekDay.MONDAY, Club.WeekDay.WEDNESDAY],
         )
 
         serializer = ClubSerializer(club)
@@ -31,7 +31,7 @@ class ClubSerializerTests(TestCase):
 
         self.assertEqual(data["name"], "Coding Club")
         self.assertEqual(data["tagline"], "Build together")
-        self.assertEqual(data["day_of_meeting"], Club.WeekDay.MONDAY)
+        self.assertEqual(data["day_of_meeting"], [Club.WeekDay.MONDAY, Club.WeekDay.WEDNESDAY])
         self.assertIn("category", data)
 
 
@@ -81,6 +81,16 @@ class CurrentClubFieldsTests(TestCase):
         self.assertEqual(listing.status_code, 200)
         self.assertNotIn('announcement', detail.json())
         self.assertNotIn('announcement', listing.json()[0])
+
+    def test_public_club_endpoints_hide_invisible_clubs(self, request):
+        visible_club = Club.objects.create(name='Chess')
+        hidden_club = Club.objects.create(name='Private Club', visible=False)
+
+        listing = self.client.get(reverse('club-list'))
+        detail = self.client.get(reverse('club-detail', args=[hidden_club.pk]))
+
+        self.assertEqual([club['id'] for club in listing.json()], [visible_club.pk])
+        self.assertEqual(detail.status_code, 404)
 
     def test_club_serializer_includes_multiple_related_announcements(self, request):
         club = Club.objects.create(name='Robotics')
