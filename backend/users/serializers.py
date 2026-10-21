@@ -80,6 +80,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "email", "password", "password2", "first_name", "last_name", "code", "captcha_token"]
 
+    def validate_email(self, value):
+        school_domain = (SiteSettings.get_solo().school_domain or "").strip().lower()
+        email_domain = value.rsplit("@", 1)[1].lower()
+
+        if email_domain != school_domain:
+            raise serializers.ValidationError("Invalid Email Address.")
+
+        return value
+
     def validate(self, attrs):
         verify_captcha_token(attrs.get('captcha_token', ''), SiteSettings.CaptchaChoice.REGISTER)
 

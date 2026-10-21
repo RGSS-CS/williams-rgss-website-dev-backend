@@ -107,7 +107,6 @@ class SiteSettings(SingletonModel):
         "This is used for email verification"
     )
     
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
