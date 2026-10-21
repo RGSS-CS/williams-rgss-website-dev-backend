@@ -138,7 +138,7 @@ class OtherImageUploadTests(SimpleTestCase):
 
 @patch('requests.post')
 class GalleryModelTests(TestCase):
-    def test_mass_import_deletion_date_defaults_from_upload_date_and_can_be_overridden(self, request):
+    def test_mass_import_deletion_date(self, request):
         club = Club.objects.create(name='Photography')
         upload = MassImport.objects.create(club=club, zip_file='upload.zip')
         self.assertEqual(
@@ -152,7 +152,7 @@ class GalleryModelTests(TestCase):
         upload.refresh_from_db()
         self.assertEqual(upload.deletion_date, custom_date)
 
-    def test_named_media_and_visibility_updates_are_saved(self, request):
+    def test_media(self, request):
         club = Club.objects.create(name='Photography')
         for model, serializer, fields in (
             (Photos, PhotoSeralizer, {'image': 'existing/photo.png'}),
