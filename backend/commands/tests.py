@@ -62,6 +62,7 @@ class GenerateTestDataTests(TestCase):
             self.generate(seed='settings', skip_clubs=True)
         settings.refresh_from_db()
         self.assertEqual(settings.school_domain, 'example.com')
+        self.assertTrue(settings.site_contact)
         self.assertEqual(settings.frontend_url, 'https://frontend.example.com')
         self.assertEqual(settings.captcha, ['LOGIN'])
         self.assertEqual(settings.favicon.name, favicon)

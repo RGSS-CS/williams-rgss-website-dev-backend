@@ -82,6 +82,7 @@ class Command(BaseCommand):
         settings_obj.school_domain = "example.com"
         settings_obj.school_email = random_email()
         settings_obj.school_phone = random_phone()
+        settings_obj.site_contact = random_email()
         settings_obj.school_mascot = random_string(10)
         settings_obj.school_primary_color = "#122647"
         settings_obj.school_secondary_color = "#47a5bd"
