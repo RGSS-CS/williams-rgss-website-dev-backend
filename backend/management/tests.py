@@ -11,7 +11,7 @@ from .signals import on_management_change
 
 
 class ManagementModelTests(TestCase):
-    def test_site_settings_have_expected_defaults(self):
+    def test_site_defaults(self):
         site_settings = SiteSettings.get_solo()
 
         self.assertTrue(site_settings.maintainance_mode)
@@ -20,7 +20,7 @@ class ManagementModelTests(TestCase):
         self.assertFalse(site_settings.site_logo)
         self.assertEqual(str(site_settings), "Site Configuration")
 
-    def test_page_settings_use_display_name_for_string_representation(self):
+    def test_page_display(self):
         page_settings = PageSettings.objects.create(
             internal_site_name=PageSettings.PageTypes.HOME,
             title="Welcome"
@@ -30,7 +30,7 @@ class ManagementModelTests(TestCase):
 
 
 class LegalDefaultsTests(TestCase):
-    def test_legal_defaults_are_loaded_from_static_markdown_files(self):
+    def test_legal_static(self):
         self.assertEqual(
             termsService(),
             (Path(__file__).parent / "legal_defaults" / "terms_service.md")
@@ -42,7 +42,7 @@ class LegalDefaultsTests(TestCase):
             .read_text(encoding="utf-8"),
         )
 
-    def test_legal_model_uses_markdown_defaults(self):
+    def test_legal_markdown(self):
         legal = Legal()
 
         self.assertEqual(legal.terms_service, termsService())
@@ -51,7 +51,7 @@ class LegalDefaultsTests(TestCase):
 
 class ManagementSignalTests(TestCase):
     @patch("management.signals.revalidate_frontend_tag")
-    def test_signal_does_not_require_an_instance(self, revalidate):
+    def test_migrate_signal(self, revalidate):
         on_management_change(sender=SiteSettings, app_config=None)
 
         revalidate.assert_called_once_with("management")
@@ -61,7 +61,7 @@ class SchoolSocialMediaTests(TestCase):
     def setUp(self):
         self.site_settings = SiteSettings.get_solo()
 
-    def test_social_media_is_available_through_site_settings(self):
+    def test_social_settings(self):
         instagram = SchoolSocialMedia.objects.create(
             site_settings=self.site_settings,
             social_type=SchoolSocialMedia.Sites.INSTAGRAM,
@@ -72,7 +72,7 @@ class SchoolSocialMediaTests(TestCase):
         self.assertEqual(list(self.site_settings.social_media.all()), [instagram])
         self.assertEqual(str(instagram), "IG")
 
-    def test_social_media_string_representation_handles_optional_title(self):
+    def test_optional_title(self):
         for title in ("", None):
             with self.subTest(title=title):
                 instagram = SchoolSocialMedia.objects.create(
@@ -85,7 +85,7 @@ class SchoolSocialMediaTests(TestCase):
                 instagram.refresh_from_db()
                 self.assertEqual(str(instagram), "IG")
 
-    def test_site_settings_endpoint_returns_social_media_details(self):
+    def test_settings_api(self):
         SchoolSocialMedia.objects.create(
             site_settings=self.site_settings,
             social_type=SchoolSocialMedia.Sites.INSTAGRAM,

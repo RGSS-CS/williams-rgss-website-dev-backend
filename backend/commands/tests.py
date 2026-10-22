@@ -26,7 +26,7 @@ class GenerateTestDataTests(TestCase):
         call_command('generate_testdata', stdout=output, **options)
         return output.getvalue()
 
-    def test_generates_valid_clubs_and_related_content(self):
+    def test_valid_seed(self):
         self.generate(seed='regression', club_amount=10)
         self.assertEqual(Club.objects.count(), 10)
         for club in Club.objects.all():
@@ -40,7 +40,7 @@ class GenerateTestDataTests(TestCase):
     @override_settings(STORAGES={
         'default': {'BACKEND': 'django.core.files.storage.InMemoryStorage'},
     })
-    def test_seeds_current_settings_models_without_duplicates(self):
+    def test_settings_once(self):
         def image():
             stream = BytesIO()
             Image.new('RGB', (160, 160)).save(stream, format='PNG')
@@ -83,7 +83,7 @@ class GenerateTestDataTests(TestCase):
             for obj in model.objects.all():
                 obj.full_clean()
 
-    def test_skip_settings_leaves_settings_untouched(self):
+    def test_skip_settings(self):
         self.generate(seed='clubs-only', club_amount=1, skip_settings=True)
         self.assertEqual(Club.objects.count(), 1)
         self.assertFalse(SiteSettings.objects.exists())
@@ -92,19 +92,19 @@ class GenerateTestDataTests(TestCase):
         self.assertFalse(SchoolAnnouncements.objects.exists())
         self.assertFalse(SchoolSocialMedia.objects.exists())
 
-    def test_skip_clubs_and_zero_amount_create_no_club_content(self):
+    def test_no_club_seed(self):
         for options in ({'skip_clubs': True}, {'club_amount': 0}):
             with self.subTest(options=options):
                 self.generate(skip_settings=True, **options)
                 self.assertFalse(Club.objects.exists())
                 self.assertFalse(ClubAnnouncement.objects.exists())
 
-    def test_negative_amount_fails_before_writing(self):
+    def test_negative_amount(self):
         with self.assertRaisesMessage(CommandError, '--club-amount must be non-negative'):
             self.generate(club_amount=-1)
         self.assertFalse(SiteSettings.objects.exists())
 
-    def test_seed_reproduces_club_fields_and_tags(self):
+    def test_seed_fields(self):
         self.generate(seed='repeatable', club_amount=2, skip_settings=True)
         first = list(Club.objects.order_by('name').values('name', 'location', 'description', 'tagline'))
         tags = [list(club.category.values_list('name', flat=True)) for club in Club.objects.order_by('name')]
@@ -113,7 +113,7 @@ class GenerateTestDataTests(TestCase):
         self.assertEqual(first, list(Club.objects.order_by('name').values('name', 'location', 'description', 'tagline')))
         self.assertEqual(tags, [list(club.category.values_list('name', flat=True)) for club in Club.objects.order_by('name')])
 
-    def test_school_announcements_have_content_and_reproducible_values(self):
+    def test_announce_seed(self):
         self.generate(seed='school-news', skip_clubs=True)
         first = list(SchoolAnnouncements.objects.order_by('title').values('title', 'contents'))
         self.assertEqual(len(first), 3)
@@ -126,7 +126,7 @@ class GenerateTestDataTests(TestCase):
         self.generate(seed='school-news', skip_clubs=True)
         self.assertEqual(first, list(SchoolAnnouncements.objects.order_by('title').values('title', 'contents')))
 
-    def test_failure_rolls_back_seeded_data(self):
+    def test_seed_rollback(self):
         with patch('commands.management.commands.generate_testdata.ClubAnnouncement.objects.create', side_effect=RuntimeError('failed')):
             with self.assertRaisesMessage(RuntimeError, 'failed'):
                 self.generate(club_amount=1)
@@ -137,5 +137,5 @@ class GenerateTestDataTests(TestCase):
 
 
 class CommandsConfigTests(SimpleTestCase):
-    def test_app_name_is_commands(self):
+    def test_app_name(self):
         self.assertEqual(CommandsConfig.name, "commands")
