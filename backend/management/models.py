@@ -106,6 +106,12 @@ class SiteSettings(SingletonModel):
         help_text="This is the domain of the school. e.g yrdsb.ca, tdsb.on.ca, etc. " \
         "This is used for email verification"
     )
+
+    site_contact = models.CharField(
+        null = True, max_length=100, 
+        help_text='How would people contact you for site issues?', 
+        verbose_name='Site Contact Info'
+    )
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -123,7 +129,9 @@ class SchoolSocialMedia(models.Model):
         LINKEDIN = "LI", "LinkedIn" 
         OTHER = "OT", "Other"
 
-    site_settings = models.ForeignKey(SiteSettings, on_delete=models.PROTECT, related_name="social_media",
+    site_settings = models.ForeignKey(SiteSettings, 
+        on_delete=models.PROTECT, 
+        related_name="social_media",
     )    
     social_type = models.CharField(choices=Sites, null=True, max_length=2)
     title = models.CharField(
