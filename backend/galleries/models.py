@@ -25,7 +25,7 @@ class MassImport(models.Model):
     zip_file = models.FileField(upload_to=zip_upload_path, help_text='EVERYTHING within the ZIP file will be uploaded into the specified club. Photo files only.')
     upload_date = models.DateTimeField(default=timezone.now, editable=False)
     upload_status = models.CharField(max_length=5, null=True)
-    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', blank=True, null=True)
+    deletion_date = models.DateField(verbose_name='Automatic Deletion Date', blank=True, null=True, help_text='This field will be populated automatically when is empty.')
 
     class Meta:
         verbose_name = 'ZIP Upload'
