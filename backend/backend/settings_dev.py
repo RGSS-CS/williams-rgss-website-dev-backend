@@ -44,3 +44,6 @@ LOGGING = {
         "level": "WARNING"
     }
 }
+
+
+MAX_CATEGORIES = 3

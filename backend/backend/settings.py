@@ -322,3 +322,6 @@ TASKS = {
         "QUEUES": ["default", "unzip_media"],
     },
 }
+
+
+MAX_CATEGORIES = config.MAX_CATEGORIES

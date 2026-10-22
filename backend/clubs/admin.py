@@ -12,6 +12,7 @@ from .models import Club, ClubAnnouncement
 from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.utils.html import format_html
 from markdownx.admin import MarkdownxModelAdmin
+from django.conf import settings
 
 
 try:
@@ -63,11 +64,11 @@ class ClubsAdminForm(forms.ModelForm):
     def clean_category(self):
         categories = self.cleaned_data["category"]
 
-        MAX_CATEGORIES = 3
+        maxCategories = settings.MAX_CATEGORIES
 
-        if len(categories) > MAX_CATEGORIES:
+        if len(categories) > maxCategories:
             raise ValidationError(
-                f"You can select a maximum of {MAX_CATEGORIES} categories."
+                f"You can select a maximum of {maxCategories} categories."
             )
 
         return categories
