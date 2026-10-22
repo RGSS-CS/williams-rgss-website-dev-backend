@@ -40,3 +40,4 @@ DATABASES = {
     }
 }
 
+MAX_CATEGORIES = 3
