@@ -16,7 +16,7 @@ class CalendarTests(TestCase):
         revalidation.start()
         self.addCleanup(revalidation.stop)
 
-    def test_filename_extension_is_added_only_once(self):
+    def test_ext_once(self):
         for filename in ('school', 'school.ics'):
             with self.subTest(filename=filename):
                 calendar = Calendar.objects.create(name='School', filename=filename)
@@ -24,7 +24,7 @@ class CalendarTests(TestCase):
                 calendar.refresh_from_db()
                 self.assertEqual(calendar.filename, 'school.ics')
 
-    def test_creating_and_updating_club_creates_only_one_calendar(self):
+    def test_club_cal_one(self):
         club = Club.objects.create(name='Chess')
         calendar = Calendar.objects.get(club=club)
         self.assertEqual(calendar.name, 'Chess')
@@ -32,7 +32,7 @@ class CalendarTests(TestCase):
         club.save()
         self.assertEqual(Calendar.objects.filter(club=club).count(), 1)
 
-    def test_deleting_club_cascades_to_calendar_and_events(self):
+    def test_club_cascade(self):
         club = Club.objects.create(name='Chess')
         calendar = Calendar.objects.get(club=club)
         event = CalendarEvent.objects.create(
@@ -56,7 +56,7 @@ class CalendarFeedTests(TestCase):
             start=start, end=start + timedelta(hours=1), location='Library',
         )
 
-    def test_feed_contains_only_selected_calendar_events_in_descending_order(self):
+    def test_feed_scope_sort(self):
         self.create_event(self.calendar, 'Earlier meeting', self.start)
         self.create_event(self.calendar, 'Later meeting', self.start + timedelta(days=1))
         other = Calendar.objects.create(name='Other', filename='other.ics')
@@ -78,18 +78,18 @@ class CalendarFeedTests(TestCase):
         self.assertEqual(events[1].decoded('DTSTART'), self.start)
         self.assertEqual(str(events[1]['DESCRIPTION']), 'Bring your projects')
 
-    def test_empty_calendar_produces_valid_feed(self):
+    def test_empty_feed(self):
         response = self.client.get(reverse('calendars_calendarfeed', args=[self.calendar.pk]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ICalendar.from_ical(response.content).walk('VEVENT'), [])
 
-    def test_missing_calendar_returns_404(self):
+    def test_missing_feed(self):
         response = self.client.get(
             reverse('calendars_calendarfeed', args=[self.calendar.pk + 1000000])
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_event_absolute_url_returns_event_details(self):
+    def test_event_url(self):
         event = self.create_event(self.calendar, 'Meeting', self.start)
         response = self.client.get(event.get_absolute_url())
         self.assertEqual(response.status_code, 200)

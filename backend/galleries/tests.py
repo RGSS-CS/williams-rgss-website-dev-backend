@@ -40,7 +40,7 @@ class GalleryUploadTests(SimpleTestCase):
             self.assertTrue(form.is_valid(), form.errors)
             self.assertEqual(upload.tell(), 0)
 
-    def test_image_dimensions(self):
+    def test_img_dimensions(self):
         for size, valid in [
             ((99, 100), False), ((100, 99), False),
             ((100, 100), True),
@@ -55,12 +55,12 @@ class GalleryUploadTests(SimpleTestCase):
                     self.assertIn('dimensions', str(form.errors))
                 self.assertEqual(upload.tell(), 0)
 
-    def test_disallowed_image(self):
+    def test_bad_image(self):
         form = PhotoForm(data={}, files={'image': self.photo('GIF')})
         self.assertFalse(form.is_valid())
         self.assertIn('Invalid file type', str(form.errors))
 
-    def test_image_size_limit(self):
+    def test_img_size_limit(self):
         upload = self.photo()
         upload.size = int(2.5 * 1024 * 1024) + 1
         form = PhotoForm(data={}, files={'image': upload})
@@ -75,7 +75,7 @@ class GalleryUploadTests(SimpleTestCase):
 
 
 class OtherImageUploadTests(SimpleTestCase):
-    def test_admin_image_fields(self):
+    def test_admin_img(self):
         for model, base_form, field, minimum in [
             (Stuco, STUCOAdminForm, 'stuco_logo', 100),
             (Stuco, STUCOAdminForm, 'group_photo', 100),
@@ -138,7 +138,7 @@ class OtherImageUploadTests(SimpleTestCase):
 
 @patch('requests.post')
 class GalleryModelTests(TestCase):
-    def test_mass_import_deletion_date(self, request):
+    def test_import_expiry(self, request):
         club = Club.objects.create(name='Photography')
         upload = MassImport.objects.create(club=club, zip_file='upload.zip')
         self.assertEqual(
@@ -174,7 +174,7 @@ class GalleryModelTests(TestCase):
                 self.assertEqual(data['name'], 'Club day')
                 self.assertEqual(data['category'], ['Arts'])
 
-    def test_blank_names_are_generated_once(self, request):
+    def test_blank_names(self, request):
         club = Club.objects.create(name='A club with a very long name')
         for model in (Photos,):
             for name in (None, '', '   '):
@@ -192,7 +192,7 @@ class GalleryModelTests(TestCase):
 
 
 class ImageUploadFilenameTests(SimpleTestCase):
-    def test_all_image_fields_generate_unique_uuid4_filenames(self):
+    def test_unique_names(self):
         from pathlib import Path
         from uuid import UUID
 

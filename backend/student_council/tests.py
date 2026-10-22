@@ -15,14 +15,14 @@ class StudentCouncilTests(TestCase):
         request.start()
         self.addCleanup(request.stop)
 
-    def test_council_defaults_and_singleton(self):
+    def test_council_single(self):
         council = Stuco.get_solo()
         self.assertEqual(council.council_name, 'STUCO')
         self.assertFalse(council.group_photo)
         self.assertIsNone(council.photo_caption)
         self.assertEqual(Stuco.get_solo().pk, council.pk)
 
-    def test_council_endpoint_includes_photo_caption(self):
+    def test_photo_caption(self):
         council = Stuco.get_solo()
         council.council_name = 'SAC'
         council.photo_caption = 'Your student council'
@@ -34,7 +34,7 @@ class StudentCouncilTests(TestCase):
             'photo_caption': 'Your student council', 'stuco_logo': None,
         })
 
-    def test_announcements_preserve_newlines_and_allow_empty_ticker(self):
+    def test_ticker_newlines(self):
         announcements = Announcements.get_solo()
         for ticker in ('Welcome!\nClub fair on Friday', '', None):
             with self.subTest(ticker=ticker):
@@ -49,14 +49,14 @@ class StudentCouncilTests(TestCase):
 
 class StudentCouncilSignalTests(TestCase):
     @patch("student_council.signals.revalidate_frontend_tag")
-    def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
+    def test_migrate_signal(self, revalidate):
         on_club_change(sender=Stuco, app_config=None)
 
         revalidate.assert_called_once_with("stuco-settings")
 
 
 class SchoolAnnouncementTests(TestCase):
-    def test_multiple_announcements_preserve_title_and_contents(self):
+    def test_announce_text(self):
         for title, contents in (
             ('Club fair', 'Meet our clubs.\nFriday in the gym.'),
             ('Spirit week', 'Wear school colours on Monday.'),
@@ -68,7 +68,7 @@ class SchoolAnnouncementTests(TestCase):
             self.assertEqual(announcement.contents, contents)
         self.assertEqual(SchoolAnnouncements.objects.count(), 2)
 
-    def test_edit_updates_modified_date_and_preserves_posted_date(self):
+    def test_edit_dates(self):
         posted = timezone.now() - timedelta(days=1)
         modified = posted + timedelta(hours=2)
         with patch('django.utils.timezone.now', return_value=posted):
