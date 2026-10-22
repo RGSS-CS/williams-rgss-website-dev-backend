@@ -51,8 +51,12 @@ class SiteSettingsAdminForm(forms.ModelForm):
             'school_email', 'school_phone', 'favicon', 'favicon_cropping',
             'site_logo', 'site_logo_cropping', 'school_mascot',
             'school_primary_color', 'school_secondary_color', 'school_tertiary_color',
-            'captcha', 'school_domain'
+            'captcha', 'school_domain', 'site_contact'
         ]
+
+        widgets = {
+            'site_contact': forms.Textarea(attrs={'rows': 1, 'cols': 50})
+        }
 
 class SocialMediaInline(admin.TabularInline):
     model = SchoolSocialMedia

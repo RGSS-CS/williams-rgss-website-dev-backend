@@ -69,7 +69,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             "school_secondary_color", 
             "school_tertiary_color",
             "captcha",
-            "school_domain"
+            "school_domain",
+            "site_contact"
         ]
 
 class PageSettingsSerializer(serializers.ModelSerializer):
