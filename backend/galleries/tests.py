@@ -154,6 +154,7 @@ class GalleryModelTests(TestCase):
 
     def test_media(self, request):
         club = Club.objects.create(name='Photography')
+        club.category.add('Arts')
         for model, serializer, fields in (
             (Photos, PhotoSeralizer, {'image': 'existing/photo.png'}),
         ):
@@ -171,6 +172,7 @@ class GalleryModelTests(TestCase):
                 self.assertFalse(data['shown_in_gallery'])
                 self.assertFalse(data['shown_in_main_page'])
                 self.assertEqual(data['name'], 'Club day')
+                self.assertEqual(data['category'], ['Arts'])
 
     def test_blank_names_are_generated_once(self, request):
         club = Club.objects.create(name='A club with a very long name')
