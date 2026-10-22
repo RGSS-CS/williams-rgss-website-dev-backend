@@ -6,9 +6,10 @@ from django.utils.crypto import get_random_string
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils import timezone
+from django.conf import settings
 
 def deletion_date():
-    return timezone.localdate() + timedelta(days=30)
+    return timezone.localdate() + timedelta(days = settings.AUTO_DELETION_DAYS)
 
 def photo_upload_path(instance, filename):
         extension = Path(filename).suffix.lower()
@@ -35,7 +36,7 @@ class MassImport(models.Model):
 
     def save(self, *args, **kwargs):
         if self._state.adding and self.deletion_date is None:
-            self.deletion_date = timezone.localdate(self.upload_date) + timedelta(days=30)
+            self.deletion_date = deletion_date()
         club_name = self.club.name
         file = self.zip_file.name
         self.name = f'{file} - {club_name[:17]}'
