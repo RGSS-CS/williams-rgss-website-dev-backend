@@ -16,7 +16,7 @@ class ClubSerializerTests(TestCase):
         revalidation.start()
         self.addCleanup(revalidation.stop)
 
-    def test_serializer_returns_expected_club_fields(self):
+    def test_club_fields(self):
         club = Club.objects.create(
             name="Coding Club",
             preview_description="A club for builders",
@@ -37,7 +37,7 @@ class ClubSerializerTests(TestCase):
 
 class ClubSignalTests(TestCase):
     @patch("clubs.signals.revalidate_frontend_tag")
-    def test_post_migrate_signal_does_not_require_an_instance(self, revalidate):
+    def test_migrate_signal(self, revalidate):
         on_club_change(sender=Club, app_config=None)
 
         revalidate.assert_called_once_with("clubs")
@@ -45,7 +45,7 @@ class ClubSignalTests(TestCase):
 
 @patch('requests.post')
 class CurrentClubFieldsTests(TestCase):
-    def test_location_supports_room_names_and_is_serialized(self, request):
+    def test_room_location(self, request):
         for location in ('Room 201', 'Library', '', None):
             with self.subTest(location=location):
                 club = Club.objects.create(name=f'Club {location}', location=location)
@@ -55,7 +55,7 @@ class CurrentClubFieldsTests(TestCase):
                     self.assertEqual(data['location'], location)
                     self.assertNotIn('room_number', data)
 
-    def test_announcement_fields_and_related_content(self, request):
+    def test_announce_fields(self, request):
         club = Club.objects.create(name='Robotics')
         now = timezone.now()
         announcement = ClubAnnouncement.objects.create(
@@ -73,7 +73,7 @@ class CurrentClubFieldsTests(TestCase):
         club.delete()
         self.assertFalse(ClubAnnouncement.objects.filter(pk=announcement.pk).exists())
 
-    def test_public_club_endpoints_omit_announcements(self, request):
+    def test_public_no_ann(self, request):
         club = Club.objects.create(name='Chess')
         detail = self.client.get(reverse('club-detail', args=[club.pk]))
         listing = self.client.get(reverse('club-list'))
@@ -82,7 +82,7 @@ class CurrentClubFieldsTests(TestCase):
         self.assertNotIn('announcement', detail.json())
         self.assertNotIn('announcement', listing.json()[0])
 
-    def test_public_club_endpoints_hide_invisible_clubs(self, request):
+    def test_public_hidden(self, request):
         visible_club = Club.objects.create(name='Chess')
         hidden_club = Club.objects.create(name='Private Club', visible=False)
 
@@ -92,7 +92,7 @@ class CurrentClubFieldsTests(TestCase):
         self.assertEqual([club['id'] for club in listing.json()], [visible_club.pk])
         self.assertEqual(detail.status_code, 404)
 
-    def test_club_serializer_includes_multiple_related_announcements(self, request):
+    def test_multi_announce(self, request):
         club = Club.objects.create(name='Robotics')
         other = Club.objects.create(name='Chess')
         now = timezone.now()
