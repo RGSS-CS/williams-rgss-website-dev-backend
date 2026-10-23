@@ -78,6 +78,7 @@ class PageSettingsSerializer(serializers.ModelSerializer):
         model = PageSettings
         fields = [
             "internal_site_name",
+            "verbose_tab_name",
             "title",
             "subtitle",
             "tagline"
