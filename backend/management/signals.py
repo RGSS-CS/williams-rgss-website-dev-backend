@@ -7,14 +7,16 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
     if not PageSettings.objects.filter(internal_site_name="AB").exists():
         PageSettings.objects.create(
             internal_site_name="AB",
-            title="About STUCO",
+            verbose_tab_name = 'About',
+            title="About School",
             subtitle="",
-            tagline="What about it? It's the student council..."
+            tagline="About the school"
         )
 
     if not PageSettings.objects.filter(internal_site_name="GL").exists():
         PageSettings.objects.create(
             internal_site_name="GL",
+            verbose_tab_name = 'Gallery',
             title="Gallery",
             subtitle="",
             tagline="Capturing the moments that matter most"
@@ -23,6 +25,7 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
     if not PageSettings.objects.filter(internal_site_name="CL").exists():
         PageSettings.objects.create(
             internal_site_name="CL",
+            verbose_tab_name = 'Clubs', 
             title="Find Your",
             subtitle="Club",
             tagline="A million ways to get involved, one club at a time"
@@ -31,8 +34,9 @@ def on_post_migrate(sender, app_config, *args, **kwargs):
     if not PageSettings.objects.filter(internal_site_name="HM").exists():
         PageSettings.objects.create(
             internal_site_name="HM",
+            verbose_tab_name = 'Home',
             title="Welcome To",
-            subtitle="STUCO",
+            subtitle="...",
             tagline="Where students come together"
         )
 

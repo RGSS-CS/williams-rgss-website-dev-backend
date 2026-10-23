@@ -167,6 +167,7 @@ class PageSettings(models.Model):
         ABOUT = "AB", "About"
 
     internal_site_name = models.CharField(max_length=2, choices=PageTypes.choices)
+    verbose_tab_name = models.CharField(max_length=12, null=True, help_text='The tab verbose name.')
     title = models.CharField(
         max_length=30, 
         help_text="This is the title of the page. It is the TOP of the title section."
