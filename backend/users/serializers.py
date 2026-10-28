@@ -84,7 +84,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         school_domain = (SiteSettings.get_solo().school_domain or "").strip().lower()
         email_domain = value.rsplit("@", 1)[1].lower()
 
-        if email_domain != school_domain:
+        if email_domain != school_domain and not email_domain.endswith(f".{school_domain}"):
             raise serializers.ValidationError("Invalid Email Address.")
 
         return value
