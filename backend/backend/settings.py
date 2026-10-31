@@ -313,6 +313,8 @@ LOGGING = {
 }
 
 
+MARKDOWNX_URLS_PATH = "/api/markdownx/markdownify/"
+MARKDOWNX_UPLOAD_URLS_PATH = "/api/markdownx/upload/"
 MARKDOWNX_EDITOR_RESIZABLE = False
 MARKDOWNX_UPLOAD_MAX_SIZE = 0
 
